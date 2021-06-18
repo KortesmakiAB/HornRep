@@ -2,7 +2,9 @@
 
 
 ## Description/Goal: 
-“HornRep is a product of Doctor Sarah Schouten's doctoral dissertation. She has vision for a site that will benefit the horn community by allowing players of all skill levels to review, search and find pieces.”
+What if a horn player/teacher, like me, could search for solo repertoire for the horn using filters like, range, duration, difficulty, style, gender of composer, nationality, etc.? These are the questions the app aims to solve. I believe this is a tool that would be extremely valuable across academia, as well as high school students and professionals.
+
+“*HornRep* is a product of Doctor Sarah Schouten's doctoral dissertation. She has vision for a site that will benefit the horn community by allowing players of all skill levels to review, search and find pieces.”
 
 - A colleague of mine wrote her doctoral  dissertation on this topic and “made” a site. It is in ROUGH shape (php on Joomla). 
     - The searching capability is very limited 
@@ -53,14 +55,16 @@ In addition to Sarah’s research, I could allow the list of works to grow by al
 Sarah would prefer an email be sent to her so she can vet, then send the data to me to add to the site.
 
 -- AND/OR --
-**Naomi**, would you help me figure out IF I can get composer/title of horn solos from IMSLP API?
+**Naomi**, would you help me figure out IF I can get composer/title of horn solos from the IMSLP API?
 - https://imslp.org/api.php ?	THIS IS CONFUSING!
     - https://www.wikidata.org/wiki/Q523660 
-- Would this API support me writing my own library????
-- I found a library for the IMSLP API, but there is nothing useful in the docs
+- I found a library for the IMSLP API, but there is not much useful in the docs
+- Looking through the code it looks like the library/package can either search by person/composer or title and cannot search by instrument.
     - https://pypi.org/project/imslp/ 
-    - **Naomi**, can you help me figure out what this library offers?
-    - Or how to use it?
+    - It looks like he is using `mwclient` a pypi package for MediaWiki
+        - https://pypi.org/project/mwclient/
+        - https://mwclient.readthedocs.io/en/latest/
+    - Do you think I could use `mwclient` to search MediaWiki directly for "horn solos"??
 
 -- AND/OR --
 If I cannot use the IMSLP API, then I could incorporate composers/titles from this page...
