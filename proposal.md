@@ -49,77 +49,65 @@ ie, professionals & students
 Frontend - React
 Backend - Node/Express
 DB: Postgres
+NB - I'd like to include more testing than previous capstone. Unit and integrated for both front and back ends.
 
 ### API
-In addition to Sarah’s research, I could allow the list of works to grow by allowing users to add new works.
-Sarah would prefer an email be sent to her so she can vet, then send the data to me to add to the site.
+(In addition to Sarah’s research, I could allow the list of works to grow by allowing users to add new works. When users submit a new work, Sarah would prefer an email be sent to her so she can vet, then send the data to me to add to the site. Is there a better way?)
 
--- AND/OR --
-**Naomi**, would you help me figure out IF I can get composer/title of horn solos from the IMSLP API?
+##### GOAL: 
+Add a complete list of works for solo horn from IMSLP to my project db. This data is listed here: https://en.wikipedia.org/wiki/List_of_compositions_for_horn
+The data I NEED is composer/title. But it would a plus to get more, when there is more available. The idea, is that the horn community would fill out/expand the detailed data for each work over time.
+
+**Naomi** TO SCRAPE OR NOT TO SCRAPE, that is the question!
+
+The data I want is already on 1 IMSLP page. So, scraping seems like the obvious choice.
+There is bonus info, eg. dates/description/movements, sometimes listed on composition details pages.
+
+However, I found an Python IMSLP pypi package. I can't figure out how to use it. So I have been emailing the author (CS prof who is also a musician at Princeton). He is wanting to clarify my needs to determine whether or not he/we may need to add to his tool. I think it would be SUPER cool to contribute to the project.
+
+Here is the tool
+- https://pypi.org/project/imslp/ 
+
+The main problem is that the IMSLP API, SUCKS!! It provides 2 things, a complete list of known composers, and known works. Yuck.
 - https://imslp.org/api.php ?	THIS IS CONFUSING!
     - https://www.wikidata.org/wiki/Q523660 
-- I found a library for the IMSLP API, but there is not much useful in the docs
-- Looking through the code it looks like the library/package can either search by person/composer or title and cannot search by instrument.
-    - https://pypi.org/project/imslp/ 
-    - It looks like he is using `mwclient` a pypi package for MediaWiki
-        - https://pypi.org/project/mwclient/
-        - https://mwclient.readthedocs.io/en/latest/
-    - Do you think I could use `mwclient` to search MediaWiki directly for "horn solos"??
 
--- AND/OR --
-If I cannot use the IMSLP API, then I could incorporate composers/titles from this page...
-https://en.wikipedia.org/wiki/List_of_compositions_for_horn
-- It might be cool to include some data found on the composition details page
-    - eg. dates/description/movements
-- Naomi, How can I get this data and potentially the data on the details pages?
-    - Beautiful Soup scraping tool?
-    - Do I need to manually add the urls for Beautiful Soup to visit, or can I tell it to look for certain types of links to follow (ie links nested in a particular way)?
-    - The IMSLP data may change over time. If desired, how would I keep keep my site up to date with IMSLP’s data?
+Deeper level:
+- It looks like he is using `mwclient` a pypi package for MediaWiki, where much of the data is stored.
+    - https://pypi.org/project/mwclient/
+    - https://mwclient.readthedocs.io/en/latest/
+- Do you think I could use `mwclient` to search MediaWiki directly for "horn solos"??
 
--- AND/OR --
-For my ‘details’ page: I could use the youtube API to gather search results for a given horn solo and...
+
+##### Also
+For my ‘details’ page: I am hoping to use the youtube API to gather search results for a given horn solo and...
 - display links 
 - in-line videos (NAH. Too bulky. The YouTube app is going to be better anyways)
 - launch a youtube search in another window using data from the current solo
 
 
 ### Schema (tables):
-I’d like to seed my db with Sarah’s research.
+- I’d like to seed my db with Sarah’s research. This will be tricky.
 
-Users
-- Personal Info
-- pw 
-- etc.
+***See pdf for complete schema***
 
-Works (from Sarah’s data) (& from IMSLP?)
-- Title Concerto for Horn
-- Composer	Atterberg, Kurt
-- Dates	(1887-1974)
-- Duration	20:00
-- Horn Range	E3 to C6
-- Level	DIfficult
-- Clef	Treble Clef
-- Techniques	Lip Trill
-- Era/Style	20th Century
-- Country/Region	Sweden
-- Accompaniment Available	Orchestra, Piano
-- Accompaniment Difficulty	Hard
-- year (of composition) ?
-- gender (of composer)
+Tables:
+- Users
+- Works: from Sarah’s data & from IMSLP
+- Composers
+- Comments
 
-Comments
-- Connected to works
-
-### Design:
-Quick Search - Page
-Needs to be the body of the homepage. It’s why people come to the site.
+### Design (pages):
+**Home**
+About
+Quick Search - Needs to be the body of the homepage. It’s why people come to the site.
 - Composer			- keyword
 - Title				- keyword
 - Duration			- slider or multi select (5 min intervals, eg 5-10, 10-15)
 - Level				- slider or multi select (1-5 scale vs Easy/Medium/Hard?)
 - Era/Style			- checkboxes (dynamically)
 
-Advanced search - Page
+**Advanced search**
 - Composer			- keyword
 - Title				- keyword
 - Dates	(1887-1974) 		- how?? Is this necessary, given era/style field?
@@ -135,20 +123,27 @@ Advanced search - Page
 - Accompaniment Difficulty	-  slider or multi select (1 - 5 scale vs Easy/Medium/Hard?)
 - Gender			- multi select
 
-Search Results - Page
+**Search Results**
 - Lists: Composer, Title, Duration, Level, Era/Style
     - Or could be cards
 - Click to go to details page 
 
-Details - Page
+**Details**
 - Contains all data, comments, YouTube search
 - Can add a comment directly here (if logged in)
 - Option: can be edited, but only by the creator, unless provided by IMSLP.
 
-Add a new work - Page
+**Add a new work**
 - Form is similar to 'Advanced Search', possibly even the same/re-usable
 - Sarah would prefer an email be sent to her so she can vet, then send the data to me to add to the site.
 - Maybe add an imslp link and/or link to publisher
+
+**Sarah's Research**
+- list of all of her work
+
+**Report Duplicate Works**
+
+---
 
 Notes for Aaron:
 Some similar data found at https://colindorman.com/french-horn-music/
