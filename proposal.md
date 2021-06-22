@@ -31,7 +31,7 @@ ie, professionals & students
     - nationality
     - style/period
     - duration
-    - year (of composition)
+    - year (of composition)? ****** How to handle this when most of the time the dates are unknown?
     - gender (of composer)
     - range
     - unique features (could maybe instead implement a tagging feature here)
@@ -60,7 +60,7 @@ The data I NEED is composer/title. But it would a plus to get more, when there i
 
 **Naomi** TO SCRAPE OR NOT TO SCRAPE, that is the question!
 
-The data I want is already on 1 IMSLP page. So, scraping seems like the obvious choice.
+The data I want is already on 1 IMSLP page (see link above). So, scraping seems like the obvious choice.
 There is bonus info, eg. dates/description/movements, sometimes listed on composition details pages.
 
 However, I found an Python IMSLP pypi package. I can't figure out how to use it. So I have been emailing the author (CS prof who is also a musician at Princeton). He is wanting to clarify my needs to determine whether or not he/we may need to add to his tool. I think it would be SUPER cool to contribute to the project.
@@ -87,7 +87,11 @@ For my ‘details’ page: I am hoping to use the youtube API to gather search r
 
 
 ### Schema (tables):
-- I’d like to seed my db with Sarah’s research. This will be tricky.
+- I’d like to seed my db with Sarah’s research. This will be tricky. See Naomi call notes.
+
+Postgres data-types:
+Duration - https://www.postgresqltutorial.com/postgresql-interval/
+Year - https://www.postgresqltutorial.com/postgresql-date/ 
 
 ***See pdf for complete schema***
 
@@ -98,16 +102,18 @@ Tables:
 - Comments
 
 ### Design (pages):
-**Home**
+##### Home
 About
 Quick Search - Needs to be the body of the homepage. It’s why people come to the site.
 - Composer			- keyword
 - Title				- keyword
-- Duration			- slider or multi select (5 min intervals, eg 5-10, 10-15)
+- Duration (in minutes) - slider or multi select (5 min intervals, eg 5-10, 10-15)
+    - https://www.postgresqltutorial.com/postgresql-interval/
+    - 
 - Level				- slider or multi select (1-5 scale vs Easy/Medium/Hard?)
 - Era/Style			- checkboxes (dynamically)
 
-**Advanced search**
+##### Advanced search
 - Composer			- keyword
 - Title				- keyword
 - Dates	(1887-1974) 		- how?? Is this necessary, given era/style field?
@@ -123,28 +129,83 @@ Quick Search - Needs to be the body of the homepage. It’s why people come to t
 - Accompaniment Difficulty	-  slider or multi select (1 - 5 scale vs Easy/Medium/Hard?)
 - Gender			- multi select
 
-**Search Results**
+##### Search Results
 - Lists: Composer, Title, Duration, Level, Era/Style
     - Or could be cards
 - Click to go to details page 
 
-**Details**
+##### Details
 - Contains all data, comments, YouTube search
 - Can add a comment directly here (if logged in)
 - Option: can be edited, but only by the creator, unless provided by IMSLP.
 
-**Add a new work**
+##### Add a new work
 - Form is similar to 'Advanced Search', possibly even the same/re-usable
 - Sarah would prefer an email be sent to her so she can vet, then send the data to me to add to the site.
 - Maybe add an imslp link and/or link to publisher
 
-**Sarah's Research**
+##### Sarah's Research
 - list of all of her work
+- Sarah's preferences?
 
-**Report Duplicate Works**
+##### Report Duplicate Works
 
 ---
+# Plan
 
+## Backend routes
+##### Search
+- default settings for 'Advanced Search' should be 'quick search'
+- this way, there is just one search route
+
+##### Works
+- Create
+    - anyone can create
+    - Sarah want this to be funneled through her, but I disagree
+    - If she has her own dedicated page, I think she may be ok
+- Edit
+    - Sarah's research = ADMIN = her and I
+    - Otherwise
+        - creator or ADMIN can edit
+        - users who don't own a work can email Sarah with suggested edits, she can then email me.
+            - is there a better way??
+        - what will this look like?
+            an edit button appears if owner/ADMIN
+- Delete 
+    - Sarah's research = ADMIN = her and I
+    - Otherwise
+        - creator or ADMIN and delete
+
+##### Comments
+- Create
+    - anyone can add a comment
+- Edit
+    - comment owner may edit
+- Delete
+    - comment owner or ADMIN may delete
+- Flag (add this feature later)
+    - anyone can flag as inappropriate
+    - what does this look like?
+
+##### Users
+- Sign-up/Sign-in/Login/Logout
+- Update personal info
+- user can delete their account
+- reset pw (add this feature later)
+- endpoint for registering ADMIN users?
+
+## Frontend
+- See 'Details' (above)
+
+### React Design
+React routing
+Sketch: components/state/context/etc.
+- Keep the curr user data in state in `<App>`
+- Form data state on form pages
+- etc.
+
+
+---
 Notes for Aaron:
 Some similar data found at https://colindorman.com/french-horn-music/
 A fun UI morsel: tags sample: https://musicbrainz.org/tags

@@ -4,10 +4,11 @@ INSERT INTO users (
                     last_name, 
                     email, 
                     password, 
-                    category)
+                    category,
+                    is_admin)
 VALUES 
-('sSchouten1', 'Sarah', 'Schouten', 'sarah@awesomeSite.com', '$2b$12$AZH7virni5jlTTiGgEg4zu3lSvAw68qVEfSIOjJ3RqtbJbdW/Oi5q', 'academia'),
-('abrant1', 'Aaron', 'Brant', 'aaron@awesomeSite.com', '$2b$12$AZH7virni5jlTTiGgEg4zu3lSvAw68qVEfSIOjJ3RqtbJbdW/Oi5q', 'academia');
+('sSchouten1', 'Sarah', 'Schouten', 'sarah@awesomeSite.com', '$2b$12$AZH7virni5jlTTiGgEg4zu3lSvAw68qVEfSIOjJ3RqtbJbdW/Oi5q', 'academia', true),
+('abrant1', 'Aaron', 'Brant', 'aaron@awesomeSite.com', '$2b$12$AZH7virni5jlTTiGgEg4zu3lSvAw68qVEfSIOjJ3RqtbJbdW/Oi5q', 'academia', true);
 
 INSERT INTO composers (
                         first_name,
@@ -24,6 +25,7 @@ INSERT INTO works (
                     title, 
                     composer_id, 
                     submitted_by, 
+                    duration,
                     era_style, 
                     highest_note, 
                     lowest_note, 
@@ -34,20 +36,14 @@ INSERT INTO works (
                     accompaniment_type, 
                     accompaniment_difficulty)
 VALUES 
-('concerto #1', 1, 1, 'romantic', 'b-flat', 'd', 'difficult', null, 'treble', 1854, 'orchestra, piano', 'medium'),
-('Parable for solo horn', 2, 1, 'modern', 'b', 'c', 'difficult', 'flutter tongue, double-tongue', 'treble, bass', 1941, 'unacompannied', null);
+('concerto #1', 1, 1, '00:15:30', 'romantic', 'b-flat', 'd', 'difficult', null, 'treble', '1854-01-01', 'orchestra, piano', 'medium'),
+('Parable for solo horn', 2, 1, '00:11:15', 'modern', 'b', 'c', 'difficult', 'flutter tongue, double-tongue', 'treble, bass', '1941-01-01', 'unacompannied', null);
 
 INSERT INTO comments (
                         comment,
-                        works_id
-)
+                        user_id,
+                        work_id)
 VALUES
-('this is a monumental work for horn. genius', 1),
-('this is a terible work for horn. attrocious', 1);
+('this is a monumental work for horn. genius', 1, 1),
+('this is a terible work for horn. attrocious', 1, 1);
 
--- INSERT INTO comment_user (
---                             comment_id,
---                             user_id
--- )
--- VALUES
--- (1, )
