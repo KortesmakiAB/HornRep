@@ -29,7 +29,7 @@ describe ('GET 1 work - getWork()', () => {
             "fName": "Richard",
             "gender": "male",
             "country": "Germany",
-            "difficulty": "difficult",
+            "difficulty": "medium/difficult",
             "duration": "15:30",
             "eraStyle": "romantic",
             "highestNote": 4,
@@ -73,7 +73,7 @@ describe('Work Search - search()', () => {
             "fName": "Richard",
             "gender": "male",
             "country": "Germany",
-            "difficulty": "difficult",
+            "difficulty": "medium/difficult",
             "duration": "15:30",
             "eraStyle": "romantic",
             "highestNote": 4,
@@ -83,13 +83,17 @@ describe('Work Search - search()', () => {
             "title": "Concerto #1",
             "username": "sSchouten1",
         });
-        
     });
 
     test('should simple search', async () => {
         const titleSearch = await Work.search({title:"concerto"});
         expect(titleSearch.length).toBe(1);
         expect(titleSearch[0].title).toBe("Concerto #1");
+        
+        // Strauss difficulty => "medium/difficult"
+        const difficultySearch = await Work.search({difficulty:"medium"});
+        expect(difficultySearch.length).toBe(1);
+        expect(difficultySearch[0].title).toBe("Concerto #1");
 
         const genderSearch = await Work.search({gender: 'male'});
         expect(genderSearch.length).toBe(2);
@@ -121,9 +125,18 @@ describe('Work Search - search()', () => {
         expect(lowestNote[0].lName).toBe('Strauss');
     });
     
+    test('should filter based on duration', async () => {
+        const maxDuration = await Work.search({ maxDuration: "00:15:29"});
+        expect(maxDuration.length).toBe(1);
+        expect(maxDuration[0].lName).toBe('Persichetti');
+    });
+    
 
-    // test('should advanced search', async () => {
-        
-    // });
+    test('should search with multiple filters', async () => {
+        const filters = { fName: 'Richard', country: "Germany", eraStyle: "Romantic" }
+        const multipleFilters = await Work.search(filters);
+        expect(multipleFilters.length).toBe(1);
+        expect(multipleFilters[0].lName).toBe('Strauss');
+    });
 });
 

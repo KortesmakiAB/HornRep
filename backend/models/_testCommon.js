@@ -61,8 +61,8 @@ async function commonBeforeAll() {
       accompaniment_type, 
       accompaniment_difficulty)
     VALUES 
-      ('Concerto #1', ${testIds.composers[0]}, ${testIds.users[0]}, '00:15:30', 'romantic', 4, 6, 'difficult', null, 'treble', '1854-01-01', 'orchestra, piano', 'medium'),
-      ('Parable for solo horn', ${testIds.composers[1]}, ${testIds.users[0]}, '00:11:15', 'modern', 5, 8, 'difficult', 'flutter tongue, double-tongue', 'treble, bass', '1941-01-01', 'unacompannied', null)
+      ('Concerto #1', ${testIds.composers[0]}, ${testIds.users[0]}, '00:15:30', 'romantic', 4, 6, 'medium/difficult', null, 'treble', '1854-01-01', 'orchestra, piano', 'medium'),
+      ('Parable for solo horn', ${testIds.composers[1]}, ${testIds.users[0]}, '00:11:15', 'modern', 5, 8, 'difficult', 'flutter tongue, double-tongue', 'treble, bass', '1941-01-01', 'none', null)
     RETURNING id;
   `);
   testIds.works = [...worksResp.rows.map(row => row.id)];

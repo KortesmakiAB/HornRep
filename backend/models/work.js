@@ -60,11 +60,10 @@ class Work {
 	*	}
 	*	
 	*	Search Field Types:
-	*	  String: title, fName(composer), lName(composer), gender(composer).
+	*	  String: title, fName(composer), lName(composer), gender(composer), difficulty, accompDifficulty.
+	*	  Interval ("HH:MM:SS", string-ish): minDuration, maxDuration. 
 	*	  Integer: highestNote, lowestNote.
-	*	  Array of strings:  accompanimentType - options["Orchestra", "Piano", "None"], techniques[any], country(composers)[any], eraStyle[predetermined].
-	*	  ?:	duration ("MM:SS").
-	*	  ?:	difficulty, accompDifficulty
+	*	  Array of strings:  accompanimentType - options["Orchestra", "Piano", "None"], techniques[any], country(composers)[any], eraStyle[].
 	*	
 	*	NB:
 	*	  highestNote (Inclusive. Begins at top of staff. 
@@ -88,16 +87,16 @@ class Work {
 		const queryValues = [];
 		
 		const { 
-		  title, duration, difficulty, eraStyle: era_style, highestNote: highest_note,  
+		  title, maxDuration, minDuration, difficulty, eraStyle: era_style, highestNote: highest_note,  
 		  lowestNote: lowest_note, techniques, accompType: accompaniment_type, 
-		  accompDifficulty: accompaniment_difficulty, fName, lName, gender, country
+		  accompDifficulty: accompaniment_difficulty, fName: first_name, lName: last_name, gender, country
 		} = searchParams;
 
 		// ILIKE - case insensitive, partial matches
 		// db column may have multiple entries listed within 1 string, eg "Glissando, lip trills, mute, stopped horn". 
 		// If search-filter-data is an array, then iterate/search. eg. ["Glissando", "lip trills", "mute", "stopped horn"]
 		// Otherwise, just search db by term
-		const ilikes = { title, fName, lName, techniques, country, era_style, accompaniment_type };
+		const ilikes = { title, difficulty, first_name, last_name, techniques, country, era_style, accompaniment_type, accompaniment_difficulty };
 		for (let filter in ilikes ) {
 			if (Array.isArray(ilikes[filter])) ilikes[filter].forEach(f => {
 				if(f !== undefined) {
@@ -109,12 +108,16 @@ class Work {
 			else {
 				if (ilikes[filter] !== undefined) {
 					queryValues.push(`%${ilikes[filter]}%`);
-					whereExpressions.push(`${[filter]} ILIKE $${queryValues.length}`);
+
+					filter === 'first_name' || filter === 'last_name'
+						? whereExpressions.push(`c.${[filter]} ILIKE $${queryValues.length}`)
+						: whereExpressions.push(`${[filter]} ILIKE $${queryValues.length}`);
 				}
 			}
 		}
 		
-		// TODO - refactor? - do I need to check for an array? 
+		// TODO - refactor? - do I need to check for an array?
+		// Cannot move gender to ILIKE: male and female, both contain "male"
 		const exactMatches = { gender };
 		for (let match in exactMatches) {
 			if (Array.isArray(exactMatches[match])) exactMatches[match].forEach(m => {
@@ -131,14 +134,23 @@ class Work {
 			}
 		}
 
-		const highestLowest = { highest_note, lowest_note };
-		for (let note in highestLowest) {
-			if (highestLowest[note] !== undefined) {
-				queryValues.push(+highestLowest[note]);
-				whereExpressions.push(`${[note]} <= $${queryValues.length}`);
+		const lowHigh = { highest_note, lowest_note };
+		for (let val in lowHigh) {
+			if (lowHigh[val] !== undefined) {
+				queryValues.push(+lowHigh[val]);
+				whereExpressions.push(`${[val]} <= $${queryValues.length}`);
 			}
 		}
 
+		// min and max
+		if (minDuration !== undefined) {
+			queryValues.push(minDuration);
+			whereExpressions.push(`duration >= $${queryValues.length}`);
+		}
+		if (maxDuration !== undefined) {
+			queryValues.push(maxDuration);
+			whereExpressions.push(`duration <= $${queryValues.length}`);
+		}
 
 		if (whereExpressions.length) {
 			query += " WHERE " + whereExpressions.join(" AND ");
