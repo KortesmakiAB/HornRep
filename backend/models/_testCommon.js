@@ -15,6 +15,7 @@ async function commonBeforeAll() {
   await db.query("DELETE FROM works");
   await db.query("DELETE FROM composers");
   await db.query("DELETE FROM users");
+  await db.query("DELETE FROM movements");
   
   const usersResp = await db.query(`
     INSERT INTO users (

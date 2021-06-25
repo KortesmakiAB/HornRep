@@ -1,7 +1,7 @@
 "use strict"
 
 const db = require("../db.js");
-const { NotFoundError } = require("../expressError");
+const { NotFoundError, BadRequestError } = require("../expressError");
 const Work = require("./work.js");
 const {
     commonBeforeAll,
@@ -16,11 +16,12 @@ beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
-describe ('GET 1 work - getWork()', () => {
-    const today = new Date() // today
+const today = new Date();
+
+describe ('Work.getWork()', () => {
     test('should get 1 work', async () => {
         const worksResp = await Work.getWork(testIds.works[0]);
-        // TODO: change test when comments functionality added
+        
         expect(worksResp).toEqual({
             "accompDifficulty": "medium",
             "accompType": "orchestra, piano",
@@ -86,7 +87,7 @@ describe ('GET 1 work - getWork()', () => {
     });
 });
 
-describe('Work Search - search()', () => {
+describe('Work.search()', () => {
     test('should return [] if no results found', async () => {
         const noLadies = await Work.search({gender: 'female'});
         expect(noLadies).toEqual([]);
@@ -176,3 +177,134 @@ describe('Work Search - search()', () => {
     });
 });
 
+describe('Work.addWork()', () => {
+    test('should add a new work', async () => {
+        const title = "Vince's newest title (posthumous)";
+        const mockFormFields = {
+            title,
+            composerId: testIds.composers[1],
+            submittedBy: testIds.users[1]
+        };
+        const newWork = await Work.addWork(mockFormFields);
+        expect(newWork.id).toEqual(expect.any(Number));
+
+        const confirmation = await Work.getWork(newWork.id);
+        expect(confirmation.title).toBe(title);
+        
+        // fields other than { title, composerId, submittedBy } are null
+        expect(confirmation.duration).toBe(null);
+        expect(confirmation.difficulty).toEqual(null);
+    });
+    
+    test('should throw error if missing composerId or missing submittedBy', async () => {
+        const title = "MISSING ID";
+
+        try {
+            await Work.addWork({
+                title,
+                submittedBy: testIds.users[0]
+            });
+        } catch (error) {
+            expect(error).toEqual(new BadRequestError('Composer not found. Please include a valid composer id.'));
+        }
+        
+        try {
+            await Work.addWork({
+                title,
+                composerId: testIds.composers[0]
+            });
+        } catch (error) {
+            expect(error).toEqual(new BadRequestError(`User not found. Please include a valid user id.`));
+        }
+    });
+    
+    test('should throw error if bad id', async () => {
+        const title = "ZERO IS NOT A GOOD ID";
+
+        try {
+            await Work.addWork({
+                title,
+                composerId: 0,
+                submittedBy: testIds.users[0]
+            });
+        } catch (error) {
+            expect(error).toEqual(new BadRequestError('Composer not found. Please include a valid composer id.'));
+        }
+        
+        try {
+            await Work.addWork({
+                title,
+                composerId: testIds.composers[0],
+                submittedBy: 0
+            });
+        } catch (error) {
+            expect(error).toEqual(new BadRequestError(`User not found. Please include a valid user id.`));
+        }
+    });
+});
+
+describe('Work.updateWork()', () => {
+    const testWork = {
+        title: 'testTitle', 
+        duration: '12:34:56', 
+        eraStyle: 'test era', 
+        highestNote: 4, 
+        lowestNote: 6, 
+        difficulty: 'test difficulty', 
+        techniques: 'test techniques', 
+        clef: 'test clef', 
+        compositionYr: '1812-01-01', 
+        accompType: 'test accompaniment type', 
+        accompDifficulty: 'test accomp difficulty'
+    };
+    
+    test('should not update submitted_by', async () => {
+        testWork.submittedBy = testIds.users[1];
+        testWork.composerId = testIds.composers[1];
+        const testWorkId = await Work.addWork(testWork);
+
+        // attempt to update submittedBy
+        testWork.submittedBy = testIds.users[0];
+        const updatedWorkId = await Work.updateWork(testWorkId.id, testWork);
+        
+        const updatedWork = await db.query(`
+            SELECT 
+                submitted_by AS "submittedBy" 
+            FROM works
+            WHERE id = ${updatedWorkId.id};`);
+
+        expect(updatedWork.rows[0].submittedBy).not.toBe(testIds.users[0]);
+        expect(updatedWork.rows[0].submittedBy).toBe(testIds.users[1]);
+    });
+
+    test('should update any/all fields, except submitted_by', async () => {
+        // add new work
+        testWork.composerId = testIds.composers[1];
+        testWork.submittedBy = testIds.users[1];
+        const testWorkId = await Work.addWork(testWork);
+        
+        // update a few fields (ps - do not attempt to update "submitted_by")
+        const duration = '00:00:01';
+        const eraStyle = 'Dawning of the age of Aquarius';
+        testWork.duration = duration;
+        testWork.eraStyle = eraStyle;
+        delete testWork.submitted_by;
+        
+        const updatedTestWorkId = await Work.updateWork(testWorkId.id, testWork);
+        expect(updatedTestWorkId.id).toBe(testWorkId.id);
+
+        // check to prove if db was updated
+        const proveIt = await db.query(` 
+            SELECT
+                title,
+                TO_CHAR(duration, 'MI:SS') AS "duration",
+                era_style AS "eraStyle"
+            FROM works
+            WHERE id = ${updatedTestWorkId.id}`);
+        expect(proveIt.rows[0].title).toBe(testWork.title);
+        expect(proveIt.rows[0].duration).toBe('00:01');
+        expect(proveIt.rows[0].eraStyle).toBe(eraStyle);
+    });
+     
+});
+ 

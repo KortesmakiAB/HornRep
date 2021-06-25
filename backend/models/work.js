@@ -2,7 +2,6 @@
 
 const db = require("../db");
 const { BadRequestError, NotFoundError } = require("../expressError");
-// const { sqlForPartialUpdate } = require("../helpers/sql");
 
 
 class Work {
@@ -30,8 +29,8 @@ class Work {
 						`;
 
 
-	/** GET 1 work by id.
-	*  Includes associated comments.
+	/** Get 1 work by id.
+	*  Includes associated comments and movements.
 	*/
 
 	static async getWork(id) {
@@ -52,7 +51,7 @@ class Work {
 				TO_CHAR(time_stamp_tz, 'mm/dd/yyyy') AS "comment_date"
 			FROM comments
 			JOIN users u on u.id = user_id
-			WHERE u.id = ${work.id};`
+			WHERE work_id = ${work.id};`
 		);
 		work.comments = comments.rows;
 
@@ -72,6 +71,8 @@ class Work {
 	}
 
 	/**	search()
+	* 
+	*	If no search fields included, will return all works	
 	*
 	*	Search fields - all optional:
 	*	{ 
@@ -96,13 +97,13 @@ class Work {
 	*	
 	*	Returns array of work objects	
 	*	
-	*	No search fields included will return all works	
 	*/
 
 	static async search(searchParams = {}) {
 		// TODO handle searchParams validation
 		//  after validation, I could probably remove some of the "!== undefined" checks
 
+		// TODO maybe I don't need all of the fields/columns that the base query includes
 		let query = `${this.baseQuery}`;
 		const whereExpressions = [];
 		const queryValues = [];
@@ -179,9 +180,111 @@ class Work {
 		query += ' ORDER BY c.last_name, c.first_name, title';
 
 		const worksResp = await db.query(query, queryValues);
-		
+
 		return worksResp.rows;
 	}
 
+	/** addWork()
+	*
+	* 	Required: title, composerId, submittedBy.
+	*	Everything else is optional.
+	*
+	*	Integer: composerId, submittedBy, highestNote, lowestNote, compYr.
+	*	Regular string: title.
+	*	Comma separated string: eraStyle, difficulty, techniques, clef, accompType, accompDifficulty.
+	*	Duration is a string: "HH:MM:SS".
+	*
+	*	Returns newly created id.
+	*/
+	static async addWork(formFields) {
+		const { title, composerId, submittedBy, duration, eraStyle, highestNote, lowestNote,
+				difficulty, techniques, clef, compYr, accompType, accompDifficulty } = formFields;
+		
+		// schema: composer_id and submitted_by are not "NOT NULL", however they are required.
+		const composerIdResp = await db.query(`SELECT id FROM composers WHERE id = $1;`, [composerId]);
+		if (composerIdResp.rows.length === 0) throw new BadRequestError('Composer not found. Please include a valid composer id.');
+		
+		const submittedByResp = await db.query(`SELECT id FROM users WHERE id = $1;`, [submittedBy]);
+		if (submittedByResp.rows.length === 0) throw new BadRequestError('User not found. Please include a valid user id.');
+		
+		const newWorkResp = await db.query(`
+			INSERT INTO works (
+				title, 
+				composer_id, 
+				submitted_by, 
+				duration, 
+				era_style, 
+				highest_note, 
+				lowest_note,
+				difficulty, 
+				techniques, 
+				clef, 
+				composition_yr, 
+				accompaniment_type, 
+				accompaniment_difficulty
+				)
+			VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
+			RETURNING
+				id`,
+				// TODO remove info below if unnecessary
+				// title, 
+				// composer_id AS composerId,
+				// submitted_by AS submittedBy,
+				// duration, 
+				// era_style AS eraStyle,
+				// highest_note AS highestNote,
+				// lowest_note AS lowestNote,
+				// difficulty, 
+				// techniques, 
+				// clef, 
+				// composition_yr AS compYr,
+				// accompaniment_type AS accompType,
+				// accompaniment_difficulty AS accompDifficulty`,
+			[title, composerId, submittedBy, duration, eraStyle, highestNote, lowestNote,
+				difficulty, techniques, clef, compYr, accompType, accompDifficulty]
+		);
+
+		return newWorkResp.rows[0];
+	}
+
+	/** updateWork().
+	* 	Updates: title, composerId, duration, eraStyle, highestNote, lowestNote,
+	*	difficulty, techniques, clef, compYr, accompType, accompDifficulty
+	* 	Does NOT update: "submitted_by" (or "id").
+	*
+	*	Returns id.
+	*/	
+	static async updateWork(id, { title, composerId, duration, eraStyle, highestNote, lowestNote,
+		difficulty, techniques, clef, compYr, accompType, accompDifficulty }) {
+		
+		const query = `
+			UPDATE works
+			SET 
+				title = $1,
+				composer_id = $2,
+				duration = $3,
+				era_style = $4,
+				highest_note = $5,
+				lowest_note = $6,
+				difficulty = $7,
+				techniques = $8,
+				clef = $9,
+				composition_yr = $10,
+				accompaniment_type = $11,
+				accompaniment_difficulty =$12
+			WHERE id = $13 
+			RETURNING id`;
+
+		const result = await db.query(query, [title, composerId, duration, eraStyle, highestNote, lowestNote,
+			difficulty, techniques, clef, compYr, accompType, accompDifficulty, id]);
+
+		const updatedWorkId = result.rows[0];
+
+		if (!updatedWorkId) throw new NotFoundError(`Work with id - ${id} not found.`);
+		
+    	return updatedWorkId;
+	}
+
+	
 }
 module.exports = Work;

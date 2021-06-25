@@ -13,13 +13,14 @@ What if a horn player/teacher, like me, could search for solo repertoire for t
 - After speaking with Sarah, she is totally DOWN for this project!
 - My sense is that there is a REAL need for this tool. In consultation with 3 horn colleagues in academia, they recognize the utility and benefits this would bring to the horn community. It’s possible nobody ever uses this tool, or I could see a scenario where there are 20k+ users annually. I’m sure current composers would love to see their compositions listed here as well.
 
-### Obstacle:
+### DATA WRANGLING!
 - Sarah has data in xls and word.
     - are there Word extraction tools?
     - open word files and write out the content to a txt or into a db?
     - how do I get the xls data into Postgres?
 - But maybe it's hosted in a db?
     - how to export the data
+- **Handle things like this:** Medium vs Moderate vs Intermediate, Hard vs Difficult vs Advanced
 
 ### Demographic: 
 horn players of any age or ability
@@ -28,10 +29,9 @@ ie, professionals & students
 ### 2 primary changes
 - Expanded, more powerful searching of repertoire
     - difficulty
-    - nationality
+    - country/region
     - style/period
     - duration
-    - year (of composition)? ****** How to handle this when most of the time the dates are unknown?
     - gender (of composer)
     - range
     - unique features (could maybe instead implement a tagging feature here)
@@ -107,31 +107,31 @@ About
 Quick Search - Needs to be the body of the homepage. It’s why people come to the site.
 - Composer			- keyword
 - Title				- keyword
-- Duration (in minutes) - slider or multi select (5 min intervals, eg 5-10, 10-15)
-    - https://www.postgresqltutorial.com/postgresql-interval/
-    - 
-- Level				- slider or multi select (1-5 scale vs Easy/Medium/Hard?)
+- Duration (in minutes) - multi select (5 min intervals, eg 5-10, 10-15)
+- Level				- multi select (1-5 scale vs Easy/Medium/Hard?)
 - Era/Style			- checkboxes (dynamically)
 
 ##### Advanced search
-- Composer			- keyword
-- Title				- keyword
-- Dates	(1887-1974) 		- how?? Is this necessary, given era/style field?
-- Duration			- slider or multi select (5 min intervals, eg 5-10, 10-15)
-- Horn Range - Highest		- slider or multi select (beginning at g. Default - any)
-- Horn Range - Lowest		- slider or multi select ( beginning at g. Default - any)
-- Level				- slider or multi select (1-5 scale vs Easy/Medium/Hard?)
-- Clef				- do not include
-- Techniques			- maybe do not include. Else checkboxes (dynamically)
-- Era/Style			- checkboxes (dynamically)
-- Country/Region		- checkboxes (dynamically)
-- Accompaniment		- checkboxes (Orchestra, Piano, Unaccompanied)
-- Accompaniment Difficulty	-  slider or multi select (1 - 5 scale vs Easy/Medium/Hard?)
+UX Notes: group like inputs together: text, mulitselect, checkboxes
+
+- Composer			- text (keyword search)
+- Title				- text (keyword search)
+- minDuration		- text ("HH:MM:SS")
+- maxDuration		- text ("HH:MM:SS")
+- Horn Range - Highest		- multi select (beginning at g. Default - any)
+- Horn Range - Lowest		- multi select ( beginning at g. Default - any)
+- Level(difficulty)			- multi select (Easy/Medium/Moderate/Hard/Difficult)(need to fix this issue in data/wrangling stage)
+- Techniques		- checkboxes (dynamically)(add to an array)
+- Era/Style			- checkboxes (list from Sarah/me?) (pass as an array)
+- Country/Region	- checkboxes (dynamically - user can specify, Sarah can edit, if necessary) (pass as an array)
+- Accompaniment		- checkboxes (Orchestra, Piano, Unaccompanied) (pass as an array)
+- Accompaniment Difficulty	-  multi select (Easy/Medium/Moderate/Hard/Difficult)(need to fix this issue in data/wrangling stage)
 - Gender			- multi select
 
 ##### Search Results
-- Lists: Composer, Title, Duration, Level, Era/Style
+- Displays only: Composer, Title, Duration, Level, Era/Style
     - Or could be cards
+    - however all of the data for each work is passed to the details page via props
 - Click to go to details page 
 
 ##### Details
@@ -153,32 +153,55 @@ Quick Search - Needs to be the body of the homepage. It’s why people come to t
 ---
 # Plan
 
-## Backend routes
-##### Search
-- default settings for 'Advanced Search' should be 'quick search'
-- this way, there is just one search route
+## Backend:
+1. ~~setup - server, app, db, config~~
+1. ~~work model - getWork()~~
+1. ~~work model - search()~~
+1. ~~add a table for "movements"~~
+1. ~~work model - getWork() - add movements and comments & tests~~
+1. ~~works route - GET 1~~
+1. ~~works route - search~~
+1. work model - addWork()
+1. work model - editWork()
+1. work model - deleteWork()
+
+
+#### TODO Later
+1. data validation. Use a library.
 
 ##### Works
 - Create
     - anyone can create
     - Sarah want this to be funneled through her, but I disagree
     - If she has her own dedicated page, I think she may be ok
-- Edit
-    - Sarah's research = ADMIN = her and I
-    - Otherwise
-        - creator or ADMIN can edit
-        - users who don't own a work can email Sarah with suggested edits, she can then email me.
-            - is there a better way??
-        - what will this look like?
-            an edit button appears if owner/ADMIN
+- GET
+    - GET 1
+    - GET - search()
+        - one search route
+        - returns array of objects
+        - if empty search, returns all results, sorted by: composer, title
+- Edit/PATCH
+    - work creator or ADMIN can edit, although ADMIN **SHOULD** almost never edit
+    - Sarah is notified when new works are added.(add this feature later?)
+    - users who don't own a work can email Sarah with suggested edits, she can then edit.  (add this feature later)?
+    - edit icon appears if owner/ADMIN
 - Delete 
-    - Sarah's research = ADMIN = her and I
-    - Otherwise
-        - creator or ADMIN and delete
+    - creator or ADMIN may delete
+
+##### Auth
+- Register/Login
+
+##### Users
+- get a user
+- Update personal info
+- user or ADMIN can delete their account
+- reset pw (add this feature later?)
+- endpoint for registering ADMIN users?  (add this feature later)
 
 ##### Comments
 - Create
     - anyone can add a comment
+- GET comments
 - Edit
     - comment owner may edit
 - Delete
@@ -187,15 +210,12 @@ Quick Search - Needs to be the body of the homepage. It’s why people come to t
     - anyone can flag as inappropriate
     - what does this look like?
 
-##### Users
-- Sign-up/Sign-in/Login/Logout
-- Update personal info
-- user can delete their account
-- reset pw (add this feature later)
-- endpoint for registering ADMIN users?
 
 ## Frontend
 - See 'Details' (above)
+- Blueprint https://blueprintjs.com/docs/#icons
+- Valtio https://github.com/pmndrs/valtio
+
 
 ### React Design
 React routing

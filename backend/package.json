@@ -9,10 +9,9 @@
     "test:work": "jest -i work.test.js -t"
   },
   "keywords": [
-    "Search",
-    "orn",
-    "Solo",
-    "Literature"
+    "Search Horn Music",
+    "Horn Solo Repertoire",
+    "Horn Solo Literature"
   ],
   "author": "Dr. Sarah Schouten and Aaron Brant",
   "license": "ISC",

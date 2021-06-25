@@ -19,7 +19,8 @@ CREATE TABLE "composers" (
   "gender" varchar
 );
 
--- composer_id "ON DELETE SET NULL" - in case there are duplicate composers, can delete 1 without loosing the work too.
+-- NOTE:
+-- composer_id "ON DELETE SET NULL" - in case there are duplicate composers, can delete 1 without losing the work too.
 -- submitted_by "ON DELETE SET NULL" - if a user deletes their account, we want to retain their contributions.
 
 CREATE TABLE "works" (
@@ -27,10 +28,10 @@ CREATE TABLE "works" (
   "title" varchar NOT NULL,
   "composer_id" INTEGER REFERENCES composers ON DELETE SET NULL,
   "submitted_by" INTEGER REFERENCES users ON DELETE SET NULL,
-  "duration" interval,
+  "duration" INTERVAL,
   "era_style" varchar,
-  "highest_note" varchar,
-  "lowest_note" varchar,
+  "highest_note" INTEGER,
+  "lowest_note" INTEGER,
   "difficulty" varchar,
   "techniques" varchar,
   "clef" varchar,
@@ -47,5 +48,15 @@ CREATE TABLE "comments" (
   "time_stamp_tz" TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-
+-- NOTE:
+-- work_id "ON DELETE SET NULL" - in case there are duplicate works, can delete 1 work without losing the work too.
+CREATE TABLE "movements" (
+  "id" SERIAL PRIMARY KEY,
+  "work_id" INTEGER REFERENCES works ON DELETE SET NULL,
+  "title" varchar,
+  "duration" INTERVAL,
+  "difficulty" varchar,
+  "highest_note" INTEGER,
+  "lowest_note" INTEGER
+);
 
