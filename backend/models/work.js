@@ -45,7 +45,28 @@ class Work {
 	
 		if (!work) throw new NotFoundError(`Work not found`);
 	
-		// TODO - query for comments
+		const comments = await db.query(`
+			SELECT
+				comment, 
+				u.username, 
+				TO_CHAR(time_stamp_tz, 'mm/dd/yyyy') AS "comment_date"
+			FROM comments
+			JOIN users u on u.id = user_id
+			WHERE u.id = ${work.id};`
+		);
+		work.comments = comments.rows;
+
+		const movements = await db.query(`
+			SELECT
+				title,
+				TO_CHAR(duration, 'MI:SS') AS "duration",
+				difficulty,
+				highest_note AS highestNote,
+				lowest_note AS lowestNote
+			FROM movements
+			WHERE work_id = ${work.id}
+		`);
+		work.movements = movements.rows;
 	
 		return work;
 	}
@@ -142,7 +163,6 @@ class Work {
 			}
 		}
 
-		// min and max
 		if (minDuration !== undefined) {
 			queryValues.push(minDuration);
 			whereExpressions.push(`duration >= $${queryValues.length}`);
@@ -158,9 +178,8 @@ class Work {
 
 		query += ' ORDER BY c.last_name, c.first_name, title';
 
-		// console.log('queryValues',queryValues)
-		// console.log('query',query)
 		const worksResp = await db.query(query, queryValues);
+		
 		return worksResp.rows;
 	}
 

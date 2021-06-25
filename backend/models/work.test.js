@@ -17,6 +17,7 @@ afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
 describe ('GET 1 work - getWork()', () => {
+    const today = new Date() // today
     test('should get 1 work', async () => {
         const worksResp = await Work.getWork(testIds.works[0]);
         // TODO: change test when comments functionality added
@@ -38,6 +39,41 @@ describe ('GET 1 work - getWork()', () => {
             "techniques": null,
             "title": "Concerto #1",
             "username": "sSchouten1",
+            "comments": [
+                {
+                  "comment": "this is a monumental work for horn. genius",
+                   "comment_date": `${today.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})}`,
+                   "username": "sSchouten1",
+                },
+                {
+                   "comment": "this is a terible work for horn. attrocious",
+                   "comment_date": `${today.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})}`,
+                   "username": "sSchouten1",
+                },
+            ],
+            "movements": [
+                {
+                    "difficulty": "Difficult",
+                    "duration": "05:22",
+                    "highestnote": 1,
+                    "lowestnote": 8,
+                    "title": "I. Allegro",
+                },
+                {
+                    "difficulty": "Difficult",
+                    "duration": "05:02",
+                    "highestnote": 1,
+                    "lowestnote": 8,
+                    "title": "II. Andante",
+                },
+                {
+                    "difficulty": "Intermediate-Advanced",
+                    "duration": "05:20",
+                    "highestnote": 1,
+                    "lowestnote": 8,
+                    "title": "III. Allegro",
+                },
+            ]
         });
     });
 

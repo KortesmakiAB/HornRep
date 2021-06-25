@@ -6,7 +6,9 @@ const { BCRYPT_WORK_FACTOR } = require("../config");
 const testIds = {
   users: [],
   composers: [],
-  works: []
+  works: [],
+  comments: [],
+  movements: []
 };
 
 async function commonBeforeAll() {
@@ -66,6 +68,36 @@ async function commonBeforeAll() {
     RETURNING id;
   `);
   testIds.works = [...worksResp.rows.map(row => row.id)];
+
+  const commentsResp = await db.query(`
+  INSERT INTO comments (
+    comment,
+    user_id,
+    work_id)
+  VALUES
+    ('this is a monumental work for horn. genius', ${testIds.users[0]}, ${testIds.works[0]}),
+    ('this is a terible work for horn. attrocious', ${testIds.users[0]}, ${testIds.works[0]})
+  RETURNING id;
+  `);
+  testIds.comments = [...commentsResp.rows.map(cmnt => cmnt.id)];
+
+
+  const movementsResp = await db.query(`
+    INSERT INTO movements (
+      work_id,
+      title,
+      duration,
+      difficulty,
+      highest_note,
+      lowest_note
+    )
+    VALUES
+      (${testIds.works[0]}, 'I. Allegro', '00:05:22', 'Difficult', 1, 8),
+      (${testIds.works[0]}, 'II. Andante', '00:05:02', 'Difficult', 1, 8),
+      (${testIds.works[0]}, 'III. Allegro', '00:05:20', 'Intermediate-Advanced', 1, 8)
+    RETURNING id;
+  `);
+  testIds.movements = [...movementsResp.rows.map(row => row.id)];
 }
 
 async function commonBeforeEach() {
