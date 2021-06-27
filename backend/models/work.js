@@ -194,7 +194,7 @@ class Work {
 	*	Comma separated string: eraStyle, difficulty, techniques, clef, accompType, accompDifficulty.
 	*	Duration is a string: "HH:MM:SS".
 	*
-	*	Returns newly created id.
+	*	Returns newly created id (integer).
 	*/
 	static async addWork(formFields) {
 		const { title, composerId, submittedBy, duration, eraStyle, highestNote, lowestNote,
@@ -244,18 +244,20 @@ class Work {
 				difficulty, techniques, clef, compYr, accompType, accompDifficulty]
 		);
 
-		return newWorkResp.rows[0];
+		return newWorkResp.rows[0].id;
 	}
 
-	/** updateWork().
-	* 	Updates: title, composerId, duration, eraStyle, highestNote, lowestNote,
-	*	difficulty, techniques, clef, compYr, accompType, accompDifficulty
-	* 	Does NOT update: "submitted_by" (or "id").
+
+	/** updateWork()
 	*
-	*	Returns id.
+	* 	Updates: title, composerId, duration, eraStyle, highestNote, lowestNote,
+	*	 difficulty, techniques, clef, compYr, accompType, accompDifficulty
+	* 	Does NOT update: "submitted_by" (or "id").
+	*	Note: db requires compYear to be "YYYY-MM-DD" (I am going with "YYYY-01-01")
+	*
+	*	Returns id (integer).
 	*/	
-	static async updateWork(id, { title, composerId, duration, eraStyle, highestNote, lowestNote,
-		difficulty, techniques, clef, compYr, accompType, accompDifficulty }) {
+	static async updateWork(id, { title, composerId, duration, eraStyle, highestNote, lowestNote, difficulty, techniques, clef, compYr, accompType, accompDifficulty }) {
 		
 		const query = `
 			UPDATE works
@@ -281,8 +283,8 @@ class Work {
 		const updatedWorkId = result.rows[0];
 
 		if (!updatedWorkId) throw new NotFoundError(`Work with id - ${id} not found.`);
-		
-    	return updatedWorkId;
+
+		return updatedWorkId.id;
 	}
 
 	

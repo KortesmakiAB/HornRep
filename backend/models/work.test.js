@@ -185,10 +185,10 @@ describe('Work.addWork()', () => {
             composerId: testIds.composers[1],
             submittedBy: testIds.users[1]
         };
-        const newWork = await Work.addWork(mockFormFields);
-        expect(newWork.id).toEqual(expect.any(Number));
+        const newWorkId = await Work.addWork(mockFormFields);
+        expect(newWorkId).toEqual(expect.any(Number));
 
-        const confirmation = await Work.getWork(newWork.id);
+        const confirmation = await Work.getWork(newWorkId);
         expect(confirmation.title).toBe(title);
         
         // fields other than { title, composerId, submittedBy } are null
@@ -265,16 +265,16 @@ describe('Work.updateWork()', () => {
 
         // attempt to update submittedBy
         testWork.submittedBy = testIds.users[0];
-        const updatedWorkId = await Work.updateWork(testWorkId.id, testWork);
+        const updatedWorkId = await Work.updateWork(testWorkId, testWork);
         
-        const updatedWork = await db.query(`
+        const proveIt = await db.query(`
             SELECT 
                 submitted_by AS "submittedBy" 
             FROM works
-            WHERE id = ${updatedWorkId.id};`);
+            WHERE id = ${updatedWorkId};`);
 
-        expect(updatedWork.rows[0].submittedBy).not.toBe(testIds.users[0]);
-        expect(updatedWork.rows[0].submittedBy).toBe(testIds.users[1]);
+        expect(proveIt.rows[0].submittedBy).not.toBe(testIds.users[0]);
+        expect(proveIt.rows[0].submittedBy).toBe(testIds.users[1]);
     });
 
     test('should update any/all fields, except submitted_by', async () => {
@@ -290,8 +290,8 @@ describe('Work.updateWork()', () => {
         testWork.eraStyle = eraStyle;
         delete testWork.submitted_by;
         
-        const updatedTestWorkId = await Work.updateWork(testWorkId.id, testWork);
-        expect(updatedTestWorkId.id).toBe(testWorkId.id);
+        const updatedTestWorkId = await Work.updateWork(testWorkId, testWork);
+        expect(updatedTestWorkId).toBe(testWorkId);
 
         // check to prove if db was updated
         const proveIt = await db.query(` 
@@ -300,7 +300,7 @@ describe('Work.updateWork()', () => {
                 TO_CHAR(duration, 'MI:SS') AS "duration",
                 era_style AS "eraStyle"
             FROM works
-            WHERE id = ${updatedTestWorkId.id}`);
+            WHERE id = ${updatedTestWorkId}`);
         expect(proveIt.rows[0].title).toBe(testWork.title);
         expect(proveIt.rows[0].duration).toBe('00:01');
         expect(proveIt.rows[0].eraStyle).toBe(eraStyle);

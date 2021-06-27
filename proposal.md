@@ -20,7 +20,9 @@ What if a horn player/teacher, like me, could search for solo repertoire for t
     - how do I get the xls data into Postgres?
 - But maybe it's hosted in a db?
     - how to export the data
-- **Handle things like this:** Medium vs Moderate vs Intermediate, Hard vs Difficult vs Advanced
+- **Handle things like this:** 
+    - Medium vs Moderate vs Intermediate, Hard vs Difficult vs Advanced
+    - commas `Flutter tongue, stopped horn ` VS forward-slash `	Easy/Moderate`
 
 ### Demographic: 
 horn players of any age or ability
@@ -161,13 +163,14 @@ UX Notes: group like inputs together: text, mulitselect, checkboxes
 1. ~~work model - getWork() - add movements and comments & tests~~
 1. ~~works route - GET 1~~
 1. ~~works route - search~~
-1. work model - addWork()
+1. ~~work model - addWork()~~
+1. ~~work route - add new~~
 1. work model - editWork()
 1. work model - deleteWork()
 
 
 #### TODO Later
-1. data validation. Use a library.
+1. Form data validation. For routes Use a library.
 
 ##### Works
 - Create

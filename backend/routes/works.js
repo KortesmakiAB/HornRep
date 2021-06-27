@@ -7,9 +7,13 @@ const Work = require('../models/work');
 
 const router = new express.Router();
 
-/** GET /works => { works: [{ work details }, ...]}
+////////////////////    /works routes
+
+/** GET / => { works: [{ work details }, ...]}
 * 
-*	Search fields - all optional:
+*	Search works or get all
+*   
+*   Search fields - all optional:
 *	{ 
 *	  title, duration, difficulty, fName, lName, gender, 
 *	  country, accompType, eraStyle, highestNote, 
@@ -36,7 +40,7 @@ router.get('/', async function (req, res, next) {
     }
 });
 
-/** GET /works/[id] => { work }
+/** GET /[id] => { work }
 * 
 * Returns complete work details and associated comments
 * 
@@ -45,7 +49,7 @@ router.get('/', async function (req, res, next) {
 */
 router.get('/:id', async function (req, res, next) {
     try {
-      const work = await Work.getWork(req.params.id);
+      const work = await Work.getWork(+req.params.id);
       return res.json({ work });
     } catch (err) {
       return next(err);
@@ -54,7 +58,7 @@ router.get('/:id', async function (req, res, next) {
 
 /** POST /works/new
 * 
-* user chooses from a list of composers or may click a button for a form to add a new composer
+* (NB: user chooses from a list of composers or may click a button for a form to add a new composer)
 */
 router.post('/new', async function (req, res, next) {
     try {
@@ -64,4 +68,23 @@ router.post('/new', async function (req, res, next) {
         return next(error);
     }
 });
+
+/** PATCH /:id
+* 
+*   Updates ALL fields, EXCEPT "submittedBy" and "id"(work).
+*   All fields are required, except as noted.
+*
+*   TODO: include auth
+*/
+router.patch('/:id', async function (req, res, next) {
+    try {
+        const newWorkId = await Work.updateWork(+req.params.id, req.body);
+        return res.status(201).json({ newWorkId });
+    } catch (error) {
+        return next(error);
+    }
+});
+
+
+
 module.exports = router;
