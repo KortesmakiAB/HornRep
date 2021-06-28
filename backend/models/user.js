@@ -2,12 +2,14 @@
 
 const db = require('../db');
 const bcrypt = require('bcrypt');
-const { BadRequestError } = require('../expressError');
+const { BadRequestError, NotFoundError } = require('../expressError');
 const { BCRYPT_WORK_FACTOR } = require('../config.js');
 
 class User {
 
-    /** Register user with data.
+    /** registerUser() 
+    * 
+    * Register user with data.
     *
     * Returns id (integer)
     *
@@ -42,6 +44,33 @@ class User {
         );
 
         return newUserId.rows[0].id;
+    }
+
+    /** getUser(id)
+    *   
+    *   Get user details by id.
+    * 
+    */
+    static async getUser(id) {
+        const userResp = await db.query(`
+            SELECT
+                username,
+                first_name AS "fName",
+                last_name AS "lName",
+                email,
+                password,
+                category,
+                is_admin AS "isAdmin"
+            FROM users
+            WHERE id = $1;`,
+            [id]
+        );
+
+        const user = userResp.rows[0];
+	
+		if (!user) throw new NotFoundError(`User with id - ${id} not found.`);
+
+        return user;
     }
 }
 
