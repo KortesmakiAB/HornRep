@@ -77,7 +77,7 @@ async function commonBeforeAll() {
     work_id)
   VALUES
     ('this is a monumental work for horn. genius', ${testIds.users[0]}, ${testIds.works[0]}),
-    ('this is a terible work for horn. attrocious', ${testIds.users[0]}, ${testIds.works[0]})
+    ('this is a terrible work for horn. atrocious', ${testIds.users[0]}, ${testIds.works[0]})
   RETURNING id;
   `);
   testIds.comments = [...commentsResp.rows.map(cmnt => cmnt.id)];

@@ -1,8 +1,8 @@
 "use strict"
 
-const db = require("../db.js");
+const db = require("../db");
 const { NotFoundError, BadRequestError } = require("../expressError");
-const Work = require("./work.js");
+const Work = require("./work");
 const {
     commonBeforeAll,
     commonBeforeEach,
@@ -47,7 +47,7 @@ describe ('Work.getWork()', () => {
                    "username": "sSchouten1",
                 },
                 {
-                   "comment": "this is a terible work for horn. attrocious",
+                   "comment": "this is a terrible work for horn. atrocious",
                    "comment_date": `${today.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})}`,
                    "username": "sSchouten1",
                 },
@@ -307,7 +307,6 @@ describe('Work.updateWork()', () => {
     });
      
 });
-
     
 describe('Work.deleteWork()', () => {
     test("should delete the Parable. It's not that great anyways.", async () => {

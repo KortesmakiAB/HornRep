@@ -45,7 +45,7 @@ INSERT INTO comments (
     work_id)
 VALUES
     ('this is a monumental work for horn. genius', 1, 1),
-    ('this is a terible work for horn. attrocious', 1, 1);
+    ('this is a terrible work for horn. atrocious', 1, 1);
 
 INSERT INTO movements (
     work_id,

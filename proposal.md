@@ -169,13 +169,18 @@ UX Notes: group like inputs together: text, mulitselect, checkboxes
 1. ~~works route - patch /:id~~
 1. ~~Work.deleteWork()~~
 1. ~~works route - delete /:id~~
-1. Users.registerUser()
-1. Users route - /new
+1. ~~User methods~~
+1. ~~Users routes~~
+1. Comments methods
+1. Comments routes
 
 
 
 #### TODO Later
 1. Form data validation. For routes Use a library.
+
+#### TODO optional
+1. Flag comments as inappropriate (maybe a required task?)
 1. Test authentication on routes (can I combine this, somehow to reduce duplication?)
 1. Add a way to change: users isAdmin, password
 
@@ -219,6 +224,9 @@ UX Notes: group like inputs together: text, mulitselect, checkboxes
 - Flag (add this feature later)
     - anyone can flag as inappropriate
     - what does this look like?
+
+##### Composers
+-CRUD??
 
 
 ## Frontend

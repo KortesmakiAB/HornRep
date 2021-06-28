@@ -1,8 +1,8 @@
 'use strict'
 
-const db = require('../db.js');
+const db = require('../db');
 const { BadRequestError, NotFoundError } = require('../expressError');
-const User = require('./user.js');
+const User = require('./user');
 const {
     commonBeforeAll,
     commonBeforeEach,
@@ -160,6 +160,26 @@ describe('User.updateUser(id, formFields)', () => {
         } catch (error) {
             expect(error).toEqual(new Error('duplicate key value violates unique constraint "users_username_key"'));
         } 
+    });
+});
+    
+describe('User.deleteUser()', () => {
+    test("should delete me. It will be sad.", async () => {
+        const deleteResp = await User.deleteUser(testIds.users[1]);
+        expect(deleteResp).toBe(undefined);
+
+        const oneUserLeft = await db.query(`SELECT * FROM users;`);
+        expect(oneUserLeft.rows.length).toBe(1);
+        expect(oneUserLeft.rows[0].first_name).toBe('Sarah');
+        expect(oneUserLeft.rows[1]).toBe(undefined);
+    });
+
+    test('should throw error if User not found - deleteUser()', async () => {
+        try {
+            await User.deleteUser(0);
+        } catch (error) {
+            expect(error).toEqual(new NotFoundError(`User with id - 0 not found.`));
+        }
     });
 });
 
