@@ -42,7 +42,7 @@ class Work {
 		
 		const work = workResp.rows[0];
 	
-		if (!work) throw new NotFoundError(`Work not found`);
+		if (!work) throw new NotFoundError(`Work with id - ${id} not found.`);
 	
 		const comments = await db.query(`
 			SELECT
@@ -287,6 +287,22 @@ class Work {
 		return updatedWorkId.id;
 	}
 
+	/** deleteWork()
+	*	returns undefined
+	*/
+	static async deleteWork(id) {
+		const deleteResp = await db.query(`
+			DELETE
+			FROM works
+			WHERE id = $1
+			RETURNING id;`,
+			[id]
+		);
+
+		const deletedWork = deleteResp.rows[0];
+
+		if (!deletedWork) throw new NotFoundError(`Work with id - ${id} not found.`);
+	}
 	
 }
 module.exports = Work;

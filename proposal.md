@@ -157,16 +157,17 @@ UX Notes: group like inputs together: text, mulitselect, checkboxes
 
 ## Backend:
 1. ~~setup - server, app, db, config~~
-1. ~~work model - getWork()~~
-1. ~~work model - search()~~
+1. ~~Work.getWork()~~
+1. ~~Work.search()~~
 1. ~~add a table for "movements"~~
-1. ~~work model - getWork() - add movements and comments & tests~~
+1. ~~Work.getWork() - add movements and comments & tests~~
 1. ~~works route - GET 1~~
 1. ~~works route - search~~
-1. ~~work model - addWork()~~
+1. ~~Work.addWork()~~
 1. ~~work route - add new~~
-1. work model - editWork()
-1. work model - deleteWork()
+1. ~~Work.updateWork()~~
+1. ~~works route - update/patch work~~
+1. Work.deleteWork()
 
 
 #### TODO Later

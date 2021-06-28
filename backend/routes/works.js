@@ -85,6 +85,18 @@ router.patch('/:id', async function (req, res, next) {
     }
 });
 
+/** DELETE /:id
+* TODO add auth
+*/
+router.delete('/:id', async function (req, res, next) {
+    try {
+        await Work.deleteWork(+req.params.id);
+        return res.json({ deleted: req.params.id });
+      } catch (err) {
+        return next(err);
+      }
+});
+
 
 
 module.exports = router;

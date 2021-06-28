@@ -78,11 +78,11 @@ describe ('Work.getWork()', () => {
         });
     });
 
-    test('should throw NotFoundError if work not found.', async () => {
+    test('should throw error if work not found - getWork().', async () => {
         try {
             await Work.getWork(0);
         } catch (error) {
-            expect(error).toEqual(new NotFoundError(`Work not found`));
+            expect(error).toEqual(new NotFoundError(`Work with id - 0 not found.`));
         }
     });
 });
@@ -307,4 +307,26 @@ describe('Work.updateWork()', () => {
     });
      
 });
+
+    
+describe('Work.deleteWork()', () => {
+    test("should delete the Parable. It's not that great anyways.", async () => {
+        const deleteResp = await Work.deleteWork(testIds.works[1]);
+        expect(deleteResp).toBe(undefined);
+
+        const oneWorkLeft = await db.query(`SELECT * FROM works;`);
+        expect(oneWorkLeft.rows.length).toBe(1);
+        expect(oneWorkLeft.rows[0].title).toBe('Concerto #1');
+        expect(oneWorkLeft.rows[1]).toBe(undefined);
+    });
+
+    test('should throw error if work not found - deleteWork()', async () => {
+        try {
+            await Work.deleteWork(0);
+        } catch (error) {
+            expect(error).toEqual(new NotFoundError(`Work with id - 0 not found.`));
+        }
+    });
+});
+
  
