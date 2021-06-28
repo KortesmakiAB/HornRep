@@ -9,23 +9,27 @@ class User {
 
     /** registerUser() 
     * 
-    * Register user with data.
+    *   Register user with data.
     *
-    * Returns id (integer)
+    *   Returns id (integer)
     *
-    * Throws BadRequestError on duplicates.
+    *   Throws BadRequestError on duplicates.
     */
+    
+    // TODO? add check for duplicates/unique fields (username, email)
+    // OR remove duplicate checks/BadRequestError
+    // update tests
     static async registerUser(formFields) {
         const { username, fName, lName, email, password, category, isAdmin } = formFields;
         
-        const duplicateCheck = await db.query(`
+        const duplicateCheckUn = await db.query(`
             SELECT username
             FROM users
             WHERE username = $1;`,
             [username]
         );
         
-        if (duplicateCheck.rows[0]) throw new BadRequestError(`Duplicate username: ${username}`);
+        if (duplicateCheckUn.rows[0]) throw new BadRequestError(`Duplicate username: ${username}`);
     
         const hashedPw = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
 
@@ -46,7 +50,7 @@ class User {
         return newUserId.rows[0].id;
     }
 
-    /** getUser(id)
+    /** getUser()
     *   
     *   Get user details by id.
     * 
@@ -73,13 +77,15 @@ class User {
         return user;
     }
 
-    /** updateUser(id)
+    /** updateUser()
     *   
-    *   Get user details by id.
+    *   Updates (required): username, fName, lName, email, category, password.
+    *   
+    *   Does not update: username, isAdmin.
     * 
     */
     static async updateUser(id, formFields) {
-        const { username, fName, lName, email, category, isAdmin, password } = formFields;
+        const { username, fName, lName, email, category, password } = formFields;
 		const query = `
 			UPDATE users
 			SET 
@@ -88,12 +94,11 @@ class User {
                 last_name = $3,
                 email = $4,
                 category = $5,
-                is_admin = $6,
-                password = $7
-			WHERE id = $8 
+                password = $6
+			WHERE id = $7 
 			RETURNING id;`;
 
-		const result = await db.query(query, [username, fName, lName, email, category, isAdmin, password, id]);
+		const result = await db.query(query, [username, fName, lName, email, category, password, id]);
 
 		const updatedUserId = result.rows[0];
 
@@ -101,6 +106,23 @@ class User {
 
 		return updatedUserId.id;
     }
+
+    /** deleteUser()
+	*	returns undefined
+	*/
+	static async deleteUser(id) {
+		const deleteResp = await db.query(`
+			DELETE
+			FROM users
+			WHERE id = $1
+			RETURNING id;`,
+			[id]
+		);
+
+		const deletedUser = deleteResp.rows[0];
+
+		if (!deletedUser) throw new NotFoundError(`User with id - ${id} not found.`);
+	}
 }
 
 module.exports = User;

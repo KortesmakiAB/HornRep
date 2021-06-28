@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const express = require('express');
 
@@ -21,13 +21,13 @@ const router = new express.Router();
 *	}
 * 
 *   Note formats:
-*   "HH:MM:SS": minDuration, maxDuration
+*   'HH:MM:SS': minDuration, maxDuration
 *   array []: accompanimentType, techniques, country, eraStyle
 *   integer: highestNote, lowestNote
 *
 *   If no search fields included, will return all works
 * 
-*   TODO: include auth
+*   TODO: include auth & validation
 * 
 */
 router.get('/', async function (req, res, next) {
@@ -42,7 +42,7 @@ router.get('/', async function (req, res, next) {
 
 /** GET /[id] => { work }
 * 
-* Returns complete work details and associated comments
+*   Returns complete work details and associated comments
 * 
 *   TODO: include auth
 * 
@@ -56,9 +56,11 @@ router.get('/:id', async function (req, res, next) {
     }
 });
 
-/** POST /works/new
+/** POST /new
 * 
-* (NB: user chooses from a list of composers or may click a button for a form to add a new composer)
+*   (NB: user chooses from a list of composers or may click a button for a form to add a new composer)
+*
+*   TODO: include auth & validation
 */
 router.post('/new', async function (req, res, next) {
     try {
@@ -71,10 +73,10 @@ router.post('/new', async function (req, res, next) {
 
 /** PATCH /:id
 * 
-*   Updates ALL fields, EXCEPT "submittedBy" and "id"(work).
+*   Updates ALL fields, EXCEPT 'submittedBy' and 'id'(work).
 *   All fields are required, except as noted.
 *
-*   TODO: include auth
+*   TODO: include auth & validation
 */
 router.patch('/:id', async function (req, res, next) {
     try {

@@ -91,10 +91,11 @@ describe('User.updateUser(id, formFields)', () => {
             expect(error).toEqual(new NotFoundError('User with id - 0 not found.'));
         } 
     });
-
-    test('should update any or all fields.', async () => {
+    
+    test('should update any or all fields (except isAdmin).', async () => {
         me.fName = 'Darth';
         me.lName = 'Vader';
+        delete me. isAdmin;
 
         const emperorId = await User.updateUser(testIds.users[1], me);
 
@@ -121,6 +122,44 @@ describe('User.updateUser(id, formFields)', () => {
             'category': 'academia',
             'isAdmin': true
         });
+    });
+
+    test('should not update isAdmin.', async () => {
+        me.isAdmin = false;
+        const failedAttemptId = await User.updateUser(testIds.users[1], me);
+
+        const stillAdmin = await db.query(`
+            SELECT username, is_admin AS "isAdmin"
+            FROM users
+            WHERE id = ${failedAttemptId};`
+        );
+
+        expect(stillAdmin.rows[0]).toEqual({
+            username: 'aBrant1',
+            isAdmin: true
+        });
+    });
+
+    test('should throw error if duplicate username.', async () => {
+        try {
+            me.username = 'sSchouten1';
+            delete me. isAdmin;
+            
+            await User.updateUser(testIds.users[1], me);
+        } catch (error) {
+            expect(error).toEqual(new Error('duplicate key value violates unique constraint "users_username_key"'));
+        } 
+    });
+
+    test('should throw error if duplicate email.', async () => {
+        try {
+            me.email = 'sarah@awesomeSite.com';
+            delete me. isAdmin;
+            
+            await User.updateUser(testIds.users[1], me);
+        } catch (error) {
+            expect(error).toEqual(new Error('duplicate key value violates unique constraint "users_username_key"'));
+        } 
     });
 });
 

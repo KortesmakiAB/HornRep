@@ -29,8 +29,9 @@ class Work {
 						`;
 
 
-	/** Get 1 work by id.
-	*  Includes associated comments and movements.
+	/** getWork()
+	* 	Get 1 work by id.
+	*  	Includes associated comments and movements.
 	*/
 
 	static async getWork(id) {

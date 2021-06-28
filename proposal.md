@@ -177,6 +177,7 @@ UX Notes: group like inputs together: text, mulitselect, checkboxes
 #### TODO Later
 1. Form data validation. For routes Use a library.
 1. Test authentication on routes (can I combine this, somehow to reduce duplication?)
+1. Add a way to change: users isAdmin, password
 
 ##### Works
 - Create
