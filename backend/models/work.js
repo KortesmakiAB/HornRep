@@ -1,7 +1,7 @@
 "use strict";
 
 const db = require("../db");
-const { BadRequestError, NotFoundError } = require("../expressError");
+const { NotFoundError, BadRequestError } = require("../expressError");
 
 
 class Work {
@@ -257,8 +257,8 @@ class Work {
 	*
 	*	Returns id (integer).
 	*/	
-	static async updateWork(id, { title, composerId, duration, eraStyle, highestNote, lowestNote, difficulty, techniques, clef, compYr, accompType, accompDifficulty }) {
-		
+	static async updateWork(id, formFields ) {
+		const { title, composerId, duration, eraStyle, highestNote, lowestNote, difficulty, techniques, clef, compYr, accompType, accompDifficulty } = formFields;
 		const query = `
 			UPDATE works
 			SET 

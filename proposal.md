@@ -164,14 +164,19 @@ UX Notes: group like inputs together: text, mulitselect, checkboxes
 1. ~~works route - GET 1~~
 1. ~~works route - search~~
 1. ~~Work.addWork()~~
-1. ~~work route - add new~~
+1. ~~works route - add new~~
 1. ~~Work.updateWork()~~
-1. ~~works route - update/patch work~~
-1. Work.deleteWork()
+1. ~~works route - patch /:id~~
+1. ~~Work.deleteWork()~~
+1. ~~works route - delete /:id~~
+1. Users.registerUser()
+1. Users route - /new
+
 
 
 #### TODO Later
 1. Form data validation. For routes Use a library.
+1. Test authentication on routes (can I combine this, somehow to reduce duplication?)
 
 ##### Works
 - Create
