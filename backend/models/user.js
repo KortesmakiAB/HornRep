@@ -72,6 +72,35 @@ class User {
 
         return user;
     }
+
+    /** updateUser(id)
+    *   
+    *   Get user details by id.
+    * 
+    */
+    static async updateUser(id, formFields) {
+        const { username, fName, lName, email, category, isAdmin, password } = formFields;
+		const query = `
+			UPDATE users
+			SET 
+                username = $1,
+                first_name = $2,
+                last_name = $3,
+                email = $4,
+                category = $5,
+                is_admin = $6,
+                password = $7
+			WHERE id = $8 
+			RETURNING id;`;
+
+		const result = await db.query(query, [username, fName, lName, email, category, isAdmin, password, id]);
+
+		const updatedUserId = result.rows[0];
+
+		if (!updatedUserId) throw new NotFoundError(`User with id - ${id} not found.`);
+
+		return updatedUserId.id;
+    }
 }
 
 module.exports = User;
