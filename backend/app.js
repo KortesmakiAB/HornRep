@@ -13,6 +13,7 @@ const { NotFoundError } = require("./expressError");
 const usersRoutes = require("./routes/users");
 const worksRoutes = require("./routes/works");
 const commentsRoutes = require("./routes/comments");
+const composersRoutes = require("./routes/composers");
 
 const morgan = require("morgan");
 
@@ -27,6 +28,7 @@ app.use(morgan("tiny"));
 app.use("/users", usersRoutes);
 app.use("/works", worksRoutes);
 app.use("/comments", commentsRoutes);
+app.use("/composers", composersRoutes);
 
 
 /** Handle 404 errors -- this matches everything */

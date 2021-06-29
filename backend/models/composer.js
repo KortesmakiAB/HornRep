@@ -54,7 +54,7 @@ class Comment {
     }
     
     /** allComposers()
-    *   Returns: { composers: [{ id, fName, lName, country, gender },...]}
+    *   Returns: [{ id, fName, lName, country, gender },...]
     */
     static async allComposers() {
         const composers = await db.query(`
@@ -74,7 +74,7 @@ class Comment {
     *   
     *   Updates (required): fName, lName, country, gender.
     * 
-    *   Return { id, fName, lName, country, gender }
+    *   Returns { id, fName, lName, country, gender }
     * 
     */
      static async updateComposer(id, { fName, lName, country, gender }) {
