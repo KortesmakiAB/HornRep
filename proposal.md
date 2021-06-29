@@ -226,7 +226,11 @@ UX Notes: group like inputs together: text, mulitselect, checkboxes
     - what does this look like?
 
 ##### Composers
--CRUD??
+- Create
+- GET all composers
+- GET composer by id
+- Edit
+- Delete
 
 
 ## Frontend

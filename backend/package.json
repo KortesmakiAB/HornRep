@@ -8,7 +8,8 @@
     "test": "jest -i",
     "test:work": "jest -i work.test.js -t",
     "test:user": "jest -i user.test.js -t",
-    "test:comment": "jest -i comment.test.js -t"
+    "test:comment": "jest -i comment.test.js -t",
+    "test:composer": "jest -i composer.test.js -t"
   },
   "keywords": [
     "Search Horn Music",

@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const db = require('../db');
 const { NotFoundError } = require('../expressError');
@@ -22,7 +22,7 @@ const today = new Date();
 describe('Comment.newComment()', () => {
     test('should add a new comment', async () => {
         const comment = {
-            comment: 'this is a test comment. Do not test me, test ye be destroyed.',
+            comment: 'this is a test comment. Do not test me, lest ye be destroyed.',
             userId: testIds.users[1],
             workId: testIds.works[1]
         };

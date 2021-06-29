@@ -1,8 +1,7 @@
 'use strict';
 
 const db = require('../db');
-const bcrypt = require('bcrypt');
-const { BadRequestError, NotFoundError } = require('../expressError');
+const { NotFoundError } = require('../expressError');
 
 class Comment {
 
