@@ -7,11 +7,13 @@ const Work = require('../models/work');
 
 const router = new express.Router();
 
-////////////////////    /works routes
 
-/** GET / => { works: [{ work details }, ...]}
+/////////////                           /works routes                      ///////////// 
+
+
+/** GET /
 * 
-*	Search works or get all
+*	  Search all works or get all
 *   
 *   Search fields - all optional:
 *	{ 
@@ -26,7 +28,9 @@ const router = new express.Router();
 *   integer: highestNote, lowestNote
 *
 *   If no search fields included, will return all works
-* 
+*
+*   Returns { works: [{ work details }, ...]}
+*   TODO: be specific about what is returned
 *   TODO: include auth & validation
 * 
 */
@@ -40,10 +44,10 @@ router.get('/', async function (req, res, next) {
     }
 });
 
-/** GET /[id] => { work }
+/** GET /:id => { work }
 * 
 *   Returns complete work details and associated comments
-* 
+*   TODO: be specific about what is returned
 *   TODO: include auth
 * 
 */
@@ -56,13 +60,16 @@ router.get('/:id', async function (req, res, next) {
     }
 });
 
-/** POST /new
+/** POST /
 * 
+*   Add a new work.
+*   TODO: what is required/optional?
+*   TODO: what is returned?
 *   (NB: user chooses from a list of composers or may click a button for a form to add a new composer)
 *
 *   TODO: include auth & validation
 */
-router.post('/new', async function (req, res, next) {
+router.post('/', async function (req, res, next) {
     try {
         const newWorkId = await Work.addWork(req.body);
         return res.status(201).json({ newWorkId });
@@ -75,7 +82,7 @@ router.post('/new', async function (req, res, next) {
 * 
 *   Updates ALL fields, EXCEPT 'submittedBy' and 'id'(work).
 *   All fields are required, except as noted.
-*
+*   TODO: what is returned?
 *   TODO: include auth & validation
 */
 router.patch('/:id', async function (req, res, next) {
@@ -88,6 +95,7 @@ router.patch('/:id', async function (req, res, next) {
 });
 
 /** DELETE /:id
+* Returns { deleted: id }
 * TODO add auth
 */
 router.delete('/:id', async function (req, res, next) {

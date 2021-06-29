@@ -8,12 +8,12 @@ const User = require('../models/user');
 const router = new express.Router();
 
 
-////////////////////    /users routes
+/////////////                           /users routes                      ///////////// 
 
 
-/** GET /[id] => { user }
+/** GET /:id
 * 
-*   Returns complete user details.
+*   id => { user: { username, fName, lName, email, password, category, isAdmin }}
 * 
 *   TODO: include auth
 * 
@@ -27,14 +27,18 @@ router.get('/:id', async function (req, res, next) {
     }
 });
 
-/** POST /register
-* 
+/** POST /
+*   
+*   Register a user
+*
 *   Required: username, fName, lName, email, password, isAdmin.
 *   Optional: category
 *
+*   Returns { newUserId: int }
+*
 *   TODO: include auth & validation
 */
-router.post('/register', async function (req, res, next) {
+router.post('/', async function (req, res, next) {
     try {
         const newUserId = await User.registerUser(req.body);
         return res.status(201).json({ newUserId });
@@ -48,6 +52,8 @@ router.post('/register', async function (req, res, next) {
 *   Updates (required): username, fName, lName, email, category, password.
 *   
 *   Does not update: isAdmin.
+*
+*   Returns { newUserId: int }
 *
 *   TODO: include auth & validation
 */

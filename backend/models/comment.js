@@ -8,14 +8,14 @@ class Comment {
 
     /** newComment() 
     * 
-    *   Required: comment(string), userId, workId
+    *   Required: comment, userId, workId
     *
-    *   Returns all comment data.
+    *   Returns { id, comment, userId, workId, commentDate }
     *
     */
     
     // TODO? add check for duplicates/unique fields 
-    // update tests
+    // then update tests
     static async newComment({ comment, userId, workId }) {
         const newComment = await db.query(`
             INSERT INTO comments (
@@ -37,7 +37,7 @@ class Comment {
 
     /** getComment()
     *   
-    *   Get Comment details by id.
+    *   id => { comment , userId, workId, commentDate }
     * 
     */
     static async getComment(id) {
@@ -66,13 +66,20 @@ class Comment {
     *   
     *   Does not update: user_id, work_id.
     * 
+    *   { id, comment } => { comment , userId, workId, commentDate }
+    * 
     */
-    static async updateComment(id, comment ) {
+    static async updateComment(id, { comment } ) {
 		const query = `
 			UPDATE comments
 			SET comment = $1
 			WHERE id = $2 
-			RETURNING id;`;
+			RETURNING 
+                id, 
+                comment,
+                user_id AS "userId",
+                work_id AS "workId",
+                TO_CHAR(time_stamp_tz, 'mm/dd/yyyy') AS "commentDate";`;
 
 		const result = await db.query(query, [comment, id]);
 
@@ -80,7 +87,7 @@ class Comment {
 
 		if (!updatedCommentId) throw new NotFoundError(`Comment with id - ${id} not found.`);
 
-		return updatedCommentId.id;
+		return updatedCommentId;
     }
 
     /** deleteComment()

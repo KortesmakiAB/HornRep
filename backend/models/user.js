@@ -52,7 +52,7 @@ class User {
 
     /** getUser()
     *   
-    *   Get user details by id.
+    *   id => {username, fName, lName, email, password, category, isAdmin }
     * 
     */
     static async getUser(id) {
@@ -82,6 +82,8 @@ class User {
     *   Updates (required): username, fName, lName, email, category, password.
     *   
     *   Does not update: username, isAdmin.
+    * 
+    *   Return id.
     * 
     */
     static async updateUser(id, formFields) {

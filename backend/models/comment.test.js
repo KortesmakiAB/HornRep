@@ -1,7 +1,7 @@
 'use strict'
 
 const db = require('../db');
-const { BadRequestError, NotFoundError } = require('../expressError');
+const { NotFoundError } = require('../expressError');
 const Comment = require('./comment');
 const {
     commonBeforeAll,
@@ -34,7 +34,6 @@ describe('Comment.newComment()', () => {
             commentDate: today.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})
         });
     });
-    
 });
 
 describe('Comment.getComment()', () => {
@@ -49,17 +48,22 @@ describe('Comment.getComment()', () => {
             commentDate: today.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})
         });
     });
-    
-    
 });
 
 describe('Comment.updateComment()', () => {
     test('should update comment text', async () => {
-        const updateText = 'Test comment has been updated.';
+        const comment = 'Test comment has been updated.';
 
-        const updatedCommentId = await Comment.updateComment(testIds.comments[1], updateText);
+        const updatedComment = await Comment.updateComment(testIds.comments[1], { comment });
+        expect(updatedComment).toEqual({
+            id: testIds.comments[1],
+            comment,
+            userId: testIds.users[0],
+            workId: testIds.works[0],
+            commentDate: today.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})
+        });
 
-        const updatedComment = await db.query(`
+        const verify = await db.query(`
             SELECT
                 id,
                 comment,
@@ -68,12 +72,12 @@ describe('Comment.updateComment()', () => {
                 TO_CHAR(time_stamp_tz, 'mm/dd/yyyy') AS "commentDate"
             FROM comments
             WHERE id = $1;`,
-            [updatedCommentId]
+            [updatedComment.id]
         );
 
-        expect(updatedComment.rows[0]).toEqual({
-            id: expect.any(Number),
-            comment: updateText,
+        expect(verify.rows[0]).toEqual({
+            id: testIds.comments[1],
+            comment,
             userId: testIds.users[0],
             workId: testIds.works[0],
             commentDate: today.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})
