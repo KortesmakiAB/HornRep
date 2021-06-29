@@ -1,9 +1,13 @@
 'use strict';
 
 const express = require('express');
+const jsonschema = require('jsonschema');
 
 const User = require('../models/user');
+const { BadRequestError } = require('../expressError');
 
+const userRegisterSchema = require('../schemas/userRegister');
+const userUpdateSchema = require('../schemas/userUpdate');
 
 const router = new express.Router();
 
@@ -20,10 +24,12 @@ const router = new express.Router();
 */
 router.get('/:id', async function (req, res, next) {
     try {
-      const user = await User.getUser(+req.params.id);
-      return res.json({ user });
+        req.params.id = parseInt(req.params.id);
+		
+        const user = await User.getUser(req.params.id);
+        return res.json({ user });
     } catch (err) {
-      return next(err);
+        return next(err);
     }
 });
 
@@ -36,10 +42,16 @@ router.get('/:id', async function (req, res, next) {
 *
 *   Returns { newUserId: int }
 *
-*   TODO: include auth & validation
+*   TODO: include auth
 */
 router.post('/', async function (req, res, next) {
     try {
+        const validator = jsonschema.validate(req.body, userRegisterSchema);
+        if (!validator.valid) {
+            const errs = validator.errors.map(e => e.stack);
+            throw new BadRequestError(errs);
+        }
+
         const newUserId = await User.registerUser(req.body);
         return res.status(201).json({ newUserId });
     } catch (error) {
@@ -55,11 +67,19 @@ router.post('/', async function (req, res, next) {
 *
 *   Returns { newUserId: int }
 *
-*   TODO: include auth & validation
+*   TODO: include auth 
 */
 router.patch('/:id', async function (req, res, next) {
     try {
-        const newUserId = await User.updateUser(+req.params.id, req.body);
+        req.params.id = parseInt(req.params.id);
+		
+        const validator = jsonschema.validate(req.body, userUpdateSchema);
+        if (!validator.valid) {
+            const errs = validator.errors.map(e => e.stack);
+            throw new BadRequestError(errs);
+        }
+
+        const newUserId = await User.updateUser(req.params.id, req.body);
         return res.status(201).json({ newUserId });
     } catch (error) {
         return next(error);
@@ -71,11 +91,13 @@ router.patch('/:id', async function (req, res, next) {
 */
 router.delete('/:id', async function (req, res, next) {
     try {
-        await User.deleteUser(+req.params.id);
+        req.params.id = parseInt(req.params.id);
+		
+        await User.deleteUser(req.params.id);
         return res.json({ deleted: req.params.id });
-      } catch (err) {
+    } catch (err) {
         return next(err);
-      }
+    }
 });
 
 

@@ -1,0 +1,101 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "required": [],
+    "properties": {
+        "title": {
+            "$id": "#/properties/title",
+            "type": "string"
+        },
+        "duration": {
+            "$id": "#/properties/duration",
+            "type": "string"
+        },
+        "difficulty": {
+            "$id": "#/properties/difficulty",
+            "type": "string"
+        },
+        "fName": {
+            "$id": "#/properties/fName",
+            "type": "string"
+        },
+        "lName": {
+            "$id": "#/properties/lName",
+            "type": "string"
+        },
+        "gender": {
+            "$id": "#/properties/gender",
+            "type": "string"
+        },
+        "country": {
+            "$id": "#/properties/country",
+            "type": "array",
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/country/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/country/items/anyOf/0",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "accompType": {
+            "$id": "#/properties/accompType",
+            "type": "array",
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/accompType/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/accompType/items/anyOf/0",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "eraStyle": {
+            "$id": "#/properties/eraStyle",
+            "type": "array",
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/eraStyle/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/eraStyle/items/anyOf/0",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "highestNote": {
+            "$id": "#/properties/highestNote",
+            "type": "integer"
+        },
+        "lowestNote": {
+            "$id": "#/properties/lowestNote",
+            "type": "integer"
+        },
+        "techniques": {
+            "$id": "#/properties/techniques",
+            "type": "array",
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/techniques/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/techniques/items/anyOf/0",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "accompDifficulty": {
+            "$id": "#/properties/accompDifficulty",
+            "type": "string"
+        }
+    },
+    "additionalProperties": false
+}

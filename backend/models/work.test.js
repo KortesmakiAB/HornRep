@@ -182,7 +182,7 @@ describe('Work.addWork()', () => {
         const title = "Vince's newest title (posthumous)";
         const mockFormFields = {
             title,
-            composerId: testIds.composers[1],
+            compId: testIds.composers[1],
             submittedBy: testIds.users[1]
         };
         const newWorkId = await Work.addWork(mockFormFields);
@@ -191,12 +191,12 @@ describe('Work.addWork()', () => {
         const confirmation = await Work.getWork(newWorkId);
         expect(confirmation.title).toBe(title);
         
-        // fields other than { title, composerId, submittedBy } are null
+        // fields other than { title, compId, submittedBy } are null
         expect(confirmation.duration).toBe(null);
         expect(confirmation.difficulty).toEqual(null);
     });
     
-    test('should throw error if missing composerId or missing submittedBy', async () => {
+    test('should throw error if missing compId or missing submittedBy', async () => {
         const title = "MISSING ID";
 
         try {
@@ -211,7 +211,7 @@ describe('Work.addWork()', () => {
         try {
             await Work.addWork({
                 title,
-                composerId: testIds.composers[0]
+                compId: testIds.composers[0]
             });
         } catch (error) {
             expect(error).toEqual(new BadRequestError(`User not found. Please include a valid user id.`));
@@ -224,7 +224,7 @@ describe('Work.addWork()', () => {
         try {
             await Work.addWork({
                 title,
-                composerId: 0,
+                compId: 0,
                 submittedBy: testIds.users[0]
             });
         } catch (error) {
@@ -234,7 +234,7 @@ describe('Work.addWork()', () => {
         try {
             await Work.addWork({
                 title,
-                composerId: testIds.composers[0],
+                compId: testIds.composers[0],
                 submittedBy: 0
             });
         } catch (error) {
@@ -260,7 +260,7 @@ describe('Work.updateWork()', () => {
     
     test('should not update submitted_by', async () => {
         testWork.submittedBy = testIds.users[1];
-        testWork.composerId = testIds.composers[1];
+        testWork.compId = testIds.composers[1];
         const testWorkId = await Work.addWork(testWork);
 
         // attempt to update submittedBy
@@ -279,7 +279,7 @@ describe('Work.updateWork()', () => {
 
     test('should update any/all fields, except submitted_by', async () => {
         // add new work
-        testWork.composerId = testIds.composers[1];
+        testWork.compId = testIds.composers[1];
         testWork.submittedBy = testIds.users[1];
         const testWorkId = await Work.addWork(testWork);
         

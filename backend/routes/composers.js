@@ -1,8 +1,12 @@
 'use strict';
 
 const express = require('express');
+const jsonschema = require('jsonschema');
 
 const Composer = require('../models/composer');
+const { BadRequestError } = require('../expressError');
+
+const composerSchema = require('../schemas/composer');
 
 const router = new express.Router();
 
@@ -15,10 +19,16 @@ const router = new express.Router();
 *   Required: { fName, lName, country, gender }
 *   Returns: { id, fName, lName, country, gender }
 *
-*   TODO: include auth & validation
+*   TODO: include auth
 */
 router.post('/', async function (req, res, next) {
     try {
+        const validator = jsonschema.validate(req.body, composerSchema);
+        if (!validator.valid) {
+            const errs = validator.errors.map(e => e.stack);
+            throw new BadRequestError(errs);
+        }
+
         const newComposer = await Composer.addComposer(req.body);
         return res.status(201).json({ newComposer });
     } catch (error) {
@@ -36,10 +46,12 @@ router.post('/', async function (req, res, next) {
 */
 router.get('/', async function (req, res, next) {
     try {
-      const composers = await Composer.allComposers(+req.params.id);
-      return res.json({ composers });
+        req.params.id = parseInt(req.params.id);
+		
+        const composers = await Composer.allComposers(req.params.id);
+        return res.json({ composers });
     } catch (err) {
-      return next(err);
+        return next(err);
     }
 });
 
@@ -52,10 +64,12 @@ router.get('/', async function (req, res, next) {
 */
 router.get('/:id', async function (req, res, next) {
     try {
-      const composer = await Composer.getComposer(+req.params.id);
-      return res.json({ composer });
+        req.params.id = parseInt(req.params.id);
+		
+        const composer = await Composer.getComposer(req.params.id);
+        return res.json({ composer });
     } catch (err) {
-      return next(err);
+        return next(err);
     }
 });
 
@@ -65,11 +79,19 @@ router.get('/:id', async function (req, res, next) {
 *   
 *   Returns { id, fName, lName, country, gender }
 *
-*   TODO: include auth & validation
+*   TODO: include auth
 */
 router.patch('/:id', async function (req, res, next) {
     try {
-        const updatedComposer = await Composer.updateComposer(+req.params.id, req.body);
+        req.params.id = parseInt(req.params.id);
+		
+        const validator = jsonschema.validate(req.body, composerSchema);
+        if (!validator.valid) {
+            const errs = validator.errors.map(e => e.stack);
+            throw new BadRequestError(errs);
+        }
+
+        const updatedComposer = await Composer.updateComposer(req.params.id, req.body);
         return res.status(201).json({ updatedComposer });
     } catch (error) {
         return next(error);
@@ -81,7 +103,9 @@ router.patch('/:id', async function (req, res, next) {
 */
 router.delete('/:id', async function (req, res, next) {
     try {
-        await Composer.deleteComposer(+req.params.id);
+        req.params.id = parseInt(req.params.id);
+		
+        await Composer.deleteComposer(req.params.id);
         return res.json({ deleted: req.params.id });
     } catch (err) {
         return next(err);

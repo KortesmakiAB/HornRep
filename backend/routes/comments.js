@@ -1,8 +1,13 @@
 'use strict';
 
 const express = require('express');
+const jsonschema = require('jsonschema');
 
 const Comment = require('../models/comment');
+const { BadRequestError } = require('../expressError');
+
+const commentNewSchema = require('../schemas/commentNew');
+const commentUpdateSchema = require('../schemas/commentUpdate');
 
 const router = new express.Router();
 
@@ -16,10 +21,16 @@ const router = new express.Router();
 *   
 *   Returns { id, comment, userId, workId, commentDate }
 *
-*   TODO: include auth & validation
+*   TODO: include auth
 */
 router.post('/', async function (req, res, next) {
     try {
+        const validator = jsonschema.validate(req.body, commentNewSchema);
+        if (!validator.valid) {
+            const errs = validator.errors.map(e => e.stack);
+            throw new BadRequestError(errs);
+        }
+
         const newComment = await Comment.newComment(req.body);
         return res.status(201).json({ newComment });
     } catch (error) {
@@ -36,10 +47,12 @@ router.post('/', async function (req, res, next) {
 */
 router.get('/:id', async function (req, res, next) {
     try {
-      const comment = await Comment.getComment(+req.params.id);
-      return res.json({ comment });
+        req.params.id = parseInt(req.params.id);
+		
+        const comment = await Comment.getComment(req.params.id);
+        return res.json({ comment });
     } catch (err) {
-      return next(err);
+        return next(err);
     }
 });
 
@@ -51,11 +64,19 @@ router.get('/:id', async function (req, res, next) {
 *
 *   Returns { comment , userId, workId, commentDate }
 *
-*   TODO: include auth & validation
+*   TODO: include auth
 */
 router.patch('/:id', async function (req, res, next) {
     try {
-        const updatedComment = await Comment.updateComment(+req.params.id, req.body);
+        req.params.id = parseInt(req.params.id);
+		
+        const validator = jsonschema.validate(req.body, commentUpdateSchema);
+        if (!validator.valid) {
+            const errs = validator.errors.map(e => e.stack);
+            throw new BadRequestError(errs);
+        }
+
+        const updatedComment = await Comment.updateComment(req.params.id, req.body);
         return res.status(201).json({ updatedComment });
     } catch (error) {
         return next(error);
@@ -67,7 +88,9 @@ router.patch('/:id', async function (req, res, next) {
 */
 router.delete('/:id', async function (req, res, next) {
     try {
-        await Comment.deleteComment(+req.params.id);
+        req.params.id = parseInt(req.params.id);
+		
+        await Comment.deleteComment(req.params.id);
         return res.json({ deleted: req.params.id });
     } catch (err) {
         return next(err);

@@ -173,8 +173,10 @@ UX Notes: group like inputs together: text, mulitselect, checkboxes
 1. ~~Users routes~~
 1. ~~Comments methods~~
 1. ~~Comments routes~~
-1. Composer methods
-1. Composers routes
+1. ~~Composer methods~~
+1. ~~Composers routes~~
+1. Routes validation
+1. Routes auth
 
 #### TODO Later
 1. Form data validation. For routes Use a library.

@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "description": "Add a new comment.",
+    "properties": {
+        "comment": {
+            "$id": "#/properties/comment",
+            "type": "string"
+        },
+        "userId": {
+            "$id": "#/properties/userId",
+            "type": "integer"
+        },
+        "workId": {
+            "$id": "#/properties/workId",
+            "type": "integer"
+        }
+    },
+    "additionalProperties": false,
+    "required": ["comment", "userId", "workId"]
+}  

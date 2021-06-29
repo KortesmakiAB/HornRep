@@ -1,0 +1,14 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "description": "Update a comment.",
+    "properties": {
+        "comment": {
+            "$id": "#/properties/comment",
+            "type": "string"
+        }
+    },
+    "additionalProperties": false,
+    "required": ["comment" ]
+}  

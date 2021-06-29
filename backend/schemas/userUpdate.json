@@ -1,0 +1,71 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "Register a user",
+    "examples": [
+        {
+            "username": "testUsername2",
+            "fName": "testFirst",
+            "lName": "testLast",
+            "email": "test@test.com",
+            "password": "testMeOnce",
+            "category": "test student",
+            "isAdmin": false
+        }
+    ],
+    "required": [
+        "username",
+        "fName",
+        "lName",
+        "email",
+        "category",
+        "password"
+    ],
+    "properties": {
+        "username": {
+            "$id": "#/properties/username",
+            "type": "string",
+            "examples": [
+                "testUsername2"
+            ]
+        },
+        "fName": {
+            "$id": "#/properties/fName",
+            "type": "string",
+            "examples": [
+                "testFirst"
+            ]
+        },
+        "lName": {
+            "$id": "#/properties/lName",
+            "type": "string",
+            "examples": [
+                "testLast"
+            ]
+        },
+        "email": {
+            "$id": "#/properties/email",
+            "type": "string",
+            "format": "email",
+            "examples": [
+                "test@test.com"
+            ]
+        },
+        "password": {
+            "$id": "#/properties/password",
+            "type": "string",
+            "examples": [
+                "testMeOnce"
+            ]
+        },
+        "category": {
+            "$id": "#/properties/category",
+            "type": "string",
+            "examples": [
+                "test student"
+            ]
+        }
+    },
+    "additionalProperties": false
+}

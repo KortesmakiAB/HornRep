@@ -1,0 +1,71 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "required": [
+        "title",
+        "compId",
+        "duration",
+        "eraStyle",
+        "highestNote",
+        "lowestNote",
+        "difficulty",
+        "techniques",
+        "clef",
+        "compYr",
+        "accompType",
+        "accompDifficulty"
+    ],
+    "properties": {
+        "title": {
+            "$id": "#/properties/title",
+            "type": "string"
+        },
+        "compId": {
+            "$id": "#/properties/compId",
+            "type": "integer"
+        },
+        "duration": {
+            "$id": "#/properties/duration",
+            "type": "string"
+        },
+        "eraStyle": {
+            "$id": "#/properties/eraStyle",
+            "type": "string"
+        },
+        "highestNote": {
+            "$id": "#/properties/highestNote",
+            "type": "integer"
+        },
+        "lowestNote": {
+            "$id": "#/properties/lowestNote",
+            "type": "integer"
+        },
+        "difficulty": {
+            "$id": "#/properties/difficulty",
+            "type": "string"
+        },
+        "techniques": {
+            "$id": "#/properties/techniques",
+            "type": "string"
+        },
+        "clef": {
+            "$id": "#/properties/clef",
+            "type": "string"
+        },
+        "compYr": {
+            "$id": "#/properties/compYr",
+            "type": "string",
+            "format": "date"
+        },
+        "accompType": {
+            "$id": "#/properties/accompType",
+            "type": "string"
+        },
+        "accompDifficulty": {
+            "$id": "#/properties/accompDifficulty",
+            "type": "string"
+        }
+    },
+    "additionalProperties": false
+}
