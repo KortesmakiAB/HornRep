@@ -1,8 +1,4 @@
 'use strict';
-// this file provided by Rithm school
-
-/** Convenience middleware to handle common auth cases in routes. */
-
 const jwt = require('jsonwebtoken');
 const { SECRET_KEY } = require('../config');
 const { UnauthorizedError } = require('../expressError');
@@ -43,7 +39,6 @@ function ensureLoggedIn(req, res, next) {
   }
 }
 
-
 /** Middleware to use when they be logged in as an admin user.
  *
  *  If not, raises Unauthorized.
@@ -60,8 +55,26 @@ function ensureAdmin(req, res, next) {
   }
 }
 
-/** Middleware to use when they must provide a valid token & be user matching
- *  username provided as route param.
+/** User must be logged in with valid token
+ *  AND user id from token matches userId from route param.
+ *
+ *  If not, raises Unauthorized.
+ */
+
+function ensureCorrectUser(req, res, next) {
+  try {
+    const user = res.locals.user;
+    if (!(user && user.id === parseInt(req.params.userId))) {
+      throw new UnauthorizedError();
+    }
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+}
+
+/** User must be logged in with valid token
+ *  AND (user is admin OR user id from token matches userId from route param).
  *
  *  If not, raises Unauthorized.
  */
@@ -69,7 +82,7 @@ function ensureAdmin(req, res, next) {
 function ensureCorrectUserOrAdmin(req, res, next) {
   try {
     const user = res.locals.user;
-    if (!(user && (user.isAdmin || user.username === req.params.username))) {
+    if (!(user && (user.isAdmin || user.id === parseInt(req.params.userId)))) {
       throw new UnauthorizedError();
     }
     return next();
@@ -83,5 +96,6 @@ module.exports = {
   authenticateJWT,
   ensureLoggedIn,
   ensureAdmin,
+  ensureCorrectUser,
   ensureCorrectUserOrAdmin,
 };

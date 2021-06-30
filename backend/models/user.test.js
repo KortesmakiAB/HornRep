@@ -81,7 +81,7 @@ describe('User.getUser(id)', () => {
 
     test('should get user details', async () => {
         const meResp = await User.getUser(testIds.users[1]);
-        expect(meResp).toEqual(me);
+        expect(meResp).toEqual({ ...me, 'id': testIds.users[1] });
     });
     
 });

@@ -22,7 +22,8 @@ class Work {
 							TO_CHAR( composition_yr, 'YYYY') AS "compYr",
 							accompaniment_type AS "accompType",
 							accompaniment_difficulty AS "accompDifficulty",
-							u.username
+							u.username,
+							submitted_by AS "submittedBy"
 						FROM works
 						JOIN composers c ON composer_id = c.id
 						JOIN users u ON u.id = submitted_by

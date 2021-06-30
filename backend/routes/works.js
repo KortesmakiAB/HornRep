@@ -4,6 +4,7 @@ const express = require('express');
 const jsonschema = require('jsonschema');
 
 const Work = require('../models/work');
+const { ensureCorrectUser, ensureCorrectUserOrAdmin } = require('../middleware/auth');
 const { BadRequestError } = require('../expressError');
 const convertToInt = require('../helpers/qString');
 
@@ -51,6 +52,7 @@ router.get('/', async function (req, res, next) {
      	}
 
 		const works = await Work.search(q);
+
 		return res.json({ works });
     } catch (err) {
       	return next(err);
@@ -69,22 +71,21 @@ router.get('/:id', async function (req, res, next) {
 		req.params.id = parseInt(req.params.id);
 		
 		const work = await Work.getWork(req.params.id);
+
 		return res.json({ work });
     } catch (err) {
       	return next(err);
     }
 });
 
-/** POST /
+/** POST /:userId
 * 
 *   Add a new work.
-*   Required: title, compId, submittedBy.
+*   Required: title, compId.
 *   Optional: duration, eraStyle, highestNote, lowestNote, difficulty, techniques, clef, compYr, accompType, accompDifficulty.
 *   (NB: user chooses from a list of composers or may click a button for a form to add a new composer)
-*
-*   TODO Auth: ensureLoggedIn
 */
-router.post('/', async function (req, res, next) {
+router.post('/:userId', ensureCorrectUser, async function (req, res, next) {
     try {
 		const validator = jsonschema.validate(req.body, workNewSchema);
 		if (!validator.valid) {
@@ -92,52 +93,52 @@ router.post('/', async function (req, res, next) {
 			throw new BadRequestError(errs);
      	}
 		
+		req.body.submittedBy = parseInt(req.params.userId);
         const newWorkId = await Work.addWork(req.body);
+
         return res.status(201).json({ newWorkId });
     } catch (error) {
         return next(error);
     }
 });
 
-/** PATCH /:id
-* 
+/** PATCH /:id/:userId
 *   Updates: title, compId, duration, eraStyle, highestNote, lowestNote, difficulty, techniques, clef, compYr, accompType, accompDifficulty
 * 	Does NOT update: "submitted_by" (or "id").
 *   All fields are required, except as noted.
 *   TODO: what is returned?
-*
-*   TODO Auth: ensureCorrectUserOrAdmin
 */
-router.patch('/:id', async function (req, res, next) {
+router.patch('/:id/:userId', ensureCorrectUserOrAdmin, async function (req, res, next) {
     try {
-		req.params.id = parseInt(req.params.id);
-		
 		const validator = jsonschema.validate(req.body, workUpdateSchema);
 		if (!validator.valid) {
 			const errs = validator.errors.map(e => e.stack);
 			throw new BadRequestError(errs);
      	}
 
+		req.params.id = parseInt(req.params.id);
+		req.body.submittedBy = parseInt(req.params.userId);
         const newWorkId = await Work.updateWork(req.params.id, req.body);
+
         return res.status(201).json({ newWorkId });
     } catch (error) {
         return next(error);
     }
 });
 
-/** DELETE /:id
-* Returns { deleted: id }
-* TODO Auth: ensureCorrectUserOrAdmin
+/** DELETE /:id/:submittedBy 
+* 	submittedBy is a userId
+* 	Returns { deleted: id }
 */
-router.delete('/:id', async function (req, res, next) {
+router.delete('/:id/:userId', ensureCorrectUserOrAdmin, async function (req, res, next) {
     try {
 		req.params.id = parseInt(req.params.id);
-
         await Work.deleteWork(req.params.id);
+
         return res.json({ deleted: req.params.id });
-      } catch (err) {
-        return next(err);
-      }
+    } catch (err) {
+      	return next(err);
+    }
 });
 
 

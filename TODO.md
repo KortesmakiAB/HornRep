@@ -13,10 +13,11 @@
 - ~~copy /helpers/tokens~~
     - ~~add user.id to token~~
 
+---
+- ~~adjust auth middleware to look at userId and not username~~
+- ~~add auth middleware to routes & adjust comments~~
+- ~~test routes manually~~
 
-- remove userId from model methods as appropriate? or pass it automatically from route?
-    - we don't want people to add their user id manually. Not even admin. Right(?)
-    - update tests accordingly
-THEN
-- add auth middleware to routes
-- test routes manually
+---
+
+updateJSONSchema so that you can't add userId

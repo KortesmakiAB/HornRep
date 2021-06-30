@@ -4,8 +4,7 @@
     "type": "object",
     "required": [
         "title",
-        "compId",
-        "submittedBy"        
+        "compId"       
     ],
     "properties": {
         "title": {
@@ -14,10 +13,6 @@
         },
         "compId": {
             "$id": "#/properties/compId",
-            "type": "integer"
-        },
-        "submittedBy": {
-            "$id": "#/properties/submittedBy",
             "type": "integer"
         },
         "duration": {

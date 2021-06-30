@@ -4,8 +4,9 @@ const express = require('express');
 const jsonschema = require('jsonschema');
 
 const User = require('../models/user');
+const { ensureCorrectUser } = require('../middleware/auth');
 const { BadRequestError } = require('../expressError');
-const { createToken } = require('../helpers/token');
+const createToken = require('../helpers/token');
 
 const userRegisterSchema = require('../schemas/userRegister');
 const userUpdateSchema = require('../schemas/userUpdate');
@@ -17,16 +18,13 @@ const router = new express.Router();
 /////////////                           /users routes                      ///////////// 
 
 
-/** GET /:id
+/** GET /:userId
 * 
 *   id => { user: { username, fName, lName, email, password, category, isAdmin }}
-* 
-*   TODO Auth: ensureCorrectUserOrAdmin
-* 
 */
-router.get('/:id', async function (req, res, next) {
+router.get('/:userId', ensureCorrectUser, async function (req, res, next) {
     try {
-        req.params.id = parseInt(req.params.id);
+        req.params.id = parseInt(req.params.userId);
 		
         const user = await User.getUser(req.params.id);
         return res.json({ user });
@@ -62,19 +60,17 @@ router.post('/', async function (req, res, next) {
     }
 });
 
-/** PATCH /:id
+/** PATCH /:userId
 * 
 *   Updates (required): username, fName, lName, email, category, password.
 *   
 *   Does not update: isAdmin.
 *
 *   Returns { newUserId: int }
-*
-*   TODO Auth: ensureLoggedIn
 */
-router.patch('/:id', async function (req, res, next) {
+router.patch('/:userId', ensureCorrectUser, async function (req, res, next) {
     try {
-        req.params.id = parseInt(req.params.id);
+        req.params.userId = parseInt(req.params.userId);
 		
         const validator = jsonschema.validate(req.body, userUpdateSchema);
         if (!validator.valid) {
@@ -82,22 +78,22 @@ router.patch('/:id', async function (req, res, next) {
             throw new BadRequestError(errs);
         }
 
-        const newUserId = await User.updateUser(req.params.id, req.body);
+        const newUserId = await User.updateUser(req.params.userId, req.body);
         return res.status(201).json({ newUserId });
     } catch (error) {
         return next(error);
     }
 });
 
-/** DELETE /:id
-*   TODO Auth: ensureLoggedIn
+/** DELETE /:userId
+*
 */
-router.delete('/:id', async function (req, res, next) {
+router.delete('/:userId', ensureCorrectUser, async function (req, res, next) {
     try {
-        req.params.id = parseInt(req.params.id);
+        req.params.userId = parseInt(req.params.userId);
 		
-        await User.deleteUser(req.params.id);
-        return res.json({ deleted: req.params.id });
+        await User.deleteUser(req.params.userId);
+        return res.json({ deleted: req.params.userId });
     } catch (err) {
         return next(err);
     }

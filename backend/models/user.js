@@ -59,6 +59,7 @@ class User {
     static async getUser(id) {
         const userResp = await db.query(`
             SELECT
+                id,
                 username,
                 first_name AS "fName",
                 last_name AS "lName",

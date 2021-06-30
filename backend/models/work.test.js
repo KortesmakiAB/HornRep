@@ -40,6 +40,7 @@ describe ('Work.getWork()', () => {
             "techniques": null,
             "title": "Concerto #1",
             "username": "sSchouten1",
+            "submittedBy": testIds.users[0],
             "comments": [
                 {
                   "comment": "this is a monumental work for horn. genius",
@@ -119,6 +120,7 @@ describe('Work.search()', () => {
             "techniques": null,
             "title": "Concerto #1",
             "username": "sSchouten1",
+            "submittedBy": testIds.users[0],
         });
     });
 

@@ -4,6 +4,7 @@ const express = require('express');
 const jsonschema = require('jsonschema');
 
 const Composer = require('../models/composer');
+const { ensureAdmin, ensureLoggedIn } = require('../middleware/auth');
 const { BadRequestError } = require('../expressError');
 
 const composerSchema = require('../schemas/composer');
@@ -17,11 +18,10 @@ const router = new express.Router();
 /** POST /
 * 
 *   Required: { fName, lName, country, gender }
-*   Returns: { id, fName, lName, country, gender }
 *
-*   TODO Auth: loggedIn
+*   Returns: { id, fName, lName, country, gender }
 */
-router.post('/', async function (req, res, next) {
+router.post('/', ensureLoggedIn, async function (req, res, next) {
     try {
         const validator = jsonschema.validate(req.body, composerSchema);
         if (!validator.valid) {
@@ -38,11 +38,11 @@ router.post('/', async function (req, res, next) {
 
 
 /** GET /
-* 
+*   Get all composers
+*
 *   Returns: { composers: [{ id, fName, lName, country, gender },...]}
 * 
 *   No auth required
-* 
 */
 router.get('/', async function (req, res, next) {
     try {
@@ -60,7 +60,6 @@ router.get('/', async function (req, res, next) {
 *   id => { composer: { id, fName, lName, country, gender }}
 * 
 *   No auth required
-* 
 */
 router.get('/:id', async function (req, res, next) {
     try {
@@ -78,10 +77,8 @@ router.get('/:id', async function (req, res, next) {
 *   Updates (required): fName, lName, country, gender
 *   
 *   Returns { id, fName, lName, country, gender }
-*
-*   TODO Auth: ensureAdmin
 */
-router.patch('/:id', async function (req, res, next) {
+router.patch('/:id', ensureAdmin, async function (req, res, next) {
     try {
         req.params.id = parseInt(req.params.id);
 		
@@ -99,9 +96,9 @@ router.patch('/:id', async function (req, res, next) {
 });
 
 /** DELETE /:id
-*   TODO Auth: ensureAdmin
+*   
 */
-router.delete('/:id', async function (req, res, next) {
+router.delete('/:id', ensureAdmin, async function (req, res, next) {
     try {
         req.params.id = parseInt(req.params.id);
 		
