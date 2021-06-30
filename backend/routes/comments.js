@@ -21,7 +21,7 @@ const router = new express.Router();
 *   
 *   Returns { id, comment, userId, workId, commentDate }
 *
-*   TODO: include auth
+*   TODO Auth: ensureLoggedIn
 */
 router.post('/', async function (req, res, next) {
     try {
@@ -42,7 +42,7 @@ router.post('/', async function (req, res, next) {
 * 
 *   id => { user: { comment , userId, workId, commentDate }}
 * 
-*   TODO: include auth
+*   TODO Auth: unsure of use case
 * 
 */
 router.get('/:id', async function (req, res, next) {
@@ -64,7 +64,7 @@ router.get('/:id', async function (req, res, next) {
 *
 *   Returns { comment , userId, workId, commentDate }
 *
-*   TODO: include auth
+*   TODO Auth: ensureLoggedIn
 */
 router.patch('/:id', async function (req, res, next) {
     try {
@@ -84,7 +84,7 @@ router.patch('/:id', async function (req, res, next) {
 });
 
 /** DELETE /:id
-*   TODO add auth
+*   TODO Auth: ensureCorrectUserOrAdmin
 */
 router.delete('/:id', async function (req, res, next) {
     try {

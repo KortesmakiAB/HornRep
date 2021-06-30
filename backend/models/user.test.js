@@ -1,7 +1,7 @@
 'use strict'
 
 const db = require('../db');
-const { BadRequestError, NotFoundError } = require('../expressError');
+const { BadRequestError, NotFoundError, UnauthorizedError } = require('../expressError');
 const User = require('./user');
 const {
     commonBeforeAll,
@@ -38,6 +38,8 @@ describe('User.registerUser()', () => {
     });
 
     test('should register a user and get new Id.', async () => {
+        // isAdmin default is false. User cannot register self as an admin.
+        
         const fakeFormData = { 
             username: 'testUsername',
             fName: 'testFirst',
@@ -45,7 +47,6 @@ describe('User.registerUser()', () => {
             email: 'test@test.com',
             password: 'testMeOnce',
             category: 'test student',
-            isAdmin: false
         };
 
         const registeredUserId = await User.registerUser(fakeFormData);
@@ -55,14 +56,16 @@ describe('User.registerUser()', () => {
             SELECT
                 username,
                 first_name,
-                category
+                category,
+                is_admin AS "isAdmin"
             FROM users
             WHERE id = ${registeredUserId};`
         );
         expect(verifyNewUser.rows[0]).toEqual({ 
             username: fakeFormData.username, 
             first_name: fakeFormData.fName, 
-            category: fakeFormData.category 
+            category: fakeFormData.category ,
+            isAdmin: false
         });
     });
 });
@@ -180,6 +183,41 @@ describe('User.deleteUser()', () => {
         } catch (error) {
             expect(error).toEqual(new NotFoundError(`User with id - 0 not found.`));
         }
+    });
+});
+
+// inherited these tests from Rithm school. 
+
+describe("User.authenticate()", function () {
+    test("works", async function () {
+      const user = await User.authenticate("aBrant1", "password");
+      expect(user).toEqual({
+        id: testIds.users[1],
+        username: "aBrant1",
+        fName: "Aaron",
+        lName: "Brant",
+        email: "aaron@awesomeSite.com",
+        category: "academia",
+        isAdmin: true
+      });
+    });
+  
+    test("unauth if no such user", async function () {
+      try {
+        await User.authenticate("nope", "password");
+        fail();
+      } catch (err) {
+        expect(err instanceof UnauthorizedError).toBeTruthy();
+      }
+    });
+  
+    test("unauth if wrong password", async function () {
+      try {
+        await User.authenticate("aBrant1", "wrong");
+        fail();
+      } catch (err) {
+        expect(err instanceof UnauthorizedError).toBeTruthy();
+      }
     });
 });
 

@@ -19,7 +19,7 @@ const router = new express.Router();
 *   Required: { fName, lName, country, gender }
 *   Returns: { id, fName, lName, country, gender }
 *
-*   TODO: include auth
+*   TODO Auth: loggedIn
 */
 router.post('/', async function (req, res, next) {
     try {
@@ -79,7 +79,7 @@ router.get('/:id', async function (req, res, next) {
 *   
 *   Returns { id, fName, lName, country, gender }
 *
-*   TODO: include auth
+*   TODO Auth: ensureAdmin
 */
 router.patch('/:id', async function (req, res, next) {
     try {
@@ -99,7 +99,7 @@ router.patch('/:id', async function (req, res, next) {
 });
 
 /** DELETE /:id
-*   TODO add auth
+*   TODO Auth: ensureAdmin
 */
 router.delete('/:id', async function (req, res, next) {
     try {

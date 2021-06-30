@@ -17,6 +17,7 @@ async function commonBeforeAll() {
   await db.query("DELETE FROM users");
   await db.query("DELETE FROM movements");
   
+  // -- both test users have the password "password"
   const usersResp = await db.query(`
     INSERT INTO users (
       username, 

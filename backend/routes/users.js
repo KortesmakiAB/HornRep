@@ -5,9 +5,11 @@ const jsonschema = require('jsonschema');
 
 const User = require('../models/user');
 const { BadRequestError } = require('../expressError');
+const { createToken } = require('../helpers/token');
 
 const userRegisterSchema = require('../schemas/userRegister');
 const userUpdateSchema = require('../schemas/userUpdate');
+const userAuthSchema = require('../schemas/userAuth');
 
 const router = new express.Router();
 
@@ -19,7 +21,7 @@ const router = new express.Router();
 * 
 *   id => { user: { username, fName, lName, email, password, category, isAdmin }}
 * 
-*   TODO: include auth
+*   TODO Auth: ensureCorrectUserOrAdmin
 * 
 */
 router.get('/:id', async function (req, res, next) {
@@ -37,12 +39,12 @@ router.get('/:id', async function (req, res, next) {
 *   
 *   Register a user
 *
-*   Required: username, fName, lName, email, password, isAdmin.
-*   Optional: category
+*   Required: { username, fName, lName, email, password }
+*   Optional: { category }
 *
-*   Returns { newUserId: int }
+*   Returns { token }
 *
-*   TODO: include auth
+*   No auth required
 */
 router.post('/', async function (req, res, next) {
     try {
@@ -53,7 +55,8 @@ router.post('/', async function (req, res, next) {
         }
 
         const newUserId = await User.registerUser(req.body);
-        return res.status(201).json({ newUserId });
+        const token = createToken(newUser);
+        return res.status(201).json({ token });
     } catch (error) {
         return next(error);
     }
@@ -67,7 +70,7 @@ router.post('/', async function (req, res, next) {
 *
 *   Returns { newUserId: int }
 *
-*   TODO: include auth 
+*   TODO Auth: ensureLoggedIn
 */
 router.patch('/:id', async function (req, res, next) {
     try {
@@ -87,7 +90,7 @@ router.patch('/:id', async function (req, res, next) {
 });
 
 /** DELETE /:id
-*   TODO add auth
+*   TODO Auth: ensureLoggedIn
 */
 router.delete('/:id', async function (req, res, next) {
     try {
@@ -99,6 +102,30 @@ router.delete('/:id', async function (req, res, next) {
         return next(err);
     }
 });
+
+/** POST /token  { username, password } => { token }
+ *
+ *  Returns JWT token which can be used to authenticate further requests.
+ *
+ *  Authorization required: none
+ */
+
+ router.post("/token", async function (req, res, next) {
+    try {
+      const validator = jsonschema.validate(req.body, userAuthSchema);
+      if (!validator.valid) {
+        const errs = validator.errors.map(e => e.stack);
+        throw new BadRequestError(errs);
+      }
+  
+      const { username, password } = req.body;
+      const user = await User.authenticate(username, password);
+      const token = createToken(user);
+      return res.json({ token });
+    } catch (err) {
+      return next(err);
+    }
+  });
 
 
 

@@ -2,7 +2,7 @@
 
 const db = require('../db');
 const bcrypt = require('bcrypt');
-const { BadRequestError, NotFoundError } = require('../expressError');
+const { BadRequestError, NotFoundError, UnauthorizedError } = require('../expressError');
 const { BCRYPT_WORK_FACTOR } = require('../config.js');
 
 class User {
@@ -10,6 +10,8 @@ class User {
     /** registerUser() 
     * 
     *   Register user with data.
+    *   TODO, which data is required
+    *   isAdmin will be set to 'false' by db.
     *
     *   Returns id (integer)
     *
@@ -20,7 +22,7 @@ class User {
     // OR remove duplicate checks/BadRequestError
     // update tests
     static async registerUser(formFields) {
-        const { username, fName, lName, email, password, category, isAdmin } = formFields;
+        const { username, fName, lName, email, password, category } = formFields;
         
         const duplicateCheckUn = await db.query(`
             SELECT username
@@ -40,11 +42,10 @@ class User {
                 last_name,
                 email,
                 password,
-                category,
-                is_admin)
-            VALUES ($1,$2,$3,$4,$5,$6,$7)
+                category)
+            VALUES ($1,$2,$3,$4,$5,$6)
             RETURNING id;`,
-            [username, fName, lName, email, hashedPw, category, isAdmin]    
+            [username, fName, lName, email, hashedPw, category]    
         );
 
         return newUserId.rows[0].id;
@@ -125,6 +126,44 @@ class User {
 
 		if (!deletedUser) throw new NotFoundError(`User with id - ${id} not found.`);
 	}
+
+    /** authenticate user with username, password.
+    *
+    *   Returns { username, first_name, last_name, email, is_admin }
+    *
+    *   Throws UnauthorizedError is user not found or wrong password.
+    **/
+
+    static async authenticate(username, password) {
+        // try to find the user first
+        const result = await db.query(
+            `SELECT 
+                id,
+                username,
+                password,
+                first_name AS "fName",
+                last_name AS "lName",
+                email,
+                category,
+                is_admin AS "isAdmin"
+            FROM users
+            WHERE username = $1`,
+            [username],
+        );
+
+        const user = result.rows[0];
+
+        if (user) {
+            // compare hashed password to a new hash from password
+            const isValid = await bcrypt.compare(password, user.password);
+            if (isValid === true) {
+                delete user.password;
+                return user;
+            }
+        }
+
+        throw new UnauthorizedError("Invalid username/password");
+    }
 }
 
 module.exports = User;

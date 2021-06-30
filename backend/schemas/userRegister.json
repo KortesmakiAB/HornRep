@@ -10,8 +10,7 @@
             "lName": "testLast",
             "email": "test@test.com",
             "password": "testMeOnce",
-            "category": "test student",
-            "isAdmin": false
+            "category": "test student"
         }
     ],
     "required": [
@@ -19,8 +18,7 @@
         "fName",
         "lName",
         "email",
-        "password",
-        "isAdmin"
+        "password"
     ],
     "properties": {
         "username": {
@@ -64,13 +62,6 @@
             "type": "string",
             "examples": [
                 "test student"
-            ]
-        },
-        "isAdmin": {
-            "$id": "#/properties/isAdmin",
-            "type": "boolean",
-            "examples": [
-                false
             ]
         }
     },

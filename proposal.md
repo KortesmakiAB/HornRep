@@ -175,12 +175,11 @@ UX Notes: group like inputs together: text, mulitselect, checkboxes
 1. ~~Comments routes~~
 1. ~~Composer methods~~
 1. ~~Composers routes~~
-1. Routes validation
+1. ~~Routes validation~~
 1. Routes auth
+1. FRONT END
 
-#### TODO Later
-1. Form data validation. For routes Use a library.
-
+S
 #### TODO optional
 1. Flag comments as inappropriate (maybe a required task?)
 1. Test authentication on routes (can I combine this, somehow to reduce duplication?)

@@ -37,13 +37,12 @@ const router = new express.Router();
 *
 *   Returns { works: [{ work details }, ...]}
 *   TODO: be specific about what is returned
-*   TODO: include auth
-* 
+*   
+* 	No auth required.
 */
 router.get('/', async function (req, res, next) {
     try {
 		const q = convertToInt(req.query, ['highestNote', 'lowestNote']);
-		console.log('^^^^^^^^^^^^^^^^^^^^', q)
 		
 		const validator = jsonschema.validate(q, workSearchSchema);
 		if (!validator.valid) {
@@ -62,8 +61,8 @@ router.get('/', async function (req, res, next) {
 * 
 *   Returns complete work details and associated comments
 *   TODO: be specific about what is returned
-*   TODO: include auth
-* 
+*   
+* 	No auth required.
 */
 router.get('/:id', async function (req, res, next) {
     try {
@@ -83,7 +82,7 @@ router.get('/:id', async function (req, res, next) {
 *   Optional: duration, eraStyle, highestNote, lowestNote, difficulty, techniques, clef, compYr, accompType, accompDifficulty.
 *   (NB: user chooses from a list of composers or may click a button for a form to add a new composer)
 *
-*   TODO: include auth
+*   TODO Auth: ensureLoggedIn
 */
 router.post('/', async function (req, res, next) {
     try {
@@ -106,7 +105,8 @@ router.post('/', async function (req, res, next) {
 * 	Does NOT update: "submitted_by" (or "id").
 *   All fields are required, except as noted.
 *   TODO: what is returned?
-*   TODO: include auth
+*
+*   TODO Auth: ensureCorrectUserOrAdmin
 */
 router.patch('/:id', async function (req, res, next) {
     try {
@@ -127,7 +127,7 @@ router.patch('/:id', async function (req, res, next) {
 
 /** DELETE /:id
 * Returns { deleted: id }
-* TODO add auth
+* TODO Auth: ensureCorrectUserOrAdmin
 */
 router.delete('/:id', async function (req, res, next) {
     try {
