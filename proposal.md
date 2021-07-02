@@ -114,7 +114,7 @@ Quick Search - Needs to be the body of the homepage. It’s why people come to t
 - Era/Style			- checkboxes (dynamically)
 
 ##### Advanced search
-UX Notes: group like inputs together: text, mulitselect, checkboxes
+UX Notes: group like inputs together: text, multi-select, checkboxes
 
 - Composer			- text (keyword search)
 - Title				- text (keyword search)
@@ -176,11 +176,11 @@ UX Notes: group like inputs together: text, mulitselect, checkboxes
 1. ~~Composer methods~~
 1. ~~Composers routes~~
 1. ~~Routes validation~~
-1. Routes auth
+1. ~~Routes auth~~
 1. FRONT END
 
-S
-#### TODO optional
+
+#### TODO backedn optional
 1. Flag comments as inappropriate (maybe a required task?)
 1. Test authentication on routes (can I combine this, somehow to reduce duplication?)
 1. Add a way to change: users isAdmin, password
@@ -233,12 +233,46 @@ S
 - Edit
 - Delete
 
+---
 
 ## Frontend
 - See 'Details' (above)
 - Blueprint https://blueprintjs.com/docs/#icons
 - Valtio https://github.com/pmndrs/valtio
 
+1. ~~Read Valtio docs. How does this change where I keep state = use valtio everywhere~~
+1. ~~Sketch state / components~~
+1. ~~Scaffold:~~
+    1. ~~Switch/Routes~~
+        1. ~~create components with dummy div/text~~
+        1. ~~create switch~~
+1. Scan Blueprint docs to look for helpful Components/things
+1. `<App>` w currUser state
+1. `<WorkList>`
+1. `<WorkDetails>`
+1. `<Home>` & `<SimpleSearch>`
+1. `<AdvancedSearch >`
+1. `<Nav>`
+1. `<EditWork>`
+1. `<EditComment>`
+1. `<AddWork>`
+1. `<AddComposer>`
+1. `<EditComposer>`
+1. Browse (2 pages): Title, Composer
+1. `<Sarah>`
+1. `<Profile>`
+1. `<EditProfile>`
+1. `<Sara>`
+1. `<Login>`
+1. `<Signup>`
+1. Loading Pages: TBD
+    1. Suspend components (Valtio)
+1. ??
+1. ReadMe.md
+
+### Do Later
+- Favicon
+- LocalStorage
 
 ### React Design
 React routing
