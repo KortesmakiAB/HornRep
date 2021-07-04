@@ -78,16 +78,16 @@ class Work {
 	*
 	*	Search fields - all optional:
 	*	{ 
-	*	  title, duration, difficulty, fName, lName, gender, 
+	*	  title, minDuration, maxDuration, difficulty, fName, lName, gender, 
 	*	  country, accompType, eraStyle, highestNote, 
 	*	  lowestNote, techniques, accompDifficulty,
 	*	}
 	*	
 	*	Search Field Types:
-	*	  String: title, fName(composer), lName(composer), gender(composer), difficulty, accompDifficulty.
+	*	  String: title, fName(composer), lName(composer), gender(composer), accompDifficulty, techniques
 	*	  Interval ("HH:MM:SS", string-ish): minDuration, maxDuration. 
 	*	  Integer: highestNote, lowestNote.
-	*	  Array of strings:  accompanimentType - options["Orchestra", "Piano", "None"], techniques[any], country(composers)[any], eraStyle[].
+	*	  Array of strings:  accompanimentType - options["Orchestra", "Piano", "None"], difficulty, country(composers)[any], eraStyle[].
 	*	
 	*	NB:
 	*	  highestNote (Inclusive. Begins at top of staff. 
@@ -303,6 +303,21 @@ class Work {
 
 		if (!deletedWork) throw new NotFoundError(`Work with id - ${id} not found.`);
 	}
-	
+
+	/** getFormChoices()
+	* 	Even though this method queries countries from the composers table, I thought it best to keep similar logic in one place.
+	*/
+	static async getFormChoices() {
+		const eraStyleResp = await db.query(`SELECT ARRAY( SELECT era_style FROM works WHERE era_style IS NOT NULL);`);
+		const eraStyle = new Set(eraStyleResp.rows[0].array);
+		
+		const countriesResp = await db.query(`SELECT ARRAY( SELECT country FROM composers WHERE country IS NOT NULL);`);
+		const countries = new Set(countriesResp.rows[0].array);
+		
+		return {
+			eraStyle: [...eraStyle],
+			countries: [...countries],
+		};
+	}
 }
 module.exports = Work;

@@ -1,5 +1,5 @@
 // import jwt from 'jsonwebtoken';
-import { proxy, useSnapshot } from 'valtio';
+import { proxy } from 'valtio';
 import { BrowserRouter } from "react-router-dom";
 
 import HornRepApi from './tools/api';
@@ -21,29 +21,53 @@ export const worksState = proxy({
   setWorksList: worksArr => worksState.worksList = worksArr,
 });
 
+// initial maxDuration is pre-set to 20 for convenience.
+// most people want works less than 20 minutes.
 export const searchFormState = proxy({
-  formFields: {},
-  setFormFields(fields) { this.formFields = fields },
+  formFields: {
+    title: '',
+    lName: '',
+    fName:'',
+    minDuration: '00:00:00', 
+    maxDuration: '00:20:00',
+    difficulty: [],
+    eraStyle: [],
+  },
+  setFormField(field, val) { this.formFields[field] = val },
 
   isAdvancedSearch: false,
   setAdvancedSearch() { this.isAdvancedSearch = !this.isAdvancedSearch },
 
-  handleChange(evt)  {
+  handleFormChange(evt) {
 		const { name, value } = evt.target;
-
-    this.setFormFields({
-      ...this.formFields,
-      [name]: value
-    });
+    searchFormState.setFormField(name, value);
   },
 
-  worksSearch: (searchFieldsObj = {} ) => {
+  isDataLoaded: false,
+  setIsDataLoadedTrue() { this.isDataLoaded = true; },
+
+  checkboxData: {},
+  setCheckboxData (dataObj) { this.checkboxData = dataObj },
+
+  eraStyleCheckboxState: {},
+  setEraStyleCheckboxState(key) { this.eraStyleCheckboxState[key] = !this.eraStyleCheckboxState[key] },
+
+  loadCheckboxData () {
     (async () => {
-      const worksList = await HornRepApi.searchWorks(searchFieldsObj)
-			worksState.setWorksList(worksList);
-      console.log('worksList--',worksState.worksList)
+      const resp = await HornRepApi.getCheckBoxData();
+      this.setCheckboxData(resp.checkboxData);
+      this.checkboxData.eraStyle.forEach(eS => this.eraStyleCheckboxState[eS] = false);
+      this.setIsDataLoadedTrue();
 		})();
-	}
+	},
+  
+  worksSearch(searchFieldsObj = {}) {
+    (async () => {
+      const worksList = await HornRepApi.searchWorks(searchFieldsObj);
+			worksState.setWorksList(worksList);
+      console.log('worksList--',worksState.worksList);
+		})();
+	},
 });
 
 

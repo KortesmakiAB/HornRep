@@ -4,7 +4,7 @@ import { searchFormState } from '../App';
 
 
 const AdvancedSearchForm = () => {
-    const unsubscribe = subscribe(searchFormState.formFields, () => console.log('state has changed to', searchFormState.formFields));
+    subscribe(searchFormState.formFields, () => console.log('state has changed to', searchFormState.formFields));
 
 
     return (

@@ -7,3 +7,5 @@ I want a function which converts integers from the query string. Would you have 
 I'm using this function in /routes/works.js => `router.get('/' ...`. 
 I suppose it would've been simpler to manually parseInt the two properties I needed as integers, but I thought it would be nice to have something reusable.
 (Note: Maybe add my solution to Daybook?)
+
+`<Search>` I wanted to have eraStyle be checkboxes which correspond to the era_style's in the db. The db contains a string which may be comma or slash separated. I thought about writing a method to query that data, but it would need to iterate over each character of each string, looking for commas and/or slashes. Maybe regex would be faster? or does it iterate too? Maybe I could change the schema to be an array of string values. But that seemed like too much work also, so I went with a keyword search. If I didn't want a keyword search, what kind of approach would you suggest?

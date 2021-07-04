@@ -110,7 +110,7 @@ Quick Search - Needs to be the body of the homepage. It’s why people come to t
 - Composer			- keyword
 - Title				- keyword
 - Duration (in minutes) - multi select (5 min intervals, eg 5-10, 10-15)
-- Level				- multi select (1-5 scale vs Easy/Medium/Hard?)
+- Level				- multi select (1-5 scale vs Easy/Medium/Hard  vs Novice, Intermediate/Advanced?)
 - Era/Style			- checkboxes (dynamically)
 
 ##### Advanced search
@@ -123,7 +123,7 @@ UX Notes: group like inputs together: text, multi-select, checkboxes
 - Horn Range - Highest		- multi select (beginning at g. Default - any)
 - Horn Range - Lowest		- multi select ( beginning at g. Default - any)
 - Level(difficulty)			- multi select (Easy/Medium/Moderate/Hard/Difficult)(need to fix this issue in data/wrangling stage)
-- Techniques		- checkboxes (dynamically)(add to an array)
+- Techniques		- keyword
 - Era/Style			- checkboxes (list from Sarah/me?) (pass as an array)
 - Country/Region	- checkboxes (dynamically - user can specify, Sarah can edit, if necessary) (pass as an array)
 - Accompaniment		- checkboxes (Orchestra, Piano, Unaccompanied) (pass as an array)

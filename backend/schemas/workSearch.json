@@ -8,13 +8,27 @@
             "$id": "#/properties/title",
             "type": "string"
         },
-        "duration": {
-            "$id": "#/properties/duration",
+        "minDuration": {
+            "$id": "#/properties/minDuration",
+            "type": "string"
+        },
+        "maxDuration": {
+            "$id": "#/properties/maxDuration",
             "type": "string"
         },
         "difficulty": {
             "$id": "#/properties/difficulty",
-            "type": "string"
+            "type": "array",
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/difficulty/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/difficulty/items/anyOf/0",
+                        "type": "string"
+                    }
+                ]
+            }
         },
         "fName": {
             "$id": "#/properties/fName",

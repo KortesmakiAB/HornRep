@@ -24,7 +24,7 @@ const router = new express.Router();
 *   
 *   Search fields - all optional:
 *	{ 
-*	  title, duration, difficulty, fName, lName, gender, 
+*	  title, minDuration, maxDuration, difficulty, fName, lName, gender, 
 *	  country, accompType, eraStyle, highestNote, 
 *	  lowestNote, techniques, accompDifficulty,
 *	}
@@ -58,6 +58,20 @@ router.get('/', async function (req, res, next) {
       	return next(err);
     }
 });
+
+/** /checkboxData
+* 	Returns 2 arrays containing all of the entries in db columns for eraStyle and countries.
+*/
+router.get('/checkboxes', async function (req, res, next) {
+	try {
+		const checkboxData = await Work.getFormChoices();
+
+		return res.json({ checkboxData })
+	} catch (error) {
+		return next(error);
+	}
+});
+
 
 /** GET /:id => { work }
 * 
@@ -140,6 +154,7 @@ router.delete('/:id/:userId', ensureCorrectUserOrAdmin, async function (req, res
       	return next(err);
     }
 });
+
 
 
 

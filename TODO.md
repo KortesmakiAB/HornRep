@@ -1,23 +1,15 @@
+Work method to get:  
+    era_style from works.
+    country from composers. 
+    with tests.
+    `SELECT ARRAY( SELECT era_style FROM works WHERE era_style IS NOT NULL);`
+    `SELECT ARRAY( SELECT country FROM composers WHERE country IS NOT NULL);`
+    ```
+    
+~~Write route to call db~~
+~~Write frontend api to call route~~
+~~Call frontend api from QuickSearchForm~~
+~~Create a proxy(or state) to hold these array(s)~~
+~~Map over the array to create checkboxes dynamically~~
 
-
-- ~~copy User.Authenticate~~
-    - ~~write tests/copy~~
-- ~~remove isAdmin from User.register model and route.~~
-    - ~~it's automatically false.~~
-    - ~~may not need to update tests~~
-- ~~auth routes~~
-    - ~~copy auth/token over to users routes~~
-        - ~~clear up app.js (delete auth)~~
-        - ~~delete auth.js routes~~
-    - ~~import or make schema~~
-- ~~copy /helpers/tokens~~
-    - ~~add user.id to token~~
-
----
-- ~~adjust auth middleware to look at userId and not username~~
-- ~~add auth middleware to routes & adjust comments~~
-- ~~test routes manually~~
-
----
-
-updateJSONSchema so that you can't add userId
+https://blueprintjs.com/docs/#core/components/collapse

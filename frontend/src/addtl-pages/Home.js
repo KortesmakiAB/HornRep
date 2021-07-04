@@ -1,27 +1,31 @@
+import { useState } from 'react';
+import { useSnapshot } from 'valtio'
+import { subscribeKey } from 'valtio/utils';
+import { Button } from "@blueprintjs/core";
+
+import { searchFormState } from '../App';
+
 import AdvancedSearchForm from '../forms/AdvancedSearchForm';
 import QuickSearchForm from '../forms/QuickSearchForm';
-
-import { useSnapshot } from 'valtio'
-// import { subscribeKey } from 'valtio/utils';
-import { searchFormState } from '../App';
 
 
 
 const Home = () => {
-    // subscribeKey(searchFormState, 'isAdvancedSearch', (v) => console.log('searchFormState.count has changed to', v))
-    const snap = useSnapshot(searchFormState);
+    subscribeKey(searchFormState, 'isDataLoaded', (v) => console.log('searchFormState.isDataLoaded has changed to', v))
     
+    searchFormState.loadCheckboxData();
+    
+    const snap = useSnapshot(searchFormState);
     
     return (
         <div>
             Home
-            <button onClick={() => searchFormState.setAdvancedSearch()}>{ snap.isAdvancedSearch ? 'Use Quick Search' : 'Use Advanced Search' }</button>
-            { snap.isAdvancedSearch
-                ? <AdvancedSearchForm /> 
-                : <QuickSearchForm />    
+
+            { snap.isDataLoaded
+                ? <QuickSearchForm />    
+                : '...Loading TODO' 
             }
-            
-            
+            <Button onClick={() => searchFormState.setAdvancedSearch()} intent='success' outlined='true'>{ snap.isAdvancedSearch ? 'Use Quick Search' : 'Use Advanced Search' }</Button>
         </div>
     );
 };

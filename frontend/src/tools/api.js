@@ -15,8 +15,7 @@ class HornRepApi {
 
     // pass an authorization token in the header.
     const url = `${BASE_URL}/${endpoint}`;
-    const headers = { };
-    // const headers = { Authorization: `Bearer ${HornRepApi.token}` };
+    const headers = HornRepApi.token ? { Authorization: `Bearer ${HornRepApi.token}` } : {};
     const params = (method === 'get')
         ? data
         : {};
@@ -37,54 +36,56 @@ class HornRepApi {
     let res = await this.request(`works`, formData);
     return res.works;
   }
-
   
-
-  /* {handle} => {handle, name, description, numEmployees, logoUrl, jobs:[{id, title, salary, equity}]} */
-  static async getCompany(handle) {
-    let res = await this.request(`companies/${handle}`);
-    return res.company;
+  /* eg => { 
+    "checkboxData": {
+        "eraStyle": [
+            "romantic",
+            "modern"
+        ],
+        "countries": [
+            "Germany",
+            "United States"
+        ]
   }
-
-  /* {title: searchTerms} => {id, title, salary, equity, companyHandle, companyName} */
-  static async getOrSearchAllJobs(formData) {
-    let res = await this.request(`jobs`, formData);
-    return res.jobs;
+} */
+  static async getCheckBoxData() {
+    return await this.request(`works/checkboxes`);
   }
   
-  static async getUser(username) {
-    let res = await this.request(`users/${username}`);
-    return res.user;
-  }
+//   static async getUser(username) {
+//     let res = await this.request(`users/${username}`);
+//     return res.user;
+//   }
 
-  static async updateUser(username, formData) {
-    const method = 'PATCH';
-    let res = await this.request(`users/${username}`, formData, method);
-    return res.user;
-  }
+//   static async updateUser(username, formData) {
+//     const method = 'PATCH';
+//     let res = await this.request(`users/${username}`, formData, method);
+//     return res.user;
+//   }
 
-  static async signUp(formData) {
-    const method = 'POST';
-    let res = await this.request(`auth/register`, formData, method);
-    return res.token;
-  }
+//   static async signUp(formData) {
+//     const method = 'POST';
+//     let res = await this.request(`auth/register`, formData, method);
+//     return res.token;
+//   }
 
-  static async signIn(unPw) {
-    const method = 'POST';
-    let res = await this.request(`auth/token`, unPw, method);
-    return res.token;
-  }
+//   static async signIn(unPw) {
+//     const method = 'POST';
+//     let res = await this.request(`auth/token`, unPw, method);
+//     return res.token;
+//   }
 
-  // {username, password} => true/false
-  static async validate(unPw) {
-    return await this.request('auth/validate', unPw);
-  }  
+//   // {username, password} => true/false
+//   static async validate(unPw) {
+//     return await this.request('auth/validate', unPw);
+//   }  
 
-  // queryString with username and id = > {applied: jobId}
-  static async applyJob(username, id) {
-    const method = 'POST';
-    return await this.request(`users/${username}/jobs/${id}`, null, method);
-  }
+//   // queryString with username and id = > {applied: jobId}
+//   static async applyJob(username, id) {
+//     const method = 'POST';
+//     return await this.request(`users/${username}/jobs/${id}`, null, method);
+//   }
 
 }
 
