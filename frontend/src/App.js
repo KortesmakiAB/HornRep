@@ -56,15 +56,18 @@ export const searchFormState = proxy({
   eraStyleCheckboxState: {},
   setEraStyleCheckboxState(key) { this.eraStyleCheckboxState[key] = !this.eraStyleCheckboxState[key] },
 
-  countriesCheckboxState: {},
-  setCountriesCheckboxState(key) { this.countriesCheckboxState[key] = !this.countriesCheckboxState[key] },
+  countriesState: {},
+  setCountriesState(key) { this.countriesState[key] = !this.countriesState[key] },
+
+  countriesQuery: '',
+  setCountriesQuery(qString) { this.countriesQuery = qString },
 
   loadCheckboxData () {
     (async () => {
       const resp = await HornRepApi.getCheckBoxData();
       this.setCheckboxData(resp.checkboxData);
       if (this.checkboxData.eraStyle) this.checkboxData.eraStyle.forEach(eS => this.eraStyleCheckboxState[eS] = false);
-      if (this.checkboxData.countries) this.checkboxData.countries.forEach(c => this.countriesCheckboxState[c] = false);
+      if (this.checkboxData.countries) this.checkboxData.countries.forEach(c => this.countriesState[c] = false);
       this.setIsDataLoadedTrue();
 		})();
 	},

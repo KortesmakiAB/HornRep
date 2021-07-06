@@ -113,6 +113,7 @@ class Work {
 		  lowestNote: lowest_note, techniques, accompType: accompaniment_type, 
 		  accompDifficulty: accompaniment_difficulty, fName: first_name, lName: last_name, gender, countries: country
 		} = searchParams;
+		console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',searchParams)
 
 		// ILIKE - case insensitive, partial matches
 		// db column may have multiple entries listed within 1 string, eg "Glissando, lip trills, mute, stopped horn". 
@@ -178,7 +179,7 @@ class Work {
 		}
 
 		query += ' ORDER BY c.last_name, c.first_name, title';
-
+		console.log('@@@@@@@@@@@@@@', query)
 		const worksResp = await db.query(query, queryValues);
 
 		return worksResp.rows;

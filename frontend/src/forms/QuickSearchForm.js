@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { Button, FormGroup, InputGroup, RangeSlider, Checkbox, Collapse } from "@blueprintjs/core";
+import { Button, FormGroup, InputGroup, RangeSlider, Checkbox, Collapse, MenuItem } from "@blueprintjs/core";
+import { MultiSelect } from "@blueprintjs/select";
 
 import { searchFormState } from '../App';
 import './QuickSearchForm.css';
@@ -44,36 +45,60 @@ const QuickSearchForm = () => {
     };
 
     const handleDifficultyCheckboxChange = (evt) => {
-        let { id, value } = evt.target;
+        let { data, value } = evt.target;
+        console.log(evt.target)
 
         // evt.target returns a string
         let bool = JSON.parse(value);
         setCheckboxesDifficulty(boxes => ({
             ...boxes,
-            [id]: !bool
+            [data]: !bool
         }));
     }
 
     const handleAccompCheckboxChange = (evt) => {
-        let { id, value } = evt.target;
+        let { data, value } = evt.target;
 
         // evt.target returns a string
         let bool = JSON.parse(value);
         setCheckboxesAccomp(boxes => ({
             ...boxes,
-            [id]: !bool
+            [data]: !bool
         }));
     }
 
     const handleEraStyleCheckboxChange = (evt) => {
-        let { id } = evt.target;
-        searchFormState.setEraStyleCheckboxState(id);
+        let { data } = evt.target;
+        searchFormState.setEraStyleCheckboxState(data);
     }
 
-    const handleCountriesCheckboxChange = (evt) => {
-        let { id } = evt.target;
-        searchFormState.setCountriesCheckboxState(id);
+
+    const handleCountrySelect = (country) => {
+        searchFormState.setCountriesState(country);
+    };
+
+    const renderTag = (tag) => {
+        // TODO - ??
+        console.log('tag', tag)
     }
+    
+    const renderCountry = (country, {handleClick, modifiers }) => {
+        // console.log(handleClick)
+        // console.log(modifiers)
+        
+        if (!modifiers.matchesPredicate) {
+            return null;
+        }
+        return (
+            <MenuItem
+                active={modifiers.active}
+                key={country}
+                onClick={handleClick}
+                text={country}
+                icon={ formSnap.countriesState[country] ? "tick" : "blank" }
+            />
+        );
+    };
 
     const formSnap = useSnapshot(searchFormState);
 
@@ -89,8 +114,8 @@ const QuickSearchForm = () => {
             if (formSnap.eraStyleCheckboxState[key]) eraStyleResults.push(key);
         }
         const countriesResults = [];
-        for (let key in formSnap.countriesCheckboxState) {
-            if (formSnap.countriesCheckboxState[key]) countriesResults.push(key);
+        for (let key in formSnap.countriesState) {
+            if (formSnap.countriesState[key]) countriesResults.push(key);
         }
         const accompResults = [];
         for (let key in checkboxesAccomp) {
@@ -106,7 +131,7 @@ const QuickSearchForm = () => {
     };
 
     return (
-        <div>QuickSearchForm
+        <div>
             <form onSubmit={handleFormSubmit} className='QuickSearchForm'>
                 <FormGroup label="Title" labelFor="title">
                     <InputGroup id="title" name="title" placeholder="keyword" value={formSnap.formFields.title} onChange={searchFormState.handleFormChange} />
@@ -152,14 +177,16 @@ const QuickSearchForm = () => {
                     }
                 </FormGroup>
 
-                <Button 
-                    onClick={() => searchFormState.setAdvancedSearch()} 
-                    minimal='true' 
-                    rightIcon={ formSnap.isAdvancedSearch ? 'caret-up' : 'caret-down' } 
-                    outlined='true'
-                >
-                    { formSnap.isAdvancedSearch ? 'Fewer options' : 'More options' } 
-                </Button>
+                <FormGroup>
+                    <Button 
+                        onClick={() => searchFormState.setAdvancedSearch()} 
+                        minimal='true' 
+                        rightIcon={ formSnap.isAdvancedSearch ? 'caret-up' : 'caret-down' } 
+                        outlined='true'
+                    >
+                        { formSnap.isAdvancedSearch ? 'Fewer options' : 'More options' } 
+                    </Button>
+                </FormGroup>
                 <Collapse isOpen={formSnap.isAdvancedSearch} keepChildrenMounted={true}>
                     <FormGroup>Range - TODO</FormGroup>
                     <FormGroup label="Technique" labelFor="techniques" helperText=' eg. lip trill or stopped' >
@@ -171,30 +198,46 @@ const QuickSearchForm = () => {
                             onChange={searchFormState.handleFormChange} 
                         />
                     </FormGroup>
-                    <FormGroup label={ formSnap.checkboxData.countries ? "Country/Region" : null } labelFor="countries"    >
-                        { formSnap.checkboxData.countries
-                            ? formSnap.checkboxData.countries.map((c) => 
-                                <Checkbox 
-                                    key={c} 
-                                    id={c} 
-                                    name="countries" 
-                                    label={c} 
-                                    inline="true" 
-                                    value={formSnap.countriesCheckboxState[c]} 
-                                    onChange={handleCountriesCheckboxChange} 
-                                />)
-                            : null
-                        }
+
+                    {/* BLUEPRINT MultiSelect ATTEMPT */}
+                    <FormGroup 
+                        label={ formSnap.checkboxData.countries ? "Country/Region" : null } 
+                        labelFor="countries"
+                    >
+                        {/* <MultiSelect
+                            items={ formSnap.checkboxData.countries }
+                            itemRenderer={renderCountry}
+                            onItemSelect={handleCountrySelect}
+                            tagRenderer={renderTag}
+
+                            query={ formSnap.countriesQuery }
+                            onQueryChange={ searchFormState.setCountriesQuery }
+
+                            // itemPredicate={filterCountry}
+                            // // noResults={<MenuItem disabled={true} text="No results." />}
+                            
+                            
+                        >
+                        </MultiSelect> */}
+                        
                     </FormGroup>
                     <FormGroup label="Accompaniment" labelFor="accompaniment">
-                        <Checkbox id="orchestra" name="accompaniment" label="Orchestra" inline="true" value={checkboxesAccomp.orchestra} onChange={handleAccompCheckboxChange} />
-                        <Checkbox id="piano" name="accompaniment" label="Piano" inline="true" value={checkboxesAccomp.piano} onChange={handleAccompCheckboxChange} />
-                        <Checkbox id="unaccompanied" name="accompaniment" label="Unaccompanied" inline="true" value={checkboxesAccomp.unaccompanied} onChange={handleAccompCheckboxChange} />
+                        <Checkbox data="orchestra" name="accompaniment" label="Orchestra" inline="true" value={checkboxesAccomp.orchestra} onChange={handleAccompCheckboxChange} />
+                        <Checkbox data="piano" name="accompaniment" label="Piano" inline="true" value={checkboxesAccomp.piano} onChange={handleAccompCheckboxChange} />
+                        <Checkbox data="unaccompanied" name="accompaniment" label="Unaccompanied" inline="true" value={checkboxesAccomp.unaccompanied} onChange={handleAccompCheckboxChange} />
+                    </FormGroup>
+                    <FormGroup label="Accompaniment Difficulty" labelFor="accompDifficulty">
+                        <Checkbox data="novice" name="accompDifficulty" label="novice" inline="true" value={checkboxesDifficulty.novice} onChange={handleDifficultyCheckboxChange} />
+                        <Checkbox data="intermediate" name="accompDifficulty" label="intermediate" inline="true" value={checkboxesDifficulty.intermediate} onChange={handleDifficultyCheckboxChange} />
+                        <Checkbox data="advanced" name="accompDifficulty" label="advanced" inline="true" value={checkboxesDifficulty.advanced} onChange={handleDifficultyCheckboxChange} />
                     </FormGroup>
                     {/* TODO Accomp Diff  */}
                     {/* TODO Gender  */}
                 </Collapse>
-                <Button type="submit" intent="primary">Submit</Button>
+                <FormGroup>
+                    <Button type="submit" intent="primary">Submit</Button>
+                </FormGroup>
+                
             </form>
         </div>
     );

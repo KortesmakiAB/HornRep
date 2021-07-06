@@ -1,15 +1,28 @@
-Work method to get:  
-    era_style from works.
-    country from composers. 
-    with tests.
-    `SELECT ARRAY( SELECT era_style FROM works WHERE era_style IS NOT NULL);`
-    `SELECT ARRAY( SELECT country FROM composers WHERE country IS NOT NULL);`
-    ```
-    
-~~Write route to call db~~
-~~Write frontend api to call route~~
-~~Call frontend api from QuickSearchForm~~
-~~Create a proxy(or state) to hold these array(s)~~
-~~Map over the array to create checkboxes dynamically~~
+Control state of the query
+    I don't know what to do about onQueryChange? I'm unable to update the query state.
+    "TypeError: Cannot add property countriesQuery, object is not extensible"
 
-https://blueprintjs.com/docs/#core/components/collapse
+How to get the selections to stay visible in the input
+
+How to get have the query filter the results as you type
+
+
+
+
+itemRenderer={renderCountry}
+    handleClick
+    ??
+onItemSelect={ handleCountrySelect }
+tagRenderer={renderTag}
+    WHAT DOES THIS DO?
+
+
+itemPredicate={filterCountry}
+noResults
+
+disable form submit on 'enter' for country search
+
+
+
+
+rename checkboxData to something else? I am no longer using all of the data for checkboxes
