@@ -204,7 +204,7 @@ const QuickSearchForm = () => {
                         label={ formSnap.checkboxData.countries ? "Country/Region" : null } 
                         labelFor="countries"
                     >
-                        {/* <MultiSelect
+                        <MultiSelect
                             items={ formSnap.checkboxData.countries }
                             itemRenderer={renderCountry}
                             onItemSelect={handleCountrySelect}
@@ -214,11 +214,10 @@ const QuickSearchForm = () => {
                             onQueryChange={ searchFormState.setCountriesQuery }
 
                             // itemPredicate={filterCountry}
-                            // // noResults={<MenuItem disabled={true} text="No results." />}
-                            
+                            // noResults={<MenuItem disabled={true} text="No results." />}
                             
                         >
-                        </MultiSelect> */}
+                        </MultiSelect>
                         
                     </FormGroup>
                     <FormGroup label="Accompaniment" labelFor="accompaniment">

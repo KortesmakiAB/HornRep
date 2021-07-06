@@ -113,7 +113,6 @@ class Work {
 		  lowestNote: lowest_note, techniques, accompType: accompaniment_type, 
 		  accompDifficulty: accompaniment_difficulty, fName: first_name, lName: last_name, gender, countries: country
 		} = searchParams;
-		console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',searchParams)
 
 		// ILIKE - case insensitive, partial matches
 		// db column may have multiple entries listed within 1 string, eg "Glissando, lip trills, mute, stopped horn". 
@@ -122,14 +121,14 @@ class Work {
 		const ilikes = { title, difficulty, first_name, last_name, techniques, country, era_style, accompaniment_type, accompaniment_difficulty };
 		for (let filter in ilikes ) {
 			if (Array.isArray(ilikes[filter])) ilikes[filter].forEach(f => {
-				if(f !== undefined) {
+				if(f !== '' && f !== undefined) {
 					queryValues.push(`%${f}%`);
 					whereExpressions.push(`${[filter]} ILIKE $${queryValues.length}`);
 				}
 			});
 			
 			else {
-				if (ilikes[filter] !== undefined) {
+				if (ilikes[filter] !== '' && ilikes[filter] !== undefined) {
 					queryValues.push(`%${ilikes[filter]}%`);
 
 					filter === 'first_name' || filter === 'last_name'
@@ -179,7 +178,7 @@ class Work {
 		}
 
 		query += ' ORDER BY c.last_name, c.first_name, title';
-		console.log('@@@@@@@@@@@@@@', query)
+		
 		const worksResp = await db.query(query, queryValues);
 
 		return worksResp.rows;
