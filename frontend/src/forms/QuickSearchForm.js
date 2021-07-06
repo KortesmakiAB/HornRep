@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { Button, FormGroup, InputGroup, RangeSlider, Checkbox, Collapse, Icon } from "@blueprintjs/core";
+import { Button, FormGroup, InputGroup, RangeSlider, Checkbox, Collapse } from "@blueprintjs/core";
 
 import { searchFormState } from '../App';
 import './QuickSearchForm.css';
@@ -19,11 +19,14 @@ const QuickSearchForm = () => {
         'intermediate': false,
         'advanced': false,
     });
-    
 
-    // const [collapseIsOpen, setCollapseIsOpen] = useState(false);
+    // used state here because the keys are static. Don't need access to them from anywhere else.
+    const [checkboxesAccomp, setCheckboxesAccomp] = useState({
+        'orchestra': false,
+        'piano': false,
+        'unaccompanied': false,
+    });
 
-    
 
     // object containing 'HH:MM:SS' values which correspond to num of minutes (from form data) as keys
     const duration = {};
@@ -51,10 +54,28 @@ const QuickSearchForm = () => {
         }));
     }
 
+    const handleAccompCheckboxChange = (evt) => {
+        let { id, value } = evt.target;
+
+        // evt.target returns a string
+        let bool = JSON.parse(value);
+        setCheckboxesAccomp(boxes => ({
+            ...boxes,
+            [id]: !bool
+        }));
+    }
+
     const handleEraStyleCheckboxChange = (evt) => {
         let { id } = evt.target;
         searchFormState.setEraStyleCheckboxState(id);
     }
+
+    const handleCountriesCheckboxChange = (evt) => {
+        let { id } = evt.target;
+        searchFormState.setCountriesCheckboxState(id);
+    }
+
+    const formSnap = useSnapshot(searchFormState);
 
     const handleFormSubmit = (evt) => {
         evt.preventDefault();
@@ -67,27 +88,35 @@ const QuickSearchForm = () => {
         for (let key in formSnap.eraStyleCheckboxState) {
             if (formSnap.eraStyleCheckboxState[key]) eraStyleResults.push(key);
         }
+        const countriesResults = [];
+        for (let key in formSnap.countriesCheckboxState) {
+            if (formSnap.countriesCheckboxState[key]) countriesResults.push(key);
+        }
+        const accompResults = [];
+        for (let key in checkboxesAccomp) {
+            if (checkboxesAccomp[key]) accompResults.push(key);
+        }
 
         searchFormState.setFormField('difficulty', difficultyArr);
         searchFormState.setFormField('eraStyle', eraStyleResults);
+        searchFormState.setFormField('countries', countriesResults);
+        searchFormState.setFormField('accompType', accompResults);
         
         searchFormState.worksSearch(searchFormState.formFields);
     };
 
-    const formSnap = useSnapshot(searchFormState);
-        
     return (
         <div>QuickSearchForm
             <form onSubmit={handleFormSubmit} className='QuickSearchForm'>
                 <FormGroup label="Title" labelFor="title">
-                    <InputGroup id="title" name="title" placeholder="Keywords" value={formSnap.formFields.title} onChange={searchFormState.handleFormChange} />
+                    <InputGroup id="title" name="title" placeholder="keywords" value={formSnap.formFields.title} onChange={searchFormState.handleFormChange} />
                 </FormGroup>
                 {/* TODO put composer first/last on one line ? */}
                 <FormGroup label="Last Name" labelFor="lName">
-                    <InputGroup id="lName" name="lName" placeholder="Composer" value={formSnap.formFields.lName} onChange={searchFormState.handleFormChange} />
+                    <InputGroup id="lName" name="lName" placeholder="composer" value={formSnap.formFields.lName} onChange={searchFormState.handleFormChange} />
                 </FormGroup>
                 <FormGroup label="First Name" labelFor="fName">
-                    <InputGroup id="fName" name="fName" placeholder="Composer" value={formSnap.formFields.fName} onChange={searchFormState.handleFormChange} />
+                    <InputGroup id="fName" name="fName" placeholder="composer" value={formSnap.formFields.fName} onChange={searchFormState.handleFormChange} />
                 </FormGroup>
                 <FormGroup label="Duration" labelFor="duration" labelInfo="(complete work)" helperText="*Does not search individual movement duration.">
                     <RangeSlider 
@@ -107,21 +136,62 @@ const QuickSearchForm = () => {
                     <Checkbox id="intermediate" name="difficulty" label="intermediate" inline="true" value={checkboxesDifficulty.intermediate} onChange={handleDifficultyCheckboxChange} />
                     <Checkbox id="advanced" name="difficulty" label="advanced" inline="true" value={checkboxesDifficulty.advanced} onChange={handleDifficultyCheckboxChange} />
                 </FormGroup>
-                <FormGroup label="Era/Style" labelFor="eraStyle">
-                    { formSnap.checkboxData.eraStyle.map((eS) => <Checkbox key={eS} id={eS} name="eraStyle" label={eS} inline="true" value={formSnap.eraStyleCheckboxState[eS]} onChange={handleEraStyleCheckboxChange} />)}
+                <FormGroup label={ formSnap.checkboxData.eraStyle ? "Era/Style" : null } labelFor="eraStyle">
+                    { formSnap.checkboxData.eraStyle
+                        ? formSnap.checkboxData.eraStyle.map((eS) => 
+                            <Checkbox 
+                                key={eS} 
+                                id={eS} 
+                                name="eraStyle" 
+                                label={eS} 
+                                inline="true" 
+                                value={formSnap.eraStyleCheckboxState[eS]} 
+                                onChange={handleEraStyleCheckboxChange} 
+                            />)
+                        : null
+                    }
                 </FormGroup>
-                {/* <Icon icon='chevron-down' tagName='span' />
-                <Collapse isOpen={collapseIsOpen} keepChildrenMounted={true}>
-                    [11:53:30] Finished 'typescript-bundle-blueprint' after 769 ms
-                    <br />
-                    [11:53:30] Starting 'typescript-typings-blueprint'...
-                    <br />
-                    [11:53:30] Finished 'typescript-typings-blueprint' after 198 ms
-                    <br />
-                    [11:53:30] write ./blueprint.css
-                    <br />
-                    [11:53:30] Finished 'sass-compile-blueprint' after 2.84 s
-                </Collapse> */}
+
+                <Button 
+                    onClick={() => searchFormState.setAdvancedSearch()} 
+                    minimal='true' 
+                    rightIcon={ formSnap.isAdvancedSearch ? 'caret-up' : 'caret-down' } 
+                    outlined='true'
+                >
+                    { formSnap.isAdvancedSearch ? 'Fewer options' : 'More options' } 
+                </Button>
+                <Collapse isOpen={formSnap.isAdvancedSearch} keepChildrenMounted={true}>
+                    <FormGroup>Range - TODO</FormGroup>
+                    <FormGroup label="Technique" labelFor="techniques" helperText=' eg. lip-trill or stopped-horn' >
+                        <InputGroup 
+                            id="techniques" 
+                            name="techniques" 
+                            placeholder='keywords' 
+                            value={formSnap.formFields.techniques} 
+                            onChange={searchFormState.handleFormChange} 
+                        />
+                    </FormGroup>
+                    <FormGroup label={ formSnap.checkboxData.countries ? "Country/Region" : null } labelFor="countries"    >
+                        { formSnap.checkboxData.countries
+                            ? formSnap.checkboxData.countries.map((c) => 
+                                <Checkbox 
+                                    key={c} 
+                                    id={c} 
+                                    name="countries" 
+                                    label={c} 
+                                    inline="true" 
+                                    value={formSnap.countriesCheckboxState[c]} 
+                                    onChange={handleCountriesCheckboxChange} 
+                                />)
+                            : null
+                        }
+                    </FormGroup>
+                    <FormGroup label="Accompaniment" labelFor="accompaniment">
+                        <Checkbox id="orchestra" name="accompaniment" label="Orchestra" inline="true" value={checkboxesAccomp.orchestra} onChange={handleAccompCheckboxChange} />
+                        <Checkbox id="piano" name="accompaniment" label="Piano" inline="true" value={checkboxesAccomp.piano} onChange={handleAccompCheckboxChange} />
+                        <Checkbox id="unaccompanied" name="accompaniment" label="Unaccompanied" inline="true" value={checkboxesAccomp.unaccompanied} onChange={handleAccompCheckboxChange} />
+                    </FormGroup>
+                </Collapse>
                 <Button type="submit" intent="primary">Submit</Button>
             </form>
         </div>

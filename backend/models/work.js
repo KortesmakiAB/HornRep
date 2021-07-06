@@ -79,7 +79,7 @@ class Work {
 	*	Search fields - all optional:
 	*	{ 
 	*	  title, minDuration, maxDuration, difficulty, fName, lName, gender, 
-	*	  country, accompType, eraStyle, highestNote, 
+	*	  countries, accompType, eraStyle, highestNote, 
 	*	  lowestNote, techniques, accompDifficulty,
 	*	}
 	*	
@@ -87,7 +87,7 @@ class Work {
 	*	  String: title, fName(composer), lName(composer), gender(composer), accompDifficulty, techniques
 	*	  Interval ("HH:MM:SS", string-ish): minDuration, maxDuration. 
 	*	  Integer: highestNote, lowestNote.
-	*	  Array of strings:  accompanimentType - options["Orchestra", "Piano", "None"], difficulty, country(composers)[any], eraStyle[].
+	*	  Array of strings:  accompType - options["Orchestra", "Piano", "None"], difficulty, countries(of composers)[], eraStyle[].
 	*	
 	*	NB:
 	*	  highestNote (Inclusive. Begins at top of staff. 
@@ -111,7 +111,7 @@ class Work {
 		const { 
 		  title, maxDuration, minDuration, difficulty, eraStyle: era_style, highestNote: highest_note,  
 		  lowestNote: lowest_note, techniques, accompType: accompaniment_type, 
-		  accompDifficulty: accompaniment_difficulty, fName: first_name, lName: last_name, gender, country
+		  accompDifficulty: accompaniment_difficulty, fName: first_name, lName: last_name, gender, countries: country
 		} = searchParams;
 
 		// ILIKE - case insensitive, partial matches
@@ -308,15 +308,13 @@ class Work {
 	* 	Even though this method queries countries from the composers table, I thought it best to keep similar logic in one place.
 	*/
 	static async getFormChoices() {
-		const eraStyleResp = await db.query(`SELECT ARRAY( SELECT era_style FROM works WHERE era_style IS NOT NULL);`);
-		const eraStyle = new Set(eraStyleResp.rows[0].array);
+		const eraStyleResp = await db.query(`SELECT ARRAY( SELECT DISTINCT era_style FROM works WHERE era_style IS NOT NULL);`);
 		
-		const countriesResp = await db.query(`SELECT ARRAY( SELECT country FROM composers WHERE country IS NOT NULL);`);
-		const countries = new Set(countriesResp.rows[0].array);
+		const countriesResp = await db.query(`SELECT ARRAY( SELECT DISTINCT country FROM composers WHERE country IS NOT NULL);`);
 		
 		return {
-			eraStyle: [...eraStyle],
-			countries: [...countries],
+			eraStyle: eraStyleResp.rows[0].array,
+			countries: countriesResp.rows[0].array,
 		};
 	}
 }

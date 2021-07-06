@@ -39,7 +39,7 @@ INSERT INTO works (
     accompaniment_difficulty)
 VALUES 
     ('Concerto #1', 1, 1, '00:15:30', 'romantic', 4, 6, 'medium/difficult', null, 'treble', '1854-01-01', 'orchestra, piano', 'medium'),
-    ('Parable for solo horn', 2, 1, '00:11:15', 'modern', 5, 8, 'difficult', 'flutter tongue, double-tongue', 'treble, bass', '1941-01-01', 'unacompannied', null);
+    ('Parable for solo horn', 2, 1, '00:11:15', 'modern', 5, 8, 'difficult', 'flutter tongue, double-tongue', 'treble, bass', '1941-01-01', 'unaccompanied', null);
 
 INSERT INTO comments (
     comment,

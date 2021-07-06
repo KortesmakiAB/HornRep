@@ -6,13 +6,14 @@ import HornRepApi from './tools/api';
 import Routes from './routes-nav/Routes';
 import './App.css';
 
+
 // SHARED STATE
+
 export const userState = proxy({ 
   token: '', 
   setToken: token => userState.token = token,
 
   user: {},
-  // Note: I could re-write this to have a separate setter method for each of the properties on the user object
   setUser: (obj) => userState.user = obj,
 });
 
@@ -32,6 +33,8 @@ export const searchFormState = proxy({
     maxDuration: '00:20:00',
     difficulty: [],
     eraStyle: [],
+    countries: [],
+    accompType: [],
   },
   setFormField(field, val) { this.formFields[field] = val },
 
@@ -52,11 +55,15 @@ export const searchFormState = proxy({
   eraStyleCheckboxState: {},
   setEraStyleCheckboxState(key) { this.eraStyleCheckboxState[key] = !this.eraStyleCheckboxState[key] },
 
+  countriesCheckboxState: {},
+  setCountriesCheckboxState(key) { this.countriesCheckboxState[key] = !this.countriesCheckboxState[key] },
+
   loadCheckboxData () {
     (async () => {
       const resp = await HornRepApi.getCheckBoxData();
       this.setCheckboxData(resp.checkboxData);
-      this.checkboxData.eraStyle.forEach(eS => this.eraStyleCheckboxState[eS] = false);
+      if (this.checkboxData.eraStyle) this.checkboxData.eraStyle.forEach(eS => this.eraStyleCheckboxState[eS] = false);
+      if (this.checkboxData.countries) this.checkboxData.countries.forEach(c => this.countriesCheckboxState[c] = false);
       this.setIsDataLoadedTrue();
 		})();
 	},

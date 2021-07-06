@@ -38,19 +38,15 @@
             "$id": "#/properties/lName",
             "type": "string"
         },
-        "gender": {
-            "$id": "#/properties/gender",
-            "type": "string"
-        },
-        "country": {
-            "$id": "#/properties/country",
+        "countries": {
+            "$id": "#/properties/countries",
             "type": "array",
             "additionalItems": true,
             "items": {
-                "$id": "#/properties/country/items",
+                "$id": "#/properties/countries/items",
                 "anyOf": [
                     {
-                        "$id": "#/properties/country/items/anyOf/0",
+                        "$id": "#/properties/countries/items/anyOf/0",
                         "type": "string"
                     }
                 ]

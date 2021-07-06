@@ -332,13 +332,17 @@ describe('Work.deleteWork()', () => {
 
 describe('Work.getFormChoices()', () => {
     test('should get 2 arrays containing all of the entries for eraStyle and countries.', async () => {
-        const eraStyle = await Work.getFormChoices();
-        expect(eraStyle).toEqual({
-            eraStyle: ['romantic', 'modern'],
+        const checkboxArrays = await Work.getFormChoices();
+        expect(checkboxArrays).toEqual({
+            eraStyle: ['modern', 'romantic',],
             countries: ['Germany', 'United States']
         });
     });
-    
+
+    // TODO
+    // test('should remove duplicates', async () => {
+        
+    // });
 });
 
 

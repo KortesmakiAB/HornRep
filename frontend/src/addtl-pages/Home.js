@@ -5,7 +5,6 @@ import { Button } from "@blueprintjs/core";
 
 import { searchFormState } from '../App';
 
-import AdvancedSearchForm from '../forms/AdvancedSearchForm';
 import QuickSearchForm from '../forms/QuickSearchForm';
 
 
@@ -16,7 +15,7 @@ const Home = () => {
     searchFormState.loadCheckboxData();
     
     const snap = useSnapshot(searchFormState);
-    
+
     return (
         <div>
             Home
@@ -25,7 +24,7 @@ const Home = () => {
                 ? <QuickSearchForm />    
                 : '...Loading TODO' 
             }
-            <Button onClick={() => searchFormState.setAdvancedSearch()} intent='success' outlined='true'>{ snap.isAdvancedSearch ? 'Use Quick Search' : 'Use Advanced Search' }</Button>
+            
         </div>
     );
 };
