@@ -90,18 +90,8 @@
         },
         "techniques": {
             "$id": "#/properties/techniques",
-            "type": "array",
-            "additionalItems": true,
-            "items": {
-                "$id": "#/properties/techniques/items",
-                "anyOf": [
-                    {
-                        "$id": "#/properties/techniques/items/anyOf/0",
-                        "type": "string"
-                    }
-                ]
-            }
-        },
+            "type": "string"
+        },       
         "accompDifficulty": {
             "$id": "#/properties/accompDifficulty",
             "type": "string"

@@ -109,7 +109,7 @@ const QuickSearchForm = () => {
         <div>QuickSearchForm
             <form onSubmit={handleFormSubmit} className='QuickSearchForm'>
                 <FormGroup label="Title" labelFor="title">
-                    <InputGroup id="title" name="title" placeholder="keywords" value={formSnap.formFields.title} onChange={searchFormState.handleFormChange} />
+                    <InputGroup id="title" name="title" placeholder="keyword" value={formSnap.formFields.title} onChange={searchFormState.handleFormChange} />
                 </FormGroup>
                 {/* TODO put composer first/last on one line ? */}
                 <FormGroup label="Last Name" labelFor="lName">
@@ -162,11 +162,11 @@ const QuickSearchForm = () => {
                 </Button>
                 <Collapse isOpen={formSnap.isAdvancedSearch} keepChildrenMounted={true}>
                     <FormGroup>Range - TODO</FormGroup>
-                    <FormGroup label="Technique" labelFor="techniques" helperText=' eg. lip-trill or stopped-horn' >
+                    <FormGroup label="Technique" labelFor="techniques" helperText=' eg. lip trill or stopped' >
                         <InputGroup 
                             id="techniques" 
                             name="techniques" 
-                            placeholder='keywords' 
+                            placeholder='keyword' 
                             value={formSnap.formFields.techniques} 
                             onChange={searchFormState.handleFormChange} 
                         />
@@ -191,6 +191,8 @@ const QuickSearchForm = () => {
                         <Checkbox id="piano" name="accompaniment" label="Piano" inline="true" value={checkboxesAccomp.piano} onChange={handleAccompCheckboxChange} />
                         <Checkbox id="unaccompanied" name="accompaniment" label="Unaccompanied" inline="true" value={checkboxesAccomp.unaccompanied} onChange={handleAccompCheckboxChange} />
                     </FormGroup>
+                    {/* TODO Accomp Diff  */}
+                    {/* TODO Gender  */}
                 </Collapse>
                 <Button type="submit" intent="primary">Submit</Button>
             </form>

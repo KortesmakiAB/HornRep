@@ -31,6 +31,7 @@ export const searchFormState = proxy({
     fName:'',
     minDuration: '00:00:00', 
     maxDuration: '00:20:00',
+    techniques: '',
     difficulty: [],
     eraStyle: [],
     countries: [],
