@@ -94,7 +94,17 @@
         },       
         "accompDifficulty": {
             "$id": "#/properties/accompDifficulty",
-            "type": "string"
+            "type": "array",
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/accompDifficulty/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/accompDifficulty/items/anyOf/0",
+                        "type": "string"
+                    }
+                ]
+            }
         }
     },
     "additionalProperties": false

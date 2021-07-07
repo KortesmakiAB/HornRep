@@ -5,7 +5,7 @@ import { Button } from "@blueprintjs/core";
 
 import { searchFormState } from '../App';
 
-import QuickSearchForm from '../forms/QuickSearchForm';
+import SearchForm from '../forms/SearchForm';
 
 
 
@@ -21,7 +21,7 @@ const Home = () => {
             Home
 
             { snap.isDataLoaded
-                ? <QuickSearchForm />    
+                ? <SearchForm />    
                 : '...Loading TODO' 
             }
             

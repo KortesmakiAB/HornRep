@@ -32,10 +32,13 @@ export const searchFormState = proxy({
     minDuration: '00:00:00', 
     maxDuration: '00:20:00',
     techniques: '',
+    highestNote: '',  // integer
+    lowestNote: '', // integer
     difficulty: [],
     eraStyle: [],
     countries: [],
     accompType: [],
+    accompDifficulty: [],
   },
   setFormField(field, val) { this.formFields[field] = val },
 
@@ -60,7 +63,7 @@ export const searchFormState = proxy({
   setCountriesState(key) { this.countriesState[key] = !this.countriesState[key] },
 
   countriesQuery: '',
-  setCountriesQuery(qString) { this.countriesQuery = qString },
+  setCountriesQuery(qString) { searchFormState.countriesQuery = qString },
 
   loadCheckboxData () {
     (async () => {

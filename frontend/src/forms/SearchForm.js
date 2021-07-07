@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { Button, FormGroup, InputGroup, RangeSlider, Checkbox, Collapse, MenuItem } from "@blueprintjs/core";
+import { Button, FormGroup, InputGroup, RangeSlider, Checkbox, Collapse, MenuItem, HTMLSelect } from "@blueprintjs/core";
 import { MultiSelect } from "@blueprintjs/select";
 
 import { searchFormState } from '../App';
-import './QuickSearchForm.css';
+import { createRangeArr } from './range';
+import './SearchForm.css';
 
 
 
@@ -14,20 +15,22 @@ const QuickSearchForm = () => {
     // most people want works shorter than 20 minutes.
     const [sliderArr, setSliderArr] = useState([0, 20]);
 
-    // used state here because the keys are static. Don't need access to them from anywhere else.
+    // used state instead of proxy because the keys are static. Don't need access to them from anywhere else.
     const [checkboxesDifficulty, setCheckboxesDifficulty] = useState({
         'novice': false,
         'intermediate': false,
         'advanced': false,
     });
-
-    // used state here because the keys are static. Don't need access to them from anywhere else.
     const [checkboxesAccomp, setCheckboxesAccomp] = useState({
         'orchestra': false,
         'piano': false,
         'unaccompanied': false,
     });
-
+    const [checkboxesAccompDifficulty, setCheckboxesAccompDifficulty] = useState({
+        'novice': false,
+        'intermediate': false,
+        'advanced': false,
+    });
 
     // object containing 'HH:MM:SS' values which correspond to num of minutes (from form data) as keys
     const duration = {};
@@ -45,47 +48,70 @@ const QuickSearchForm = () => {
     };
 
     const handleDifficultyCheckboxChange = (evt) => {
-        let { data, value } = evt.target;
-        console.log(evt.target)
+        let { value } = evt.target;
+        const diff = evt.target.getAttribute('data-diff');
 
         // evt.target returns a string
         let bool = JSON.parse(value);
         setCheckboxesDifficulty(boxes => ({
             ...boxes,
-            [data]: !bool
+            [diff]: !bool
         }));
     }
 
+    const handleEraStyleCheckboxChange = (evt) => searchFormState.setEraStyleCheckboxState(evt.target.getAttribute('data-eS'));
+
+    const rangeArr = createRangeArr();
+    const createHighRangeArr = () => {
+        const arr = [];
+
+        // G at top of staff
+        let highRangeLowerBound = 43;
+        // E above staff
+        let highRangeUpperBound = 52;
+        
+        for (let i = highRangeUpperBound; i >= highRangeLowerBound; i--) {
+            arr.push({
+                ...rangeArr[i],
+                value: i,
+            });
+        }
+
+        return arr;
+    }
+    const highRangeArr = createHighRangeArr();
+    
+    // TODO - const createLowRangeArr = () => {}
+
     const handleAccompCheckboxChange = (evt) => {
-        let { data, value } = evt.target;
+        let { value } = evt.target;
+        const accompType = evt.target.getAttribute('data-accomp');
 
         // evt.target returns a string
         let bool = JSON.parse(value);
         setCheckboxesAccomp(boxes => ({
             ...boxes,
-            [data]: !bool
+            [accompType]: !bool
         }));
     }
 
-    const handleEraStyleCheckboxChange = (evt) => {
-        let { data } = evt.target;
-        searchFormState.setEraStyleCheckboxState(data);
+    const handleAccompDiffCheckboxChange = (evt) => {
+        let { value } = evt.target;
+        const accompDiff = evt.target.getAttribute('data-accompDiff');
+
+        // evt.target returns a string
+        let bool = JSON.parse(value);
+        setCheckboxesAccompDifficulty(boxes => ({
+            ...boxes,
+            [accompDiff]: !bool
+        }));
     }
 
+    const filterCountry = (query, country) => country.toLowerCase().startsWith(query.toLowerCase());
 
-    const handleCountrySelect = (country) => {
-        searchFormState.setCountriesState(country);
-    };
+    const handleCountrySelect = (country) => searchFormState.setCountriesState(country);
 
-    const renderTag = (tag) => {
-        // TODO - ??
-        console.log('tag', tag)
-    }
-    
     const renderCountry = (country, {handleClick, modifiers }) => {
-        // console.log(handleClick)
-        // console.log(modifiers)
-        
         if (!modifiers.matchesPredicate) {
             return null;
         }
@@ -100,7 +126,12 @@ const QuickSearchForm = () => {
         );
     };
 
+    const renderTag = (tag) => tag;
+
+    const handleTagRemove = (_tag) => { searchFormState.setCountriesState(_tag) };
+
     const formSnap = useSnapshot(searchFormState);
+
 
     const handleFormSubmit = (evt) => {
         evt.preventDefault();
@@ -121,13 +152,20 @@ const QuickSearchForm = () => {
         for (let key in checkboxesAccomp) {
             if (checkboxesAccomp[key]) accompResults.push(key);
         }
+        const accompDiffResults = [];
+        for (let key in checkboxesAccompDifficulty) {
+            if (checkboxesAccompDifficulty[key]) accompDiffResults.push(key);
+        }
 
         searchFormState.setFormField('difficulty', difficultyArr);
         searchFormState.setFormField('eraStyle', eraStyleResults);
         searchFormState.setFormField('countries', countriesResults);
         searchFormState.setFormField('accompType', accompResults);
+        searchFormState.setFormField('accompDifficulty', accompDiffResults);
         
         searchFormState.worksSearch(searchFormState.formFields);
+
+        // TODO - redirect searchResults
     };
 
     return (
@@ -136,7 +174,6 @@ const QuickSearchForm = () => {
                 <FormGroup label="Title" labelFor="title">
                     <InputGroup id="title" name="title" placeholder="keyword" value={formSnap.formFields.title} onChange={searchFormState.handleFormChange} />
                 </FormGroup>
-                {/* TODO put composer first/last on one line ? */}
                 <FormGroup label="Last Name" labelFor="lName">
                     <InputGroup id="lName" name="lName" placeholder="composer" value={formSnap.formFields.lName} onChange={searchFormState.handleFormChange} />
                 </FormGroup>
@@ -157,16 +194,16 @@ const QuickSearchForm = () => {
                     />
                 </FormGroup>
                 <FormGroup label="Difficulty" labelFor="difficulty">
-                    <Checkbox id="novice" name="difficulty" label="novice" inline="true" value={checkboxesDifficulty.novice} onChange={handleDifficultyCheckboxChange} />
-                    <Checkbox id="intermediate" name="difficulty" label="intermediate" inline="true" value={checkboxesDifficulty.intermediate} onChange={handleDifficultyCheckboxChange} />
-                    <Checkbox id="advanced" name="difficulty" label="advanced" inline="true" value={checkboxesDifficulty.advanced} onChange={handleDifficultyCheckboxChange} />
+                    <Checkbox data-diff="novice" name="difficulty" label="novice" inline="true" value={checkboxesDifficulty.novice} onChange={handleDifficultyCheckboxChange} />
+                    <Checkbox data-diff="intermediate" name="difficulty" label="intermediate" inline="true" value={checkboxesDifficulty.intermediate} onChange={handleDifficultyCheckboxChange} />
+                    <Checkbox data-diff="advanced" name="difficulty" label="advanced" inline="true" value={checkboxesDifficulty.advanced} onChange={handleDifficultyCheckboxChange} />
                 </FormGroup>
                 <FormGroup label={ formSnap.checkboxData.eraStyle ? "Era/Style" : null } labelFor="eraStyle">
                     { formSnap.checkboxData.eraStyle
                         ? formSnap.checkboxData.eraStyle.map((eS) => 
                             <Checkbox 
                                 key={eS} 
-                                id={eS} 
+                                data-eS={eS}
                                 name="eraStyle" 
                                 label={eS} 
                                 inline="true" 
@@ -179,16 +216,29 @@ const QuickSearchForm = () => {
 
                 <FormGroup>
                     <Button 
+                        type='button'
                         onClick={() => searchFormState.setAdvancedSearch()} 
                         minimal='true' 
                         rightIcon={ formSnap.isAdvancedSearch ? 'caret-up' : 'caret-down' } 
                         outlined='true'
+                        intent='primary'
                     >
                         { formSnap.isAdvancedSearch ? 'Fewer options' : 'More options' } 
                     </Button>
                 </FormGroup>
                 <Collapse isOpen={formSnap.isAdvancedSearch} keepChildrenMounted={true}>
-                    <FormGroup>Range - TODO</FormGroup>
+                    <FormGroup label='Highest Note' labelFor='highestNote' labelInfo='(horn in F)' helperText='beginning at top of treble clef staff'>
+                        <HTMLSelect value={formSnap.formFields.highestNote} onChange={searchFormState.setFormField('highestNote', formSnap.formFields.highestNote)}>
+                            <option>choose...</option>
+                            { highRangeArr.map((note, idx) => 
+                                <option key={idx} value={note.value}>{note.abbrevName}</option>
+                            )}
+                        </HTMLSelect>
+                    </FormGroup>
+                    <FormGroup label='Lowest Note' labelFor='lowestNote'>
+                        <HTMLSelect value={formSnap.formFields.lowestNote} onChange={searchFormState.setFormField('lowestNote', formSnap.formFields.lowestNote)}>
+                        </HTMLSelect>
+                    </FormGroup>
                     <FormGroup label="Technique" labelFor="techniques" helperText=' eg. lip trill or stopped' >
                         <InputGroup 
                             id="techniques" 
@@ -199,7 +249,6 @@ const QuickSearchForm = () => {
                         />
                     </FormGroup>
 
-                    {/* BLUEPRINT MultiSelect ATTEMPT */}
                     <FormGroup 
                         label={ formSnap.checkboxData.countries ? "Country/Region" : null } 
                         labelFor="countries"
@@ -212,31 +261,30 @@ const QuickSearchForm = () => {
 
                             query={ formSnap.countriesQuery }
                             onQueryChange={ searchFormState.setCountriesQuery }
-
-                            // itemPredicate={filterCountry}
-                            // noResults={<MenuItem disabled={true} text="No results." />}
-                            
+                            itemPredicate={filterCountry}
+                            noResults={<MenuItem disabled={true} text="No results." />}
+                            resetOnSelect='true'
+                            selectedItems={ Object.keys(formSnap.countriesState).filter(c => formSnap.countriesState[c]) }
+                            tagInputProps={{
+                                onRemove: handleTagRemove,
+                            }}
                         >
                         </MultiSelect>
-                        
                     </FormGroup>
                     <FormGroup label="Accompaniment" labelFor="accompaniment">
-                        <Checkbox data="orchestra" name="accompaniment" label="Orchestra" inline="true" value={checkboxesAccomp.orchestra} onChange={handleAccompCheckboxChange} />
-                        <Checkbox data="piano" name="accompaniment" label="Piano" inline="true" value={checkboxesAccomp.piano} onChange={handleAccompCheckboxChange} />
-                        <Checkbox data="unaccompanied" name="accompaniment" label="Unaccompanied" inline="true" value={checkboxesAccomp.unaccompanied} onChange={handleAccompCheckboxChange} />
+                        <Checkbox data-accomp="orchestra" name="accompaniment" label="Orchestra" inline="true" value={checkboxesAccomp.orchestra} onChange={handleAccompCheckboxChange} />
+                        <Checkbox data-accomp="piano" name="accompaniment" label="Piano" inline="true" value={checkboxesAccomp.piano} onChange={handleAccompCheckboxChange} />
+                        <Checkbox data-accomp="unaccompanied" name="accompaniment" label="Unaccompanied" inline="true" value={checkboxesAccomp.unaccompanied} onChange={handleAccompCheckboxChange} />
                     </FormGroup>
                     <FormGroup label="Accompaniment Difficulty" labelFor="accompDifficulty">
-                        <Checkbox data="novice" name="accompDifficulty" label="novice" inline="true" value={checkboxesDifficulty.novice} onChange={handleDifficultyCheckboxChange} />
-                        <Checkbox data="intermediate" name="accompDifficulty" label="intermediate" inline="true" value={checkboxesDifficulty.intermediate} onChange={handleDifficultyCheckboxChange} />
-                        <Checkbox data="advanced" name="accompDifficulty" label="advanced" inline="true" value={checkboxesDifficulty.advanced} onChange={handleDifficultyCheckboxChange} />
+                        <Checkbox data-accompDiff="novice" name="accompDifficulty" label="novice" inline="true" value={checkboxesAccompDifficulty.novice} onChange={handleAccompDiffCheckboxChange} />
+                        <Checkbox data-accompDiff="intermediate" name="accompDifficulty" label="intermediate" inline="true" value={checkboxesAccompDifficulty.intermediate} onChange={handleAccompDiffCheckboxChange} />
+                        <Checkbox data-accompDiff="advanced" name="accompDifficulty" label="advanced" inline="true" value={checkboxesAccompDifficulty.advanced} onChange={handleAccompDiffCheckboxChange} />
                     </FormGroup>
-                    {/* TODO Accomp Diff  */}
-                    {/* TODO Gender  */}
                 </Collapse>
                 <FormGroup>
                     <Button type="submit" intent="primary">Submit</Button>
                 </FormGroup>
-                
             </form>
         </div>
     );

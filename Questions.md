@@ -1,11 +1,12 @@
-#### `<QuickSearchForm>` 
+#### `<SearchForm>` 
 I am getting my ass kicked by `<MultiSelect>`: see TODO.md
 
 I wanted to have eraStyle be checkboxes which correspond to the era_style's in the db. The db contains a string which may be comma or slash separated. I thought about writing a method to query that data, but it would need to iterate over each character of each string, looking for commas and/or slashes. Maybe regex would be faster? or does it iterate too? Maybe I could change the schema to be an array of string values. But that seemed like too much work also, so I went with a keyword search. If I didn't want a keyword search, what kind of approach would you suggest?
 
-App.js is humongous. As is SearchForm.js.
-Should I do anything about this?
+There is a lot of repetition, particularly handleFormSubmit().
+Would you refactor this?
 
+#### App.js
 
 #### Valtio
 I'm not sure I understand the use case for `subscribe()` and `unsubscribe()`. I am exporting and importing the proxy state and it seems to be working. Can you help me understand what `subscribe()` and `unsubscribe()` do and how to use them?

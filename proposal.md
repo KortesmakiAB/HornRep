@@ -128,7 +128,6 @@ UX Notes: group like inputs together: text, multi-select, checkboxes
 - Country/Region	- checkboxes (dynamically - user can specify, Sarah can edit, if necessary) (pass as an array)
 - Accompaniment		- checkboxes (Orchestra, Piano, Unaccompanied) (pass as an array)
 - Accompaniment Difficulty	-  multi select (Easy/Medium/Moderate/Hard/Difficult)(need to fix this issue in data/wrangling stage)
-- Gender			- multi select
 
 ##### Search Results
 - Displays only: Composer, Title, Duration, Level, Era/Style
