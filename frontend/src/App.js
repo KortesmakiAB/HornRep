@@ -32,8 +32,8 @@ export const searchFormState = proxy({
     minDuration: '00:00:00', 
     maxDuration: '00:20:00',
     techniques: '',
-    highestNote: '',  // integer
-    lowestNote: '', // integer
+    // highestNote: '',  // property will be set as used. integer
+    // lowestNote: '', // property will be set as used. integer
     difficulty: [],
     eraStyle: [],
     countries: [],

@@ -156,12 +156,21 @@ class Work {
 			}
 		}
 
-		const lowHigh = { highest_note, lowest_note };
-		for (let val in lowHigh) {
-			if (Number.isInteger(lowHigh[val])) {
-				queryValues.push(lowHigh[val]);
-				whereExpressions.push(`${[val]} <= $${queryValues.length}`);
-			}
+		// original lowest/highest approach
+		// const lowHigh = { highest_note, lowest_note };
+		// for (let val in lowHigh) {
+		// 	if (Number.isInteger(lowHigh[val])) {
+		// 		queryValues.push(lowHigh[val]);
+		// 		whereExpressions.push(`${[val]} <= $${queryValues.length}`);
+		// 	}
+		// }
+		if (highest_note && Number.isInteger(highest_note)) {
+			queryValues.push(highest_note);
+			whereExpressions.push(`highest_note <= $${queryValues.length}`);
+		}
+		if (lowest_note && Number.isInteger(lowest_note)) {
+			queryValues.push(lowest_note);
+			whereExpressions.push(`lowest_note >= $${queryValues.length}`);
 		}
 
 		if (minDuration !== undefined) {

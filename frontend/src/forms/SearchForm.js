@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { Button, FormGroup, InputGroup, RangeSlider, Checkbox, Collapse, MenuItem, HTMLSelect } from "@blueprintjs/core";
-import { MultiSelect } from "@blueprintjs/select";
+import { MultiSelect, Select } from "@blueprintjs/select";
 
 import { searchFormState } from '../App';
 import { createRangeArr } from './range';
@@ -31,6 +31,8 @@ const QuickSearchForm = () => {
         'intermediate': false,
         'advanced': false,
     });
+    const [highestNote, setHighestNote] = useState({});
+    const [lowestNote, setLowestNote] = useState({});
 
     // object containing 'HH:MM:SS' values which correspond to num of minutes (from form data) as keys
     const duration = {};
@@ -72,16 +74,59 @@ const QuickSearchForm = () => {
         
         for (let i = highRangeUpperBound; i >= highRangeLowerBound; i--) {
             arr.push({
-                ...rangeArr[i],
+                label: rangeArr[i].abbrevName,
+                value: i,
+            });
+        }
+
+        arr.push({
+            label: 'select',
+            value: null,
+        })
+
+        return arr;
+    }
+    const highRangeArr = createHighRangeArr();
+    const createLowRangeArr = () => {
+        const arr = [];
+
+        // G below middle C
+        let lowRangeUpperBound = 19;
+        // Shost 5 pedal E
+        let lowRangeLowerBound = 4;
+        
+        arr.push({
+            label: 'select',
+            value: null,
+        });
+        
+        for (let i = lowRangeUpperBound; i >= lowRangeLowerBound; i--) {
+            arr.push({
+                label: rangeArr[i].abbrevName,
                 value: i,
             });
         }
 
         return arr;
     }
-    const highRangeArr = createHighRangeArr();
+    const lowRangeArr = createLowRangeArr();
     
-    // TODO - const createLowRangeArr = () => {}
+    const renderRange = (note, { handleClick, modifiers }) => {
+        if (!modifiers.matchesPredicate) {
+            return null;
+        }
+        return (
+            <MenuItem
+                active={modifiers.active}
+                key={note.value}
+                onClick={handleClick}
+                text={note.label}
+            />
+        );
+    };
+
+    const handleHighestSelect = (note) => setHighestNote(() => ({...note}));
+    const handleLowestSelect = (note) => setLowestNote(() => ({...note}));
 
     const handleAccompCheckboxChange = (evt) => {
         let { value } = evt.target;
@@ -162,6 +207,8 @@ const QuickSearchForm = () => {
         searchFormState.setFormField('countries', countriesResults);
         searchFormState.setFormField('accompType', accompResults);
         searchFormState.setFormField('accompDifficulty', accompDiffResults);
+        if (highestNote.value) searchFormState.setFormField('highestNote', highestNote.value);
+        if (lowestNote.value) searchFormState.setFormField('lowestNote', lowestNote.value);
         
         searchFormState.worksSearch(searchFormState.formFields);
 
@@ -227,17 +274,37 @@ const QuickSearchForm = () => {
                     </Button>
                 </FormGroup>
                 <Collapse isOpen={formSnap.isAdvancedSearch} keepChildrenMounted={true}>
-                    <FormGroup label='Highest Note' labelFor='highestNote' labelInfo='(horn in F)' helperText='beginning at top of treble clef staff'>
-                        <HTMLSelect value={formSnap.formFields.highestNote} onChange={searchFormState.setFormField('highestNote', formSnap.formFields.highestNote)}>
+                    <FormGroup label='Highest Note' labelFor='highestNote' labelInfo='(horn in F)' helperText='above the treble clef staff'>
+                        {/* <HTMLSelect 
+                            value={formSnap.formFields.highestNote} 
+                            onChange={handleHighRangeChange}
+                            options={highRangeArr}
+                            >
                             <option>choose...</option>
                             { highRangeArr.map((note, idx) => 
                                 <option key={idx} value={note.value}>{note.abbrevName}</option>
                             )}
-                        </HTMLSelect>
+                        </HTMLSelect> */}
+                        <Select
+                            items={highRangeArr}
+                            itemRenderer={renderRange}
+                            onItemSelect={handleHighestSelect}
+                            
+                            filterable={false}
+                        >
+                            <Button text={ highestNote.label || lowRangeArr[0].label } rightIcon="double-caret-vertical" />
+                        </Select>
                     </FormGroup>
-                    <FormGroup label='Lowest Note' labelFor='lowestNote'>
-                        <HTMLSelect value={formSnap.formFields.lowestNote} onChange={searchFormState.setFormField('lowestNote', formSnap.formFields.lowestNote)}>
-                        </HTMLSelect>
+                    <FormGroup label='Lowest Note' labelFor='lowestNote' labelInfo='(horn in F)' helperText='descending, beginning G below middle C'>
+                        <Select
+                            items={lowRangeArr}
+                            itemRenderer={renderRange}
+                            onItemSelect={handleLowestSelect}
+                            
+                            filterable={false}
+                        >
+                            <Button text={ lowestNote.label || lowRangeArr[0].label } rightIcon="double-caret-vertical" />
+                        </Select>
                     </FormGroup>
                     <FormGroup label="Technique" labelFor="techniques" helperText=' eg. lip trill or stopped' >
                         <InputGroup 
