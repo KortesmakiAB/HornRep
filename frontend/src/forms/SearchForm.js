@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { Button, FormGroup, InputGroup, RangeSlider, Checkbox, Collapse, MenuItem, HTMLSelect } from "@blueprintjs/core";
+import { Button, FormGroup, InputGroup, RangeSlider, Checkbox, Collapse, MenuItem } from "@blueprintjs/core";
 import { MultiSelect, Select } from "@blueprintjs/select";
+import { useHistory } from 'react-router-dom';
 
 import { searchFormState } from '../App';
 import { createRangeArr } from './range';
@@ -33,6 +34,9 @@ const QuickSearchForm = () => {
     });
     const [highestNote, setHighestNote] = useState({});
     const [lowestNote, setLowestNote] = useState({});
+
+    const history = useHistory();   // creates a history object
+    const formSnap = useSnapshot(searchFormState);
 
     // object containing 'HH:MM:SS' values which correspond to num of minutes (from form data) as keys
     const duration = {};
@@ -142,7 +146,7 @@ const QuickSearchForm = () => {
 
     const handleAccompDiffCheckboxChange = (evt) => {
         let { value } = evt.target;
-        const accompDiff = evt.target.getAttribute('data-accompDiff');
+        const accompDiff = evt.target.getAttribute('data-accomp-diff');
 
         // evt.target returns a string
         let bool = JSON.parse(value);
@@ -174,8 +178,6 @@ const QuickSearchForm = () => {
     const renderTag = (tag) => tag;
 
     const handleTagRemove = (_tag) => { searchFormState.setCountriesState(_tag) };
-
-    const formSnap = useSnapshot(searchFormState);
 
 
     const handleFormSubmit = (evt) => {
@@ -212,7 +214,7 @@ const QuickSearchForm = () => {
         
         searchFormState.worksSearch(searchFormState.formFields);
 
-        // TODO - redirect searchResults
+        history.push('/works');
     };
 
     return (
@@ -275,16 +277,6 @@ const QuickSearchForm = () => {
                 </FormGroup>
                 <Collapse isOpen={formSnap.isAdvancedSearch} keepChildrenMounted={true}>
                     <FormGroup label='Highest Note' labelFor='highestNote' labelInfo='(horn in F)' helperText='above the treble clef staff'>
-                        {/* <HTMLSelect 
-                            value={formSnap.formFields.highestNote} 
-                            onChange={handleHighRangeChange}
-                            options={highRangeArr}
-                            >
-                            <option>choose...</option>
-                            { highRangeArr.map((note, idx) => 
-                                <option key={idx} value={note.value}>{note.abbrevName}</option>
-                            )}
-                        </HTMLSelect> */}
                         <Select
                             items={highRangeArr}
                             itemRenderer={renderRange}
@@ -344,9 +336,9 @@ const QuickSearchForm = () => {
                         <Checkbox data-accomp="unaccompanied" name="accompaniment" label="Unaccompanied" inline="true" value={checkboxesAccomp.unaccompanied} onChange={handleAccompCheckboxChange} />
                     </FormGroup>
                     <FormGroup label="Accompaniment Difficulty" labelFor="accompDifficulty">
-                        <Checkbox data-accompDiff="novice" name="accompDifficulty" label="novice" inline="true" value={checkboxesAccompDifficulty.novice} onChange={handleAccompDiffCheckboxChange} />
-                        <Checkbox data-accompDiff="intermediate" name="accompDifficulty" label="intermediate" inline="true" value={checkboxesAccompDifficulty.intermediate} onChange={handleAccompDiffCheckboxChange} />
-                        <Checkbox data-accompDiff="advanced" name="accompDifficulty" label="advanced" inline="true" value={checkboxesAccompDifficulty.advanced} onChange={handleAccompDiffCheckboxChange} />
+                        <Checkbox data-accomp-diff="novice" name="accompDifficulty" label="novice" inline="true" value={checkboxesAccompDifficulty.novice} onChange={handleAccompDiffCheckboxChange} />
+                        <Checkbox data-accomp-diff="intermediate" name="accompDifficulty" label="intermediate" inline="true" value={checkboxesAccompDifficulty.intermediate} onChange={handleAccompDiffCheckboxChange} />
+                        <Checkbox data-accomp-diff="advanced" name="accompDifficulty" label="advanced" inline="true" value={checkboxesAccompDifficulty.advanced} onChange={handleAccompDiffCheckboxChange} />
                     </FormGroup>
                 </Collapse>
                 <FormGroup>

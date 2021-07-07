@@ -37,7 +37,8 @@ CREATE TABLE "works" (
   "clef" varchar,
   "composition_yr" date,
   "accompaniment_type" varchar,
-  "accompaniment_difficulty" varchar
+  "accompaniment_difficulty" varchar,
+  "description" varchar
 );
 
 CREATE TABLE "comments" (

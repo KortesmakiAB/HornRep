@@ -22,6 +22,19 @@ export const worksState = proxy({
   setWorksList: worksArr => worksState.worksList = worksArr,
 });
 
+export const workDetailsState = proxy({
+  workDetails: {},
+  setWorkDetails(worksObj) { this.workDetails = worksObj },
+
+
+  loadWorkDeets(id) {
+    (async () => {
+      const resp = await HornRepApi.getWorkDetails(id);
+      this.setWorkDetails(resp.work);
+		})();
+	},
+});
+
 // initial maxDuration is pre-set to 20 for convenience.
 // most people want works less than 20 minutes.
 export const searchFormState = proxy({
@@ -79,7 +92,6 @@ export const searchFormState = proxy({
     (async () => {
       const worksList = await HornRepApi.searchWorks(searchFieldsObj);
 			worksState.setWorksList(worksList);
-      console.log('worksList--',worksState.worksList);
 		})();
 	},
 });

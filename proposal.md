@@ -245,12 +245,10 @@ UX Notes: group like inputs together: text, multi-select, checkboxes
     1. ~~Switch/Routes~~
         1. ~~create components with dummy div/text~~
         1. ~~create switch~~
-1. Scan Blueprint docs to look for helpful Components/things
-1. `<App>` w currUser state
+1. ~~`<SearchForm>`~~
 1. `<WorkList>`
 1. `<WorkDetails>`
-1. `<Home>` & `<SimpleSearch>`
-1. `<AdvancedSearch >`
+1. `<Home>`
 1. `<Nav>`
 1. `<EditWork>`
 1. `<EditComment>`

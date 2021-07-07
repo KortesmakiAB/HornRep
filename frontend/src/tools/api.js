@@ -31,13 +31,16 @@ class HornRepApi {
 
   // Individual API routes
 
-  /** TODO */
   static async searchWorks(formData) {
     let res = await this.request(`works`, formData);
     return res.works;
   }
+
+  static async getWorkDetails(id) {
+    return await this.request(`works/${id}`);
+  }
   
-  /* eg => { 
+  /* returns => { 
     "checkboxData": {
         "eraStyle": [
             "romantic",
@@ -47,8 +50,9 @@ class HornRepApi {
             "Germany",
             "United States"
         ]
-  }
-} */
+      }
+    } 
+  */
   static async getCheckBoxData() {
     return await this.request(`works/checkboxes`);
   }

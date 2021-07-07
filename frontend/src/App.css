@@ -5,9 +5,13 @@
 
 
 .App {
-  margin: 2.5%;
+  margin: .66rem;
   /* TODO: remove */
-  border: 1px solid black
+  /* border: 1px solid black */
+}
+
+ul {
+  list-style-type: none;
 }
 
 /* .App-logo {

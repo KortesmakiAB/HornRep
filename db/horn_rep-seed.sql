@@ -36,10 +36,12 @@ INSERT INTO works (
     clef, 
     composition_yr, 
     accompaniment_type, 
-    accompaniment_difficulty)
+    accompaniment_difficulty,
+    description)
+    
 VALUES 
-    ('Concerto #1', 1, 1, '00:15:30', 'romantic', 46, 18, 'medium/difficult', null, 'treble', '1854-01-01', 'orchestra, piano', 'medium'),
-    ('Parable for solo horn', 2, 1, '00:11:15', 'modern', 47, 8, 'difficult', 'flutter tongue, double-tongue', 'treble, bass', '1941-01-01', 'unaccompanied', null);
+    ('Concerto #1', 1, 1, '00:15:30', 'romantic', 46, 18, 'intermediate/advanced', null, 'treble', '1854-01-01', 'orchestra, piano', 'intermediate', 'This early work of Richard Strauss is a standard in the horn’s solo repertoire.  It is often asked for in both orchestral and university auditions.  While a standard among professionals, it is playable by an above-average high school student.  The diverse piece requires lyrical, technical, and heroic playing.  The first movement opens with a cadenza-like passage before transitioning into the more lyrical melody.  It requires lyrical and technical proficiency, in addition to a large dynamic range.  The second movement demands a control of the mid-range at both pianissimo and fortissimo.  The third movement shares the lyrical and technical demands of the first movement.  Due to the work’s length and breadth, endurance is an important consideration regarding placement on a recital program.'),
+    ('Parable for solo horn', 2, 1, '00:11:15', 'modern', 47, 8, 'advanced', 'flutter tongue, double-tongue', 'treble, bass', '1941-01-01', 'unaccompanied', null, 'This unaccompanied work is quite demanding.  Its technical difficulties include mixed meters, difficult intervals, and large leaps.  Lyrically, its phrases demand maturity from the performer.  Even though it is a difficult work it is not inaccessible to the undergraduate student.  This piece is one that challenges the performer and the audience; nevertheless, it is a standard selection in the repertoire.');
 
 INSERT INTO comments (
     comment,

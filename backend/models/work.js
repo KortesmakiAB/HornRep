@@ -5,30 +5,6 @@ const { NotFoundError, BadRequestError } = require("../expressError");
 
 
 class Work {
-	static baseQuery = `SELECT 
-							works.id,
-							title,
-							c.first_name AS "fName",
-							c.last_name AS "lName",
-							c.country,
-							c.gender,
-							TO_CHAR(duration, 'MI:SS') AS "duration",
-							era_style AS "eraStyle",
-							highest_note AS "highestNote",
-							lowest_note AS "lowestNote",
-							difficulty,
-							techniques,
-							clef,
-							TO_CHAR( composition_yr, 'YYYY') AS "compYr",
-							accompaniment_type AS "accompType",
-							accompaniment_difficulty AS "accompDifficulty",
-							u.username,
-							submitted_by AS "submittedBy"
-						FROM works
-						JOIN composers c ON composer_id = c.id
-						JOIN users u ON u.id = submitted_by
-						`;
-
 
 	/** getWork()
 	* 	Get 1 work by id.
@@ -36,8 +12,30 @@ class Work {
 	*/
 
 	static async getWork(id) {
-		const workResp = await db.query(
-			`${this.baseQuery}
+		const workResp = await db.query(`
+			SELECT 
+				works.id,
+				title,
+				c.first_name AS "fName",
+				c.last_name AS "lName",
+				c.country,
+				c.gender,
+				TO_CHAR(duration, 'MI:SS') AS "duration",
+				era_style AS "eraStyle",
+				highest_note AS "highestNote",
+				lowest_note AS "lowestNote",
+				difficulty,
+				techniques,
+				clef,
+				TO_CHAR( composition_yr, 'YYYY') AS "compYr",
+				accompaniment_type AS "accompType",
+				accompaniment_difficulty AS "accompDifficulty",
+				u.username,
+				submitted_by AS "submittedBy",
+				description
+			FROM works
+			JOIN composers c ON composer_id = c.id
+			JOIN users u ON u.id = submitted_by
 			WHERE works.id = $1;`,
 			[id]
 		);
@@ -62,8 +60,8 @@ class Work {
 				title,
 				TO_CHAR(duration, 'MI:SS') AS "duration",
 				difficulty,
-				highest_note AS highestNote,
-				lowest_note AS lowestNote
+				highest_note AS "highestNote",
+				lowest_note AS "lowestNote"
 			FROM movements
 			WHERE work_id = ${work.id}
 		`);
@@ -103,8 +101,20 @@ class Work {
 
 	static async search(searchParams = {}) {
 
-		// TODO maybe I don't need all of the fields/columns that the base query includes
-		let query = `${this.baseQuery}`;
+		let query = `
+			SELECT 
+				works.id,
+				title,
+				c.first_name AS "fName",
+				c.last_name AS "lName",
+				TO_CHAR(duration, 'MI:SS') AS "duration",
+				era_style AS "eraStyle",
+				difficulty
+			FROM works
+			JOIN composers c ON composer_id = c.id
+			JOIN users u ON u.id = submitted_by
+		`;
+		
 		const whereExpressions = [];
 		const queryValues = [];
 		
