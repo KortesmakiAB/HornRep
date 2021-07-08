@@ -6,7 +6,7 @@
 
 .App {
   margin: 1rem;
-  padding: 1.25rem;
+  padding: 1rem;
   border: 1px solid darkslategrey;
   border-radius: .25rem;
 }
@@ -20,6 +20,9 @@ ul {
   list-style-type: none;
 }
 
+.Card {
+  margin-top: 1rem;
+}
 
 
 /* .App-logo {

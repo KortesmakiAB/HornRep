@@ -10,7 +10,7 @@ const Works = () => {
     const worksSnap = useSnapshot(worksState);
     
     const cards = worksSnap.worksList.map(w => 
-        <Card key={w.id} interactive={true} elevation={Elevation.TWO} className='Works-Card'>
+        <Card key={w.id} interactive={true} elevation={Elevation.TWO} className='Card'>
             <Link to={`/works/${w.id}`}><H4>{w.title}</H4></Link>
             <UL>
                 <li><b>composer:</b> {w.fName} {w.lName}</li>

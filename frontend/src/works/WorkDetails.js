@@ -23,13 +23,13 @@ const WorkDetails = () => {
 
         return (
             <>
-            <Card>
+            <Card className='Card'>
                 <H2>{title}</H2>
                 <Callout intent='success' icon={null} >
                     {description}
                 </Callout>
             </Card>
-            <Card elevation={Elevation.TWO} className=''>
+            <Card elevation={Elevation.TWO} className='Card'>
                 <H3>Work</H3>
                 <HTMLTable>
                     <tbody>
@@ -106,7 +106,7 @@ const WorkDetails = () => {
                     </tbody>
                 </HTMLTable>
             </Card>
-            <Card>
+            <Card className='Card'>
                 <H3>Composer</H3>
                 <HTMLTable>
                     <tbody>
@@ -126,7 +126,7 @@ const WorkDetails = () => {
                     </tbody>
                 </HTMLTable>
             </Card>
-            <Card>
+            <Card className='Card'>
             { movements && movements.length > 0 
                 ? (<div>
                     <H3>Movements</H3>
@@ -142,7 +142,7 @@ const WorkDetails = () => {
                         </thead>
                         <tbody>
                         {  movements.map(m => (
-                            <tr>
+                            <tr key={m.id}>
                                 <td>{m.title}</td>
                                 <td>{m.duration}</td>
                                 <td>{m.difficulty}</td>
