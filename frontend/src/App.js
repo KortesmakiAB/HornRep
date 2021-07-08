@@ -1,10 +1,13 @@
 // import jwt from 'jsonwebtoken';
 import { proxy } from 'valtio';
+import { H1 } from '@blueprintjs/core';
 import { BrowserRouter } from "react-router-dom";
 
 import HornRepApi from './tools/api';
 import Routes from './routes-nav/Routes';
 import './App.css';
+// import hornBg from '../src/media/HornBg2.jpg';
+
 
 
 // SHARED STATE
@@ -30,6 +33,7 @@ export const workDetailsState = proxy({
   loadWorkDeets(id) {
     (async () => {
       const resp = await HornRepApi.getWorkDetails(id);
+      console.log(resp.work)
       this.setWorkDetails(resp.work);
 		})();
 	},
@@ -102,7 +106,7 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <header className="App-header">
-          
+          <H1 className='App-title'>HornRep</H1>
         </header>
         <Routes></Routes>
       </div>

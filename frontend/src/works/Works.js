@@ -11,7 +11,7 @@ const Works = () => {
     
     const cards = worksSnap.worksList.map(w => 
         <Card key={w.id} interactive={true} elevation={Elevation.TWO} className='Works-Card'>
-            <Link to={`/works/${w.id}`}><H3>{w.title}</H3></Link>
+            <Link to={`/works/${w.id}`}><H4>{w.title}</H4></Link>
             <UL>
                 <li><b>composer:</b> {w.fName} {w.lName}</li>
                 <li><b>duration:</b> "{w.duration}"</li>

@@ -5,14 +5,22 @@
 
 
 .App {
-  margin: .66rem;
-  /* TODO: remove */
-  /* border: 1px solid black */
+  margin: 1rem;
+  padding: 1.25rem;
+  border: 1px solid darkslategrey;
+  border-radius: .25rem;
+}
+
+.App-title {
+  text-align: center;
+  font-family: 'Almarai', sans-serif;
 }
 
 ul {
   list-style-type: none;
 }
+
+
 
 /* .App-logo {
   height: 40vmin;

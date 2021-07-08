@@ -10,7 +10,7 @@ import './SearchForm.css';
 
 
 
-const QuickSearchForm = () => {
+const SearchForm = () => {
     
     // initial maxDuration is pre-set to 20 for convenience.
     // most people want works shorter than 20 minutes.
@@ -219,7 +219,7 @@ const QuickSearchForm = () => {
 
     return (
         <div>
-            <form onSubmit={handleFormSubmit} className='QuickSearchForm'>
+            <form onSubmit={handleFormSubmit} className='SearchForm'>
                 <FormGroup label="Title" labelFor="title">
                     <InputGroup id="title" name="title" placeholder="keyword" value={formSnap.formFields.title} onChange={searchFormState.handleFormChange} />
                 </FormGroup>
@@ -349,4 +349,4 @@ const QuickSearchForm = () => {
     );
 };
 
-export default QuickSearchForm;
+export default SearchForm;
