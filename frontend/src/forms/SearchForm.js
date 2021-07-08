@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { Button, FormGroup, InputGroup, RangeSlider, Checkbox, Collapse, MenuItem } from "@blueprintjs/core";
+import { Button, FormGroup, InputGroup, RangeSlider, Checkbox, Collapse, MenuItem, H3, Card } from "@blueprintjs/core";
 import { MultiSelect, Select } from "@blueprintjs/select";
 import { useHistory } from 'react-router-dom';
 
@@ -65,7 +65,7 @@ const SearchForm = () => {
         }));
     }
 
-    const handleEraStyleCheckboxChange = (evt) => searchFormState.setEraStyleCheckboxState(evt.target.getAttribute('data-eS'));
+    const handleEraStyleCheckboxChange = (evt) => searchFormState.setEraStyleCheckboxState(evt.target.getAttribute('data-es'));
 
     const rangeArr = createRangeArr();
     const createHighRangeArr = () => {
@@ -115,6 +115,20 @@ const SearchForm = () => {
     }
     const lowRangeArr = createLowRangeArr();
     
+    const genderArr = [{display: 'male', value: 'male'}, {display: 'female', value: 'female'}, {display: 'select', value: null}];
+    const renderGender = (gender, { handleClick, modifiers }) => {
+        if (!modifiers.matchesPredicate) {
+            return null;
+        }
+        return (
+            <MenuItem
+                active={modifiers.active}
+                key={gender.display}
+                onClick={handleClick}
+                text={gender.display}
+            />
+        );
+    };
     const renderRange = (note, { handleClick, modifiers }) => {
         if (!modifiers.matchesPredicate) {
             return null;
@@ -129,6 +143,7 @@ const SearchForm = () => {
         );
     };
 
+    const handleGenderSelect = (g) => searchFormState.setFormField('gender', g.value);
     const handleHighestSelect = (note) => setHighestNote(() => ({...note}));
     const handleLowestSelect = (note) => setLowestNote(() => ({...note}));
 
@@ -142,7 +157,7 @@ const SearchForm = () => {
             ...boxes,
             [accompType]: !bool
         }));
-    }
+    };
 
     const handleAccompDiffCheckboxChange = (evt) => {
         let { value } = evt.target;
@@ -154,7 +169,7 @@ const SearchForm = () => {
             ...boxes,
             [accompDiff]: !bool
         }));
-    }
+    };
 
     const filterCountry = (query, country) => country.toLowerCase().startsWith(query.toLowerCase());
 
@@ -219,132 +234,146 @@ const SearchForm = () => {
 
     return (
         <div>
-            <form onSubmit={handleFormSubmit} className='SearchForm'>
-                <FormGroup label="Title" labelFor="title">
-                    <InputGroup id="title" name="title" placeholder="keyword" value={formSnap.formFields.title} onChange={searchFormState.handleFormChange} />
-                </FormGroup>
-                <FormGroup label="Last Name" labelFor="lName">
-                    <InputGroup id="lName" name="lName" placeholder="composer" value={formSnap.formFields.lName} onChange={searchFormState.handleFormChange} />
-                </FormGroup>
-                <FormGroup label="First Name" labelFor="fName">
-                    <InputGroup id="fName" name="fName" placeholder="composer" value={formSnap.formFields.fName} onChange={searchFormState.handleFormChange} />
-                </FormGroup>
-                <FormGroup label="Duration" labelFor="duration" labelInfo="(complete work)" helperText="*Does not search individual movement duration.">
-                    <RangeSlider 
-                        id="duration" 
-                        name="duration" 
-                        intent="primary"
-                        max={sliderMax}
-                        value={sliderArr} 
-                        onChange={(valArr) => setSliderArr(() => valArr)} 
-                        onRelease={handleSliderRelease} 
-                        labelStepSize={5}
-                        stepSize={1}
-                    />
-                </FormGroup>
-                <FormGroup label="Difficulty" labelFor="difficulty">
-                    <Checkbox data-diff="novice" name="difficulty" label="novice" inline="true" value={checkboxesDifficulty.novice} onChange={handleDifficultyCheckboxChange} />
-                    <Checkbox data-diff="intermediate" name="difficulty" label="intermediate" inline="true" value={checkboxesDifficulty.intermediate} onChange={handleDifficultyCheckboxChange} />
-                    <Checkbox data-diff="advanced" name="difficulty" label="advanced" inline="true" value={checkboxesDifficulty.advanced} onChange={handleDifficultyCheckboxChange} />
-                </FormGroup>
-                <FormGroup label={ formSnap.checkboxData.eraStyle ? "Era/Style" : null } labelFor="eraStyle">
-                    { formSnap.checkboxData.eraStyle
-                        ? formSnap.checkboxData.eraStyle.map((eS) => 
-                            <Checkbox 
-                                key={eS} 
-                                data-eS={eS}
-                                name="eraStyle" 
-                                label={eS} 
-                                inline="true" 
-                                value={formSnap.eraStyleCheckboxState[eS]} 
-                                onChange={handleEraStyleCheckboxChange} 
-                            />)
-                        : null
-                    }
-                </FormGroup>
-
-                <FormGroup>
-                    <Button 
-                        type='button'
-                        onClick={() => searchFormState.setAdvancedSearch()} 
-                        minimal='true' 
-                        rightIcon={ formSnap.isAdvancedSearch ? 'caret-up' : 'caret-down' } 
-                        outlined='true'
-                        intent='primary'
-                    >
-                        { formSnap.isAdvancedSearch ? 'Fewer options' : 'More options' } 
-                    </Button>
-                </FormGroup>
-                <Collapse isOpen={formSnap.isAdvancedSearch} keepChildrenMounted={true}>
-                    <FormGroup label='Highest Note' labelFor='highestNote' labelInfo='(horn in F)' helperText='above the treble clef staff'>
-                        <Select
-                            items={highRangeArr}
-                            itemRenderer={renderRange}
-                            onItemSelect={handleHighestSelect}
-                            
-                            filterable={false}
-                        >
-                            <Button text={ highestNote.label || lowRangeArr[0].label } rightIcon="double-caret-vertical" />
-                        </Select>
+            <Card className='Card'>
+                <H3>Search</H3>
+                <form onSubmit={handleFormSubmit} className='SearchForm'>
+                    <FormGroup label="Difficulty" labelFor="difficulty">
+                        <Checkbox data-diff="novice" name="difficulty" label="novice" inline="true" value={checkboxesDifficulty.novice} onChange={handleDifficultyCheckboxChange} />
+                        <Checkbox data-diff="intermediate" name="difficulty" label="intermediate" inline="true" value={checkboxesDifficulty.intermediate} onChange={handleDifficultyCheckboxChange} />
+                        <Checkbox data-diff="advanced" name="difficulty" label="advanced" inline="true" value={checkboxesDifficulty.advanced} onChange={handleDifficultyCheckboxChange} />
                     </FormGroup>
-                    <FormGroup label='Lowest Note' labelFor='lowestNote' labelInfo='(horn in F)' helperText='descending, beginning G below middle C'>
-                        <Select
-                            items={lowRangeArr}
-                            itemRenderer={renderRange}
-                            onItemSelect={handleLowestSelect}
-                            
-                            filterable={false}
-                        >
-                            <Button text={ lowestNote.label || lowRangeArr[0].label } rightIcon="double-caret-vertical" />
-                        </Select>
+                    <FormGroup label={ formSnap.checkboxData.eraStyle ? "Era/Style" : null } labelFor="eraStyle">
+                        { formSnap.checkboxData.eraStyle
+                            ? formSnap.checkboxData.eraStyle.map((eS) => 
+                                <Checkbox 
+                                    key={eS} 
+                                    data-es={eS}
+                                    name="eraStyle" 
+                                    label={eS} 
+                                    inline="true" 
+                                    value={formSnap.eraStyleCheckboxState[eS]} 
+                                    onChange={handleEraStyleCheckboxChange} 
+                                />)
+                            : null
+                        }
                     </FormGroup>
-                    <FormGroup label="Technique" labelFor="techniques" helperText=' eg. lip trill or stopped' >
-                        <InputGroup 
-                            id="techniques" 
-                            name="techniques" 
-                            placeholder='keyword' 
-                            value={formSnap.formFields.techniques} 
-                            onChange={searchFormState.handleFormChange} 
+                    <FormGroup label="Duration" labelFor="duration" labelInfo="(complete work)" helperText="*Does not search individual movement duration.">
+                        <RangeSlider 
+                            id="duration" 
+                            name="duration" 
+                            intent="primary"
+                            max={sliderMax}
+                            value={sliderArr} 
+                            onChange={(valArr) => setSliderArr(() => valArr)} 
+                            onRelease={handleSliderRelease} 
+                            labelStepSize={5}
+                            stepSize={1}
                         />
                     </FormGroup>
-
-                    <FormGroup 
-                        label={ formSnap.checkboxData.countries ? "Country/Region" : null } 
-                        labelFor="countries"
-                    >
-                        <MultiSelect
-                            items={ formSnap.checkboxData.countries }
-                            itemRenderer={renderCountry}
-                            onItemSelect={handleCountrySelect}
-                            tagRenderer={renderTag}
-
-                            query={ formSnap.countriesQuery }
-                            onQueryChange={ searchFormState.setCountriesQuery }
-                            itemPredicate={filterCountry}
-                            noResults={<MenuItem disabled={true} text="No results." />}
-                            resetOnSelect='true'
-                            selectedItems={ Object.keys(formSnap.countriesState).filter(c => formSnap.countriesState[c]) }
-                            tagInputProps={{
-                                onRemove: handleTagRemove,
-                            }}
+                    <FormGroup>
+                        <Button 
+                            type='button'
+                            onClick={() => searchFormState.setAdvancedSearch()} 
+                            minimal='true' 
+                            rightIcon={ formSnap.isAdvancedSearch ? 'caret-up' : 'caret-down' } 
+                            outlined='true'
+                            intent='primary'
                         >
-                        </MultiSelect>
+                            { formSnap.isAdvancedSearch ? 'Fewer options' : 'More options' } 
+                        </Button>
                     </FormGroup>
-                    <FormGroup label="Accompaniment" labelFor="accompaniment">
-                        <Checkbox data-accomp="orchestra" name="accompaniment" label="Orchestra" inline="true" value={checkboxesAccomp.orchestra} onChange={handleAccompCheckboxChange} />
-                        <Checkbox data-accomp="piano" name="accompaniment" label="Piano" inline="true" value={checkboxesAccomp.piano} onChange={handleAccompCheckboxChange} />
-                        <Checkbox data-accomp="unaccompanied" name="accompaniment" label="Unaccompanied" inline="true" value={checkboxesAccomp.unaccompanied} onChange={handleAccompCheckboxChange} />
+                    <Collapse isOpen={formSnap.isAdvancedSearch} keepChildrenMounted={true}>
+                        <FormGroup 
+                            label={ formSnap.checkboxData.countries ? "Country/Region" : null } 
+                            labelFor="countries"
+                            labelInfo='(of composer)'
+                        >
+                            <MultiSelect
+                                items={ formSnap.checkboxData.countries }
+                                itemRenderer={renderCountry}
+                                onItemSelect={handleCountrySelect}
+                                tagRenderer={renderTag}
+
+                                query={ formSnap.countriesQuery }
+                                onQueryChange={ searchFormState.setCountriesQuery }
+                                itemPredicate={filterCountry}
+                                noResults={<MenuItem disabled={true} text="No results." />}
+                                resetOnSelect='true'
+                                selectedItems={ Object.keys(formSnap.countriesState).filter(c => formSnap.countriesState[c]) }
+                                tagInputProps={{
+                                    onRemove: handleTagRemove,
+                                }}
+                            >
+                            </MultiSelect>
+                        </FormGroup>
+                        <FormGroup label='Gender' labelFor='gender' >
+                            <Select
+                                items={genderArr}
+                                itemRenderer={renderGender}
+                                onItemSelect={handleGenderSelect}
+                                
+                                filterable={false}
+                            >
+                                <Button text={ formSnap.formFields.gender || genderArr[2].display } rightIcon="double-caret-vertical" />
+                            </Select>
+                        </FormGroup>
+                        <FormGroup label='Highest Note' labelFor='highestNote' labelInfo='(horn in F)' helperText='above the treble clef staff'>
+                            <Select
+                                items={highRangeArr}
+                                itemRenderer={renderRange}
+                                onItemSelect={handleHighestSelect}
+                                
+                                filterable={false}
+                            >
+                                <Button text={ highestNote.label || lowRangeArr[0].label } rightIcon="double-caret-vertical" />
+                            </Select>
+                        </FormGroup>
+                        <FormGroup label='Lowest Note' labelFor='lowestNote' labelInfo='(horn in F)' helperText='descending, beginning G below middle C'>
+                            <Select
+                                items={lowRangeArr}
+                                itemRenderer={renderRange}
+                                onItemSelect={handleLowestSelect}
+                                
+                                filterable={false}
+                            >
+                                <Button text={ lowestNote.label || lowRangeArr[0].label } rightIcon="double-caret-vertical" />
+                            </Select>
+                        </FormGroup>
+                        <FormGroup label="Accompaniment" labelFor="accompaniment">
+                            <Checkbox data-accomp="orchestra" name="accompaniment" label="Orchestra" inline="true" value={checkboxesAccomp.orchestra} onChange={handleAccompCheckboxChange} />
+                            <Checkbox data-accomp="piano" name="accompaniment" label="Piano" inline="true" value={checkboxesAccomp.piano} onChange={handleAccompCheckboxChange} />
+                            <Checkbox data-accomp="unaccompanied" name="accompaniment" label="Unaccompanied" inline="true" value={checkboxesAccomp.unaccompanied} onChange={handleAccompCheckboxChange} />
+                        </FormGroup>
+                        <FormGroup label="Accompaniment Difficulty" labelFor="accompDifficulty">
+                            <Checkbox data-accomp-diff="novice" name="accompDifficulty" label="novice" inline="true" value={checkboxesAccompDifficulty.novice} onChange={handleAccompDiffCheckboxChange} />
+                            <Checkbox data-accomp-diff="intermediate" name="accompDifficulty" label="intermediate" inline="true" value={checkboxesAccompDifficulty.intermediate} onChange={handleAccompDiffCheckboxChange} />
+                            <Checkbox data-accomp-diff="advanced" name="accompDifficulty" label="advanced" inline="true" value={checkboxesAccompDifficulty.advanced} onChange={handleAccompDiffCheckboxChange} />
+                        </FormGroup>
+                        <FormGroup label="Technique" labelFor="techniques" helperText=' eg. lip trill, stopped' >
+                            <InputGroup 
+                                id="techniques" 
+                                name="techniques" 
+                                placeholder='keyword' 
+                                value={formSnap.formFields.techniques} 
+                                onChange={searchFormState.handleFormChange} 
+                            />
+                        </FormGroup>
+                        <FormGroup label="Title" labelFor="title">
+                            <InputGroup id="title" name="title" placeholder="keyword" value={formSnap.formFields.title} onChange={searchFormState.handleFormChange} />
+                        </FormGroup>
+                        <FormGroup label="Last Name" labelFor="lName">
+                            <InputGroup id="lName" name="lName" placeholder="composer" value={formSnap.formFields.lName} onChange={searchFormState.handleFormChange} />
+                        </FormGroup>
+                        <FormGroup label="First Name" labelFor="fName">
+                            <InputGroup id="fName" name="fName" placeholder="composer" value={formSnap.formFields.fName} onChange={searchFormState.handleFormChange} />
+                        </FormGroup>
+                    </Collapse>
+                    <FormGroup>
+                        <Button type="submit" intent="primary">Submit</Button>
                     </FormGroup>
-                    <FormGroup label="Accompaniment Difficulty" labelFor="accompDifficulty">
-                        <Checkbox data-accomp-diff="novice" name="accompDifficulty" label="novice" inline="true" value={checkboxesAccompDifficulty.novice} onChange={handleAccompDiffCheckboxChange} />
-                        <Checkbox data-accomp-diff="intermediate" name="accompDifficulty" label="intermediate" inline="true" value={checkboxesAccompDifficulty.intermediate} onChange={handleAccompDiffCheckboxChange} />
-                        <Checkbox data-accomp-diff="advanced" name="accompDifficulty" label="advanced" inline="true" value={checkboxesAccompDifficulty.advanced} onChange={handleAccompDiffCheckboxChange} />
-                    </FormGroup>
-                </Collapse>
-                <FormGroup>
-                    <Button type="submit" intent="primary">Submit</Button>
-                </FormGroup>
-            </form>
+                </form>
+            </Card>
+
         </div>
     );
 };

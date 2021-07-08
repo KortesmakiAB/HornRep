@@ -1,6 +1,6 @@
 // import jwt from 'jsonwebtoken';
 import { proxy } from 'valtio';
-import { H1 } from '@blueprintjs/core';
+import { H1, Card } from '@blueprintjs/core';
 import { BrowserRouter } from "react-router-dom";
 
 import HornRepApi from './tools/api';
@@ -56,6 +56,7 @@ export const searchFormState = proxy({
     countries: [],
     accompType: [],
     accompDifficulty: [],
+    gender: ''
   },
   setFormField(field, val) { this.formFields[field] = val },
 
@@ -104,12 +105,12 @@ export const searchFormState = proxy({
 function App() {
   return (
     <BrowserRouter>
-      <div className="App">
+      <Card className="App">
         <header className="App-header">
           <H1 className='App-title'>HornRep</H1>
         </header>
         <Routes></Routes>
-      </div>
+      </Card>
     </BrowserRouter>
   );
 }

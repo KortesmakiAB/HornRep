@@ -48,7 +48,7 @@ class Work {
 			SELECT
 				comment, 
 				u.username, 
-				TO_CHAR(time_stamp_tz, 'mm/dd/yyyy') AS "comment_date"
+				TO_CHAR(time_stamp_tz, 'mm/dd/yyyy') AS "commentDate"
 			FROM comments
 			JOIN users u on u.id = user_id
 			WHERE work_id = ${work.id};`
@@ -159,7 +159,8 @@ class Work {
 				}
 			});
 			else {
-				if (exactMatches[match] !== undefined) {
+				console.log('##########', exactMatches[match])
+				if (exactMatches[match] !== '' && exactMatches[match] !== undefined) {
 					queryValues.push(exactMatches[match]);
 					whereExpressions.push(`${[match]} = $${queryValues.length}`);
 				}

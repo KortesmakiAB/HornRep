@@ -7,7 +7,7 @@ import { workDetailsState } from '../App';
 
 // import Loading from '../tools/Loading';
 
-import './Works.css';
+import './WorkDetails.css';
 
 
 const WorkDetails = () => {
@@ -17,20 +17,15 @@ const WorkDetails = () => {
     const WorkDeets = () => {
         workDetailsState.loadWorkDeets(id);
         const workDeetsSnap = useSnapshot(workDetailsState);
-        const { title, description, duration, difficulty, eraStyle, compYr, highestNote, clef,
+        const { title, description, duration, difficulty, eraStyle, compYr, highestNote, clef, comments,
             lowestNote, techniques, fName, lName, country, gender, accompType, accompDifficulty, movements
         } = workDeetsSnap.workDetails;
 
         return (
             <>
-            <Card className='Card'>
-                <H2>{title}</H2>
-                <Callout intent='success' icon={null} >
-                    {description}
-                </Callout>
-            </Card>
+            
             <Card elevation={Elevation.TWO} className='Card'>
-                <H3>Work</H3>
+                <H3>{title}</H3>
                 <HTMLTable>
                     <tbody>
                     { duration ? 
@@ -110,21 +105,38 @@ const WorkDetails = () => {
                 <H3>Composer</H3>
                 <HTMLTable>
                     <tbody>
+                    { fName || lName ? 
                         <tr>
                             <td>composer</td>
                             <td>{fName} {lName}</td>
                         </tr>
+                        : null 
+                    }
+                    { country ? 
                         <tr>
                             <td>country/region</td>
                             <td>{country}</td>
                         </tr>
+                        : null 
+                    }
+                    { gender ? 
                         <tr>
                             <td>gender</td>
                             <td>{gender}</td>
                         </tr>
-
+                        : null 
+                    }
                     </tbody>
                 </HTMLTable>
+            </Card>
+            <Card className='Card'>
+                <H3>Description</H3>
+                { description ? 
+                    <Callout intent='success' icon={null} className='Callout'>
+                        {description}
+                    </Callout>
+                    : 'N/A'
+                }
             </Card>
             <Card className='Card'>
             { movements && movements.length > 0 
@@ -154,6 +166,26 @@ const WorkDetails = () => {
                 )
                 : null
             }
+            </Card>
+            <Card className='Card'>
+                <H3>Community</H3>
+                { comments && comments.length > 0 
+                    ? (
+                        <div>
+                            { comments.map(c => (
+                                <>
+                                    <p>
+                                        {c.comment}<br />
+                                        <small>-{c.username} ({c.commentDate})</small>
+                                    </p>
+                                    
+                                </>
+                            ))}
+                        </div>
+                    )
+                    : null
+                }
+
             </Card>
             </>
         );

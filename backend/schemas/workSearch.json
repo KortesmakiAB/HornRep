@@ -92,6 +92,10 @@
             "$id": "#/properties/techniques",
             "type": "string"
         },       
+        "gender": {
+            "$id": "#/properties/gender",
+            "type": "string"
+        },       
         "accompDifficulty": {
             "$id": "#/properties/accompDifficulty",
             "type": "array",
