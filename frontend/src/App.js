@@ -27,17 +27,22 @@ export const worksState = proxy({
 export const workDetailsState = proxy({
   workDetails: {},
   setWorkDetails(worksObj) { this.workDetails = worksObj },
-  addWorkDetailsComment(commentObj) { 
-    if (this.workDetails.comments) {
-      this.workDetails.comments.push(commentObj);
-    }
-  },
-
+  setComments(commentsArr) { this.workDetails.comments = commentsArr },
+  
   hideCommentForm: true,
   toggleHideCommentForm() {this.hideCommentForm = !this.hideCommentForm},
   
-  newComment: '',
-  setNewComment(comment) {this.newComment = comment},
+  hideEditForm: true,
+  toggleHideEditForm() {this.hideEditForm = !this.hideEditForm},
+  
+  newCommentState: '',
+  setNewCommentState(comment) {this.newCommentState = comment},
+  
+  commentEditState: '',
+  setCommentEditState(comment) {this.commentEditState = comment},
+  
+  commentEditId: '',
+  setCommentEditId(id) {this.commentEditId = id},
 
   addNewComment() {
     (async () => {
@@ -46,12 +51,46 @@ export const workDetailsState = proxy({
       // if error, send an error toast?
 
       const addedComment = await HornRepApi.newComment({
-        comment: this.newComment,
+        comment: this.newCommentState,
         // TODO remove hard coded id and add userId from proxy state
         userId: 2,
         workId: this.workDetails.id
       });
-			// TODO anything else?
+		})();
+	},
+
+  editComment(commentId) {
+    (async () => {
+      // TODO user must be logged in. 
+      // TODO try/catch
+      // if error, send an error toast?
+      const editedComment = await HornRepApi.editComment({
+        comment: this.commentEditState,
+        // TODO remove hard coded id and add userId from proxy state
+        userId: 2,
+        commentId
+      });
+		})();
+	},
+
+  deleteComment(commentId) {
+    (async () => {
+      // TODO user must be logged in or admin
+      // TODO try/catch
+      // if error, send an error toast?
+
+      const addedComment = await HornRepApi.deleteComment({
+        commentId,
+        // TODO remove hard coded id and add userId from proxy state
+        userId: 2,
+      });
+		})();
+	},
+  
+  setWorkComments(workId) {
+    (async () => {
+      const workComments = await HornRepApi.getWorkComments(workId);
+      this.setComments(workComments.comments);
 		})();
 	},
   

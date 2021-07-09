@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { useSnapshot } from 'valtio';
-import { H3, Callout, HTMLTable, Card, Elevation, Button, FormGroup, InputGroup } from '@blueprintjs/core';
+import { H3, Callout, HTMLTable, Card, Elevation, Button, FormGroup, InputGroup, Icon } from '@blueprintjs/core';
 import { useParams } from 'react-router-dom';
 
 import { workDetailsState } from '../App';
@@ -16,32 +16,54 @@ const WorkDetails = () => {
     workDetailsState.loadWorkDeets(id);
 
     const WorkDeets = () => {
+        const workDeetsSnap = useSnapshot(workDetailsState);
 
         const handleCommentChange = (evt) => {
             const { value } = evt.target;
-            workDetailsState.setNewComment(value);
+            workDetailsState.setNewCommentState(value);
         };
 
         const handleCommentSubmit = (evt) => {
             evt.preventDefault();
-
-            // does not add to db, but avoids page refresh.
-            workDetailsState.addWorkDetailsComment({ 
-                comment: workDeetsSnap.newComment,
-                // TODO add username from state and current date
-                // username: ,
-                // commentDate: 
-            });
             workDetailsState.addNewComment();
-            workDetailsState.setNewComment('');
             workDetailsState.toggleHideCommentForm();
-            
-            // TODO or is it better to do a redirect, triggering an api call?
-            // history.push(`/works/${id}`)
-            
+            workDetailsState.setNewCommentState('');
+            // get comments from db and add to proxy
+            workDetailsState.setWorkComments(id);
+        };
+
+        const handleCommentEditClick = (evt) => {
+            evt.preventDefault();
+            const commentId = parseInt(evt.target.getAttribute('data-comment-id'));
+            workDetailsState.setCommentEditId(commentId);
+            workDeetsSnap.workDetails.comments.forEach(c => {
+                if (c.id === commentId) workDetailsState.setCommentEditState(c.comment);
+            });
+            workDetailsState.toggleHideEditForm();
+        }
+
+        const handleEditChange = (evt) => {
+            const { value } = evt.target;
+            workDetailsState.setCommentEditState(value);
+        };
+
+        const handleEditSubmit = (evt) => {
+            evt.preventDefault();
+            workDetailsState.editComment(workDeetsSnap.commentEditId);
+            workDetailsState.toggleHideEditForm();
+            workDetailsState.setCommentEditState('')
+            workDetailsState.setWorkComments(id);
+        };
+
+        const handleCommentDelete = (evt) => {
+            evt.preventDefault();
+            const commentId = evt.target.getAttribute('data-comment-id');
+            //  call delete api
+            workDetailsState.deleteComment(commentId);
+            workDetailsState.setWorkComments(id);
         };
         
-        const workDeetsSnap = useSnapshot(workDetailsState);
+        
         const { title, description, duration, difficulty, eraStyle, compYr, highestNote, clef, comments,
             lowestNote, techniques, fName, lName, country, gender, accompType, accompDifficulty, movements
         } = workDeetsSnap.workDetails;
@@ -198,11 +220,17 @@ const WorkDetails = () => {
                     ? (
                         <div>
                             { comments.map(c => (
-                                <p key={c.id}>
+                                <div key={c.id}>
                                     {c.comment}<br />
                                     <small>-{c.username} ({c.commentDate})</small>
-                                </p>
-                                
+                                    {/* TODO user must be logged in */}
+                                    <form data-comment-id={c.id} className='comment-form-edit' onSubmit={handleCommentEditClick}>
+                                        <Button icon='edit' type='submit' minimal={true} className='comment-icon' />
+                                    </form>
+                                    <form data-comment-id={c.id} className='comment-form-delete' onSubmit={handleCommentDelete}>
+                                        <Button icon='trash' type='submit' minimal={true} className='comment-icon' />
+                                    </form>
+                                </div>
                             ))}
                         </div>
                     )
@@ -210,7 +238,7 @@ const WorkDetails = () => {
                 }
             {/* TODO user must be logged in */}
             { workDeetsSnap.hideCommentForm ? 
-                <Button type='button' onClick={() => workDetailsState.toggleHideCommentForm() } >add comment</Button>
+                <Button type='button' onClick={() => workDetailsState.toggleHideCommentForm()} text='add comment'  ></Button>
                 : null
             }
             </Card>
@@ -219,10 +247,23 @@ const WorkDetails = () => {
                 <Card className='Card'>
                     <form onSubmit={handleCommentSubmit}>
                         <FormGroup label='Share your experience with this work' labelFor='comment'>
-                            <InputGroup id='comment' value={workDeetsSnap.newComment} onChange={handleCommentChange} />
+                            <InputGroup id='comment' value={workDeetsSnap.newCommentState} onChange={handleCommentChange} />
                         </FormGroup>
-                        <Button type='button' onClick={() => workDetailsState.toggleHideCommentForm() } >Cancel</Button>
-                        <Button type='submit'>Add comment</Button>
+                        <Button type='button' small={true} intent='danger' className='comment-form-btn' onClick={() => workDetailsState.toggleHideCommentForm() } text='cancel' />
+                        <Button type='submit' small={true} intent='primary' className='comment-form-btn'>Add comment</Button>
+                    </form>
+                </Card>
+                : null
+            }
+            {/* TODO user must be logged in */}
+            { !workDeetsSnap.hideEditForm ?
+                <Card className='Card'>
+                    <form onSubmit={handleEditSubmit}>
+                        <FormGroup label='Edit your comment' labelFor='editComment'>
+                            <InputGroup id='editComment' value={workDeetsSnap.commentEditState} onChange={handleEditChange} />
+                        </FormGroup>
+                        <Button type='button' small={true} intent='danger' className='comment-form-btn' onClick={() => workDetailsState.toggleHideEditForm() } text='cancel' />
+                        <Button type='submit' small={true} intent='primary' className='comment-form-btn' text='update comment' />
                     </form>
                 </Card>
                 : null

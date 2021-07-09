@@ -1,3 +1,15 @@
 div > .Callout {
     padding: 1rem;
 }
+
+.comment-form-btn {
+    margin-right: .5rem;
+}
+
+.comment-form-delete, .comment-form-edit {
+    display: inline;
+}
+
+.comment-icon {
+    margin-left: .5rem;
+}

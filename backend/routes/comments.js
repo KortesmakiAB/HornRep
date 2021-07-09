@@ -56,7 +56,7 @@ router.get('/:id', async function (req, res, next) {
     }
 });
 
-/** PATCH /:id/:userId
+/** PATCH /:commentId/:userId
 * 
 *   Updates (required): comment (and time_stamp_tz(commentDate), passively).
 *   
@@ -64,7 +64,7 @@ router.get('/:id', async function (req, res, next) {
 *
 *   Returns { comment , userId, workId, commentDate }
 */
-router.patch('/:id/:userId', ensureCorrectUser, async function (req, res, next) {
+router.patch('/:commentId/:userId', async function (req, res, next) {
     try {
         const validator = jsonschema.validate(req.body, commentUpdateSchema);
         if (!validator.valid) {
@@ -72,8 +72,8 @@ router.patch('/:id/:userId', ensureCorrectUser, async function (req, res, next) 
             throw new BadRequestError(errs);
         }
 
-        req.params.id = parseInt(req.params.id);
-        const updatedComment = await Comment.updateComment(req.params.id, req.body);
+        req.params.commentId = parseInt(req.params.commentId);
+        const updatedComment = await Comment.updateComment(req.params.commentId, req.body);
 
         return res.status(201).json({ updatedComment });
     } catch (error) {
@@ -81,21 +81,33 @@ router.patch('/:id/:userId', ensureCorrectUser, async function (req, res, next) 
     }
 });
 
-/** DELETE /:id/:userId
+/** DELETE /:commentId/:userId
 *   
 */
-router.delete('/:id/:userId', ensureCorrectUserOrAdmin, async function (req, res, next) {
+router.delete('/:commentId/:userId', ensureCorrectUserOrAdmin, async function (req, res, next) {
     try {
-        req.params.id = parseInt(req.params.id);
+        req.params.commentId = parseInt(req.params.commentId);
 		
-        await Comment.deleteComment(req.params.id);
+        await Comment.deleteComment(req.params.commentId);
 
-        return res.json({ deleted: req.params.id });
+        return res.json({ deleted: req.params.commentId });
     } catch (err) {
         return next(err);
     }
 });
 
+
+router.get('/work/:workId', async function (req, res, next) {
+    try {
+        req.params.workId = parseInt(req.params.workId);
+		
+        const comments = await Comment.getWorkComments(req.params.workId);
+
+        return res.json({ comments });
+    } catch (err) {
+        return next(err);
+    }
+});
 
 
 module.exports = router;

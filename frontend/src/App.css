@@ -5,9 +5,9 @@
 
 
 .App {
-  margin: .75rem;
-  padding: .75rem;
-  /* border: 1px solid darkslategrey; */
+  margin: .85rem;
+  padding: 1rem;
+  /* border: 3px solid black; */
   border-radius: .25rem;
 }
 
@@ -24,6 +24,23 @@ ul {
   margin-top: 1rem;
 }
 
+@media only screen and (min-width: 768px) {
+  
+  .App {
+    margin: 0 auto;
+    width: calc(768px - 1rem);
+  }
+  
+}
+
+@media only screen and (min-width: 992px) {
+  
+  .App {
+    margin: 0 auto;
+    width: calc(992px - .75rem);
+  }
+  
+}
 
 /* .App-logo {
   height: 40vmin;

@@ -105,6 +105,20 @@ class Comment {
 
 		if (!deletedComment) throw new NotFoundError(`Comment with id - ${id} not found.`);
 	}
+
+    static async getWorkComments(workId) {
+        const commentsArr = await db.query(`
+            SELECT
+				c.id,
+				comment, 
+				u.username, 
+				TO_CHAR(time_stamp_tz, 'mm/dd/yyyy') AS "commentDate"
+			FROM comments c
+			JOIN users u on u.id = user_id
+			WHERE work_id = ${workId};
+        `);
+        return commentsArr.rows;
+    }
 }
 
 module.exports = Comment;

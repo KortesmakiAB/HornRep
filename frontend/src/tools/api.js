@@ -61,7 +61,23 @@ class HornRepApi {
     const method = 'POST';
     return await this.request(`comments`, commentObj, method);
   }
+  
+  static async editComment({ comment, commentId, userId }) {
+    const method = 'PATCH';
+    return await this.request(`comments/${commentId}/${userId}`, {comment}, method);
+  }
+  
+  static async deleteComment({ commentId, userId }) {
+    const method = 'DELETE';
+    return await this.request(`comments/${commentId}/${userId}`, null, method);
+  }
 
+  static async getWorkComments(workId) {
+    return await this.request(`comments/work/${workId}`);
+  }
+
+
+  // TODO get rid of unused api call examples below
 //   static async getUser(username) {
 //     let res = await this.request(`users/${username}`);
 //     return res.user;

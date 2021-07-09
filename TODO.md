@@ -17,12 +17,23 @@
     - COMMENTS
 
 ---
-- Media query - fix <`Card>` width at large size to not be so wide
-- add colors to community buttons (3)
-- add space to comment form buttons 2
-- edit and delete comments
-    - use blueprint icons
+- ~~Media query - fix <`Card>` width at large size to not be so wide~~
+
+- ~~add colors to community buttons (3)~~
+- ~~add space to comment form buttons 2~~
+- ~~fix add comment~~
+    - ~~get comments from api~~
+- ~~delete comments~~
+    - ~~get comments from api~~
+- edit comments
+
 ---
+
+`<WorkDetails>` range pics
+- create images from pdf
+- import images to app
+
+--- 
 
 ### login
 - add form
