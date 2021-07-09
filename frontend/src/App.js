@@ -9,7 +9,6 @@ import './App.css';
 // import hornBg from '../src/media/HornBg2.jpg';
 
 
-
 // SHARED STATE
 
 export const userState = proxy({ 
@@ -28,8 +27,34 @@ export const worksState = proxy({
 export const workDetailsState = proxy({
   workDetails: {},
   setWorkDetails(worksObj) { this.workDetails = worksObj },
+  addWorkDetailsComment(commentObj) { 
+    if (this.workDetails.comments) {
+      this.workDetails.comments.push(commentObj);
+    }
+  },
 
+  hideCommentForm: true,
+  toggleHideCommentForm() {this.hideCommentForm = !this.hideCommentForm},
+  
+  newComment: '',
+  setNewComment(comment) {this.newComment = comment},
 
+  addNewComment() {
+    (async () => {
+      // TODO user must be logged in. 
+      // TODO try/catch
+      // if error, send an error toast?
+
+      const addedComment = await HornRepApi.newComment({
+        comment: this.newComment,
+        // TODO remove hard coded id and add userId from proxy state
+        userId: 2,
+        workId: this.workDetails.id
+      });
+			// TODO anything else?
+		})();
+	},
+  
   loadWorkDeets(id) {
     (async () => {
       const resp = await HornRepApi.getWorkDetails(id);

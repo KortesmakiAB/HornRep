@@ -7,6 +7,7 @@ import { searchFormState } from '../App';
 import SearchForm from '../forms/SearchForm';
 // import Loading from '../tools/Loading';
 
+import './Home.css';
 
 const Home = () => {
     
@@ -26,7 +27,7 @@ const Home = () => {
                 </p>
                 
                 <p>
-                    Use the search form below to be as specific or general as you desire. 
+                    Use the search form below to be as specific or general as you wish. 
                 </p>
                 <p>
                     Alternatively, browse by <Link to={'/composer'}>composer</Link> or <Link to={'/title'}>title</Link>.
@@ -42,6 +43,7 @@ const Home = () => {
                 <p>
                     Her vision is to create a tool which benefits the entire horn community.
                 </p>
+                    
             </Card>
                  
             { snap.isDataLoaded
@@ -49,7 +51,7 @@ const Home = () => {
                 : '...Loading TODO' 
                 // : <Loading />
             }
-            
+            <footer><small>web work by Aaron Brant</small></footer>
         </div>
     );
 };

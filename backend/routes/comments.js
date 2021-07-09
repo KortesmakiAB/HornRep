@@ -18,11 +18,11 @@ const router = new express.Router();
 
 /** POST /
 * 
-*   Required: comment, workId
+*   Required:  req.body is {comment, userId, workId}
 *   
 *   Returns { id, comment, userId, workId, commentDate }
 */
-router.post('/:userId', ensureCorrectUser, async function (req, res, next) {
+router.post('/', ensureCorrectUser, async function (req, res, next) {
     try {
         const validator = jsonschema.validate(req.body, commentNewSchema);
         if (!validator.valid) {
@@ -30,7 +30,6 @@ router.post('/:userId', ensureCorrectUser, async function (req, res, next) {
             throw new BadRequestError(errs);
         }
 
-        req.body.userId = parseInt(req.params.userId);
         const newComment = await Comment.newComment(req.body);
 
         return res.status(201).json({ newComment });

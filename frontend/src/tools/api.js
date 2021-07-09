@@ -57,6 +57,11 @@ class HornRepApi {
     return await this.request(`works/checkboxes`);
   }
   
+  static async newComment(commentObj) {
+    const method = 'POST';
+    return await this.request(`comments`, commentObj, method);
+  }
+
 //   static async getUser(username) {
 //     let res = await this.request(`users/${username}`);
 //     return res.user;

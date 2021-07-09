@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { useSnapshot } from 'valtio';
-import { UL, H2, H3, H4,  Callout, HTMLTable, Card, Elevation } from '@blueprintjs/core';
+import { H3, Callout, HTMLTable, Card, Elevation, Button, FormGroup, InputGroup } from '@blueprintjs/core';
 import { useParams } from 'react-router-dom';
 
 import { workDetailsState } from '../App';
@@ -9,13 +9,38 @@ import { workDetailsState } from '../App';
 
 import './WorkDetails.css';
 
-
 const WorkDetails = () => {
     const { id } = useParams();
+    // const history = useHistory();    // TODO remove?
+    
+    workDetailsState.loadWorkDeets(id);
 
-  
     const WorkDeets = () => {
-        workDetailsState.loadWorkDeets(id);
+
+        const handleCommentChange = (evt) => {
+            const { value } = evt.target;
+            workDetailsState.setNewComment(value);
+        };
+
+        const handleCommentSubmit = (evt) => {
+            evt.preventDefault();
+
+            // does not add to db, but avoids page refresh.
+            workDetailsState.addWorkDetailsComment({ 
+                comment: workDeetsSnap.newComment,
+                // TODO add username from state and current date
+                // username: ,
+                // commentDate: 
+            });
+            workDetailsState.addNewComment();
+            workDetailsState.setNewComment('');
+            workDetailsState.toggleHideCommentForm();
+            
+            // TODO or is it better to do a redirect, triggering an api call?
+            // history.push(`/works/${id}`)
+            
+        };
+        
         const workDeetsSnap = useSnapshot(workDetailsState);
         const { title, description, duration, difficulty, eraStyle, compYr, highestNote, clef, comments,
             lowestNote, techniques, fName, lName, country, gender, accompType, accompDifficulty, movements
@@ -135,7 +160,7 @@ const WorkDetails = () => {
                     <Callout intent='success' icon={null} className='Callout'>
                         {description}
                     </Callout>
-                    : 'N/A'
+                    : 'No description available.'
                 }
             </Card>
             <Card className='Card'>
@@ -173,20 +198,35 @@ const WorkDetails = () => {
                     ? (
                         <div>
                             { comments.map(c => (
-                                <>
-                                    <p>
-                                        {c.comment}<br />
-                                        <small>-{c.username} ({c.commentDate})</small>
-                                    </p>
-                                    
-                                </>
+                                <p key={c.id}>
+                                    {c.comment}<br />
+                                    <small>-{c.username} ({c.commentDate})</small>
+                                </p>
+                                
                             ))}
                         </div>
                     )
                     : null
                 }
-
+            {/* TODO user must be logged in */}
+            { workDeetsSnap.hideCommentForm ? 
+                <Button type='button' onClick={() => workDetailsState.toggleHideCommentForm() } >add comment</Button>
+                : null
+            }
             </Card>
+            {/* TODO user must be logged in */}
+            { !workDeetsSnap.hideCommentForm ?
+                <Card className='Card'>
+                    <form onSubmit={handleCommentSubmit}>
+                        <FormGroup label='Share your experience with this work' labelFor='comment'>
+                            <InputGroup id='comment' value={workDeetsSnap.newComment} onChange={handleCommentChange} />
+                        </FormGroup>
+                        <Button type='button' onClick={() => workDetailsState.toggleHideCommentForm() } >Cancel</Button>
+                        <Button type='submit'>Add comment</Button>
+                    </form>
+                </Card>
+                : null
+            }
             </>
         );
     };

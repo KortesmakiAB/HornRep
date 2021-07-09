@@ -46,10 +46,11 @@ class Work {
 	
 		const comments = await db.query(`
 			SELECT
+				c.id,
 				comment, 
 				u.username, 
 				TO_CHAR(time_stamp_tz, 'mm/dd/yyyy') AS "commentDate"
-			FROM comments
+			FROM comments c
 			JOIN users u on u.id = user_id
 			WHERE work_id = ${work.id};`
 		);

@@ -13,9 +13,25 @@
         - add this to `<Home>` as well
         - BP skeleton is also an issue, but prob too much work right now
 - display
-
     - MOVEMENTS
     - COMMENTS
+
+---
+- Media query - fix <`Card>` width at large size to not be so wide
+- add colors to community buttons (3)
+- add space to comment form buttons 2
+- edit and delete comments
+    - use blueprint icons
+---
+
+### login
+- add form
+- plumb api
+- `<WorkDetails>`
+    - add snapshot username to handleCommentSubmit for route auth
+    - get date
+    - add way to check for logged in user to Community Card (2 spots)
+        - check for token?
 
 
 

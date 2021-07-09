@@ -368,7 +368,7 @@ const SearchForm = () => {
                             <InputGroup id="fName" name="fName" placeholder="composer" value={formSnap.formFields.fName} onChange={searchFormState.handleFormChange} />
                         </FormGroup>
                     </Collapse>
-                    <FormGroup>
+                    <FormGroup className='submit-btn'>
                         <Button type="submit" intent="primary">Submit</Button>
                     </FormGroup>
                 </form>

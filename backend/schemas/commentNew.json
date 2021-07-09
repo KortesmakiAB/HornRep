@@ -8,11 +8,15 @@
             "$id": "#/properties/comment",
             "type": "string"
         },
+        "userId": {
+            "$id": "#/properties/userId",
+            "type": "integer"
+        },
         "workId": {
             "$id": "#/properties/workId",
             "type": "integer"
         }
     },
     "additionalProperties": false,
-    "required": ["comment", "workId"]
+    "required": ["comment", "userId", "workId"]
 }  
