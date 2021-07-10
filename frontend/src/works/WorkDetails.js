@@ -6,13 +6,18 @@ import { useParams } from 'react-router-dom';
 import { workDetailsState } from '../App';
 
 // import Loading from '../tools/Loading';
+import { createRangeArr } from '../tools/range';
+import i from '../media/noteWebPs/webp';
+
 
 import './WorkDetails.css';
 
 const WorkDetails = () => {
+    
     const { id } = useParams();
     // const history = useHistory();    // TODO remove?
-    
+    const rangeArr = createRangeArr();
+
     workDetailsState.loadWorkDeets(id);
 
     const WorkDeets = () => {
@@ -103,20 +108,6 @@ const WorkDetails = () => {
                         </tr> 
                         : null 
                     }
-                    { highestNote ? 
-                        <tr>
-                            <td>highest note</td>
-                            <td> {highestNote}</td>
-                        </tr> 
-                        : null 
-                    }
-                    { lowestNote ? 
-                        <tr>
-                            <td>lowest note</td>
-                            <td> {lowestNote}</td>
-                        </tr> 
-                        : null 
-                    }
                     { techniques ? 
                         <tr>
                             <td>technique(s)</td>
@@ -142,6 +133,20 @@ const WorkDetails = () => {
                         <tr>
                             <td>accompaniment difficulty</td>
                             <td> {accompDifficulty}</td>
+                        </tr> 
+                        : null 
+                    }
+                                        { highestNote ? 
+                        <tr>
+                            <td>highest note</td>
+                            <td><img src={ i[rangeArr[highestNote].fullName] } alt={ rangeArr[highestNote].fullName }></img></td>
+                        </tr> 
+                        : null 
+                    }
+                    { lowestNote ? 
+                        <tr>
+                            <td>lowest note</td>
+                            <td><img src={ i[rangeArr[lowestNote].fullName] } alt={ rangeArr[lowestNote].fullName }></img></td>
                         </tr> 
                         : null 
                     }
@@ -185,35 +190,38 @@ const WorkDetails = () => {
                     : 'No description available.'
                 }
             </Card>
-            <Card className='Card'>
+            
             { movements && movements.length > 0 
-                ? (<div>
-                    <H3>Movements</H3>
-                    <HTMLTable>
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Duration</th>
-                                <th>Difficulty</th>
-                                {/* <th>Highest Note</th>
-                                <th>Lowest Note</th> */}
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {  movements.map(m => (
-                            <tr key={m.id}>
-                                <td>{m.title}</td>
-                                <td>{m.duration}</td>
-                                <td>{m.difficulty}</td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </HTMLTable>
-                </div>
+                ? (
+                <Card className='Card'>
+                    <div>
+                        <H3>Movements</H3>
+                        <HTMLTable>
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Duration</th>
+                                    <th>Difficulty</th>
+                                    {/* <th>Highest Note</th>
+                                    <th>Lowest Note</th> */}
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {  movements.map(m => (
+                                <tr key={m.id}>
+                                    <td>{m.title}</td>
+                                    <td>{m.duration}</td>
+                                    <td>{m.difficulty}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </HTMLTable>
+                    </div>
+                </Card>
                 )
                 : null
             }
-            </Card>
+            
             <Card className='Card'>
                 <H3>Community</H3>
                 { comments && comments.length > 0 

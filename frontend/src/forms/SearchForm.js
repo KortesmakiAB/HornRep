@@ -5,7 +5,7 @@ import { MultiSelect, Select } from "@blueprintjs/select";
 import { useHistory } from 'react-router-dom';
 
 import { searchFormState } from '../App';
-import { createRangeArr } from './range';
+import { createRangeArr } from '../tools/range'
 import './SearchForm.css';
 
 

@@ -21,14 +21,13 @@
 
 export function createRangeArr() {
     const RangeArr = [];
-    const chromaticScaleAscending = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    const chromaticScaleAscending = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
 
     for (let octave = 2; octave <= 6; octave++){
         for (let note of chromaticScaleAscending){
             RangeArr.push({ 
                 fullName: `${note}${octave}`,
                 abbrevName: note,
-                imgPath: '' ,
             });
         }
     }

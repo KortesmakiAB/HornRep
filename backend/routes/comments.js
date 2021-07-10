@@ -64,7 +64,7 @@ router.get('/:id', async function (req, res, next) {
 *
 *   Returns { comment , userId, workId, commentDate }
 */
-router.patch('/:commentId/:userId', async function (req, res, next) {
+router.patch('/:commentId/:userId', ensureCorrectUser, async function (req, res, next) {
     try {
         const validator = jsonschema.validate(req.body, commentUpdateSchema);
         if (!validator.valid) {

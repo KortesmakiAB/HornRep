@@ -58,6 +58,7 @@ class Work {
 
 		const movements = await db.query(`
 			SELECT
+				id,
 				title,
 				TO_CHAR(duration, 'MI:SS') AS "duration",
 				difficulty,

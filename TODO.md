@@ -25,9 +25,11 @@
     - ~~get comments from api~~
 - ~~delete comments~~
     - ~~get comments from api~~
-- edit comments
+- ~~edit comments~~
 
 ---
+
+
 
 `<WorkDetails>` range pics
 - create images from pdf
