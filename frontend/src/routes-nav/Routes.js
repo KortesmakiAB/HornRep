@@ -1,7 +1,6 @@
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 import Home from '../addtl-pages/Home';
-import Login from '../auth/Login';
 import Signup from '../auth/Signup';
 import Works from '../works/Works';
 import WorkDetails from '../works/WorkDetails';
@@ -15,10 +14,6 @@ function Routes() {
         <Switch>
             <Route exact path='/'>
                 <Home />
-            </Route>
-
-            <Route exact path='/login'>
-                <Login />
             </Route>
 
             <Route exact path='/signup'>

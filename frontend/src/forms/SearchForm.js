@@ -375,7 +375,7 @@ const SearchForm = () => {
                         </FormGroup>
                     </Collapse>
                     <FormGroup className='submit-btn'>
-                        <Button type="submit" intent="primary">Submit</Button>
+                        <Button type='submit' intent='primary'>Submit</Button>
                     </FormGroup>
                 </form>
             </Card>

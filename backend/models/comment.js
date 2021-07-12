@@ -111,7 +111,8 @@ class Comment {
             SELECT
 				c.id,
 				comment, 
-				u.username, 
+				u.username,
+                u.id AS "userId",
 				TO_CHAR(time_stamp_tz, 'mm/dd/yyyy') AS "commentDate"
 			FROM comments c
 			JOIN users u on u.id = user_id

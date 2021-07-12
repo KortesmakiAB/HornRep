@@ -34,9 +34,7 @@
 - ~~import images to app~~
 
 --- 
-### Navbar
-
-
+~~### Navbar~~
 
 ---
 

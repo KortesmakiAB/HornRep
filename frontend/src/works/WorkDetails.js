@@ -3,7 +3,7 @@ import { useSnapshot } from 'valtio';
 import { H3, Callout, HTMLTable, Card, Elevation, Button, FormGroup, InputGroup } from '@blueprintjs/core';
 import { useParams } from 'react-router-dom';
 
-import { workDetailsState } from '../App';
+import { workDetailsState, userState } from '../App';
 
 // import Loading from '../tools/Loading';
 import { createRangeArr } from '../tools/range';
@@ -15,13 +15,13 @@ import './WorkDetails.css';
 const WorkDetails = () => {
     
     const { id } = useParams();
-    // const history = useHistory();    // TODO remove?
     const rangeArr = createRangeArr();
 
     workDetailsState.loadWorkDeets(id);
 
     const WorkDeets = () => {
         const workDeetsSnap = useSnapshot(workDetailsState);
+        const userSnap = useSnapshot(userState);
 
         const handleCommentChange = (evt) => {
             const { value } = evt.target;
@@ -228,30 +228,38 @@ const WorkDetails = () => {
                     ? (
                         <div>
                             { comments.map(c => (
-                                <div key={c.id}>
+                                <div key={c.id} className='Details-card-comment'>
                                     {c.comment}<br />
                                     <small>-{c.username} ({c.commentDate})</small>
-                                    {/* TODO user must be logged in */}
-                                    <form data-comment-id={c.id} className='comment-form-edit' onSubmit={handleCommentEditClick}>
-                                        <Button icon='edit' type='submit' minimal={true} className='comment-icon' />
-                                    </form>
-                                    <form data-comment-id={c.id} className='comment-form-delete' onSubmit={handleCommentDelete}>
-                                        <Button icon='trash' type='submit' minimal={true} className='comment-icon' />
-                                    </form>
+                                    { 
+                                        userSnap.isLoggedIn && userSnap.user.id === c.userId 
+                                        ? 
+                                        <form data-comment-id={c.id} className='comment-form-edit' onSubmit={handleCommentEditClick}>
+                                            <Button icon='edit' type='submit' minimal={true} className='comment-icon' />
+                                        </form>
+                                        : null
+                                    }
+                                    { 
+                                        userSnap.isLoggedIn && (userSnap.user.id === c.userId || userSnap.user.isAdmin)
+                                        ? 
+                                        <form data-comment-id={c.id} className='comment-form-delete' onSubmit={handleCommentDelete}>
+                                                <Button icon='trash' type='submit' minimal={true} className='comment-icon' />
+                                        </form>
+                                        : null
+                                    }
                                 </div>
                             ))}
                         </div>
                     )
                     : null
                 }
-            {/* TODO user must be logged in */}
-            { workDeetsSnap.hideCommentForm ? 
-                <Button type='button' onClick={() => workDetailsState.toggleHideCommentForm()} text='add comment'  ></Button>
-                : null
+            { 
+                userSnap.isLoggedIn && workDeetsSnap.hideCommentForm
+                ? <Button type='button' onClick={() => workDetailsState.toggleHideCommentForm()} text='add comment' />
+                : null 
             }
             </Card>
-            {/* TODO user must be logged in */}
-            { !workDeetsSnap.hideCommentForm ?
+            { userSnap.isLoggedIn && !workDeetsSnap.hideCommentForm ?
                 <Card className='Card'>
                     <form onSubmit={handleCommentSubmit}>
                         <FormGroup label='Share your experience with this work' labelFor='comment'>
@@ -263,8 +271,7 @@ const WorkDetails = () => {
                 </Card>
                 : null
             }
-            {/* TODO user must be logged in */}
-            { !workDeetsSnap.hideEditForm ?
+            { userSnap.isLoggedIn && !workDeetsSnap.hideEditForm ?
                 <Card className='Card'>
                     <form onSubmit={handleEditSubmit}>
                         <FormGroup label='Edit your comment' labelFor='editComment'>

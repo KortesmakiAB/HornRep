@@ -13,3 +13,7 @@ div > .Callout {
 .comment-icon {
     margin-left: .5rem;
 }
+
+.Details-card-comment {
+    margin: .75rem 0;
+}

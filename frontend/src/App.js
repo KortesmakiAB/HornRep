@@ -1,7 +1,8 @@
 // import jwt from 'jsonwebtoken';
 import { proxy } from 'valtio';
 import { H1, Card } from '@blueprintjs/core';
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter } from 'react-router-dom';
+import jwt from 'jsonwebtoken';
 
 import HornRepApi from './tools/api';
 import Routes from './routes-nav/Routes';
@@ -11,14 +12,53 @@ import './App.css';
 // import hornBg from '../src/media/HornBg2.jpg';
 
 
-// SHARED STATE
+// SHARED/GLOBAL STATE
 
 export const userState = proxy({ 
   token: '', 
-  setToken: token => userState.token = token,
+  setToken(token) {this.token = token},
 
   user: {},
-  setUser: (obj) => userState.user = obj,
+  setUser (obj) { this.user = obj },
+
+  isLoggedIn: false,
+  setIsLoggedIn() { this.isLoggedIn = true },
+  setIsNotLoggedIn() { this.isLoggedIn = false },
+});
+
+export const authState = proxy({
+   // TODO reset to empty string
+   unPw: {
+		username: 'aBrant1',
+		password: 'password',
+	},
+  setUnPw (name, value) { this.unPw[name] = value },
+
+  handleLoginFormChange(evt) {
+    const { name, value } = evt.target;
+    authState.setUnPw(name, value);
+  },
+
+  loginGetUser() {
+    (async () => {
+      const respToken = await HornRepApi.login(this.unPw);
+
+      if (respToken){
+        HornRepApi.token = respToken;
+        userState.setToken(respToken);
+        const decodedToken = jwt.decode(respToken)
+        // HornRepApi.login() returns {id(userId), isAdmin}
+        const user = await HornRepApi.getUser(decodedToken.id);
+        delete user.password
+        userState.setUser(user);
+        userState.setIsLoggedIn();
+      }
+    })();
+  },
+
+  loginIsOpen: false,
+  setLoginIsOpen() { this.loginIsOpen = true },
+  setLoginIsNotOpen() { this.loginIsOpen = false },
 });
 
 export const worksState = proxy({

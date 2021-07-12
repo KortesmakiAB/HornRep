@@ -76,13 +76,19 @@ class HornRepApi {
     return await this.request(`comments/work/${workId}`);
   }
 
+  static async login(unPw) {
+    const method = 'POST';
+    let res = await this.request(`users/token`, unPw, method);
+    return res.token;
+  }
+
+  // TODO username or userid?
+  static async getUser(userId) {
+    let res = await this.request(`users/${userId}`);
+    return res.user;
+  }
 
   // TODO get rid of unused api call examples below
-//   static async getUser(username) {
-//     let res = await this.request(`users/${username}`);
-//     return res.user;
-//   }
-
 //   static async updateUser(username, formData) {
 //     const method = 'PATCH';
 //     let res = await this.request(`users/${username}`, formData, method);
