@@ -101,7 +101,7 @@ class Work {
 	*	
 	*/
 
-	static async search(searchParams = {}) {
+	static async search(searchParams = {} ) {
 
 		let query = `
 			SELECT 
@@ -122,7 +122,7 @@ class Work {
 		
 		const { 
 		  title, maxDuration, minDuration, difficulty, eraStyle: era_style, highestNote: highest_note,  
-		  lowestNote: lowest_note, techniques, accompType: accompaniment_type, 
+		  lowestNote: lowest_note, techniques, accompType: accompaniment_type, byTitles = true,
 		  accompDifficulty: accompaniment_difficulty, fName: first_name, lName: last_name, gender, countries: country
 		} = searchParams;
 
@@ -161,7 +161,6 @@ class Work {
 				}
 			});
 			else {
-				console.log('##########', exactMatches[match])
 				if (exactMatches[match] !== '' && exactMatches[match] !== undefined) {
 					queryValues.push(exactMatches[match]);
 					whereExpressions.push(`${[match]} = $${queryValues.length}`);
@@ -199,8 +198,11 @@ class Work {
 			query += " WHERE " + whereExpressions.join(" AND ");
 		}
 
-		query += ' ORDER BY c.last_name, c.first_name, title';
-		
+		// TODO remove ternary?
+		// query += ` ORDER BY ${  ? 'title, c.last_name, c.first_name' : 'c.last_name, c.first_name, title' };`;
+		if (byTitles === true) query += ' ORDER BY title, c.last_name, c.first_name;'
+		else if (byTitles === false) query += ' ORDER BY c.last_name, c.first_name, title;'
+		console.log('@@@@@@@@@', query)
 		const worksResp = await db.query(query, queryValues);
 
 		return worksResp.rows;

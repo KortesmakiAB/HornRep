@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { useSnapshot } from 'valtio';
-import { H3, Callout, HTMLTable, Card, Elevation, Button, FormGroup, InputGroup, Icon } from '@blueprintjs/core';
+import { H3, Callout, HTMLTable, Card, Elevation, Button, FormGroup, InputGroup } from '@blueprintjs/core';
 import { useParams } from 'react-router-dom';
 
 import { workDetailsState } from '../App';

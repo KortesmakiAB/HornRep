@@ -5,6 +5,8 @@ import { BrowserRouter } from "react-router-dom";
 
 import HornRepApi from './tools/api';
 import Routes from './routes-nav/Routes';
+import Nav from './routes-nav/Nav';
+
 import './App.css';
 // import hornBg from '../src/media/HornBg2.jpg';
 
@@ -21,7 +23,14 @@ export const userState = proxy({
 
 export const worksState = proxy({
   worksList: [],
-  setWorksList: worksArr => worksState.worksList = worksArr,
+  setWorksList(worksArr){ this.worksList = worksArr},
+
+  worksSearch(searchFieldsObj = {}, byTitles = true ) {
+    (async () => {
+      const worksList = await HornRepApi.searchWorks(searchFieldsObj, byTitles);
+			this.setWorksList(worksList);
+		})();
+	},
 });
 
 export const workDetailsState = proxy({
@@ -156,13 +165,6 @@ export const searchFormState = proxy({
       this.setIsDataLoadedTrue();
 		})();
 	},
-  
-  worksSearch(searchFieldsObj = {}) {
-    (async () => {
-      const worksList = await HornRepApi.searchWorks(searchFieldsObj);
-			worksState.setWorksList(worksList);
-		})();
-	},
 });
 
 
@@ -171,6 +173,7 @@ function App() {
     <BrowserRouter>
       <Card className="App">
         <header className="App-header">
+          <Nav />
           <H1 className='App-title'>HornRep</H1>
         </header>
         <Routes></Routes>

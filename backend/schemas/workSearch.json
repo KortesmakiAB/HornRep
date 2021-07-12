@@ -109,6 +109,10 @@
                     }
                 ]
             }
+        },
+        "byTitles": {
+            "$id": "#/properties/byTitles",
+            "type": "boolean"
         }
     },
     "additionalProperties": false

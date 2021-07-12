@@ -6,9 +6,7 @@ import Signup from '../auth/Signup';
 import Works from '../works/Works';
 import WorkDetails from '../works/WorkDetails';
 import Sarah from '../addtl-pages/Sarah';
-import WorksByTitle from '../addtl-pages/WorksByTitle';
-import WorksByComposer from '../addtl-pages/WorksByComposer';
-
+import Browse from '../Browse/Browse';
 
 
 function Routes() {
@@ -35,12 +33,8 @@ function Routes() {
                 <Sarah />
             </Route>
 
-            <Route exact path='/works/title'>
-                <WorksByTitle />
-            </Route>
-
-            <Route exact path='/works/composer'>
-                <WorksByComposer />
+            <Route exact path='/works/browse'>
+                <Browse />
             </Route>
 
             <Route exact path='/works/:id'>

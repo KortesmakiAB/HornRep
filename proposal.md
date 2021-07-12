@@ -246,9 +246,9 @@ UX Notes: group like inputs together: text, multi-select, checkboxes
         1. ~~create components with dummy div/text~~
         1. ~~create switch~~
 1. ~~`<SearchForm>`~~
-1. `<WorkList>`
-1. `<WorkDetails>`
-1. `<Home>`
+1. ~~`<WorkList>`~~
+1. ~~`<WorkDetails>`~~
+1. ~~`<Home>`~~
 1. `<Nav>`
 1. `<EditWork>`
 1. `<EditComment>`

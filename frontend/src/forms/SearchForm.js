@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { Button, FormGroup, InputGroup, RangeSlider, Checkbox, Collapse, MenuItem, H3, Card } from "@blueprintjs/core";
+import { Button, FormGroup, InputGroup, RangeSlider, Checkbox, Collapse, MenuItem, H3, Card, Icon } from "@blueprintjs/core";
 import { MultiSelect, Select } from "@blueprintjs/select";
 import { useHistory } from 'react-router-dom';
 
 import { searchFormState } from '../App';
-import { createRangeArr } from '../tools/range'
+import { worksState } from '../App';
+import { createRangeArr } from '../tools/range';
+
 import './SearchForm.css';
 
 
@@ -227,7 +229,7 @@ const SearchForm = () => {
         if (highestNote.value) searchFormState.setFormField('highestNote', highestNote.value);
         if (lowestNote.value) searchFormState.setFormField('lowestNote', lowestNote.value);
         
-        searchFormState.worksSearch(searchFormState.formFields);
+        worksState.worksSearch(formSnap.formFields);
 
         history.push('/works');
     };
@@ -235,7 +237,11 @@ const SearchForm = () => {
     return (
         <div>
             <Card className='Card'>
-                <H3>Search</H3>
+                <div>
+                    <H3 className='Card-search' >Search</H3>
+                    <Icon icon='search' className='Card-search-icon'></Icon>
+                </div>
+                
                 <form onSubmit={handleFormSubmit} className='SearchForm'>
                     <FormGroup label="Difficulty" labelFor="difficulty">
                         <Checkbox data-diff="novice" name="difficulty" label="novice" inline="true" value={checkboxesDifficulty.novice} onChange={handleDifficultyCheckboxChange} />

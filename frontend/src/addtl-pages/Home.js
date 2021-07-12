@@ -30,8 +30,7 @@ const Home = () => {
                     Use the search form below to be as specific or general as you wish. 
                 </p>
                 <p>
-                    Alternatively, browse by <Link to={'/composer'}>composer</Link> or <Link to={'/title'}>title</Link>.
-                    {/* TODO, update link path */}
+                    Alternatively, <Link to='/works/browse'>browse</Link> by title or composer.
                 </p>
                 
             </Card>

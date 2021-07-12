@@ -29,13 +29,16 @@
 
 ---
 
-
-
-`<WorkDetails>` range pics
-- create images from pdf
-- import images to app
+~~`<WorkDetails>` range pics~~
+- ~~create images from pdf~~
+- ~~import images to app~~
 
 --- 
+### Navbar
+
+
+
+---
 
 ### login
 - add form

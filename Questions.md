@@ -5,6 +5,7 @@ There is a lot of repetition, particularly handleFormSubmit().
 Would you refactor this?
 
 #### App.js
+searchFormState.formFields - I am sending lots of empty strings in the qstring to the api. The backend is expecting this and can handle it. But ideally, should there be a different approach?
 
 #### Valtio
 I'm not sure I understand the use case for `subscribe()` and `unsubscribe()`. 

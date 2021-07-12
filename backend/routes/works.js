@@ -44,6 +44,8 @@ const router = new express.Router();
 router.get('/', async function (req, res, next) {
     try {
 		const q = convertToInt(req.query, ['highestNote', 'lowestNote']);
+		// https://stackoverflow.com/a/55702686
+		q.byTitles = (req.query.byTitles === undefined || (req.query.byTitles.toLowerCase() === 'false' ? false : true));
 		
 		const validator = jsonschema.validate(q, workSearchSchema);
 		if (!validator.valid) {
