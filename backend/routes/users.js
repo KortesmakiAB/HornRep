@@ -53,7 +53,7 @@ router.post('/', async function (req, res, next) {
         }
 
         const newUserId = await User.registerUser(req.body);
-        const token = createToken(newUser);
+        const token = createToken({ id: newUserId });
         return res.status(201).json({ token });
     } catch (error) {
         return next(error);
@@ -99,7 +99,7 @@ router.delete('/:userId', ensureCorrectUser, async function (req, res, next) {
     }
 });
 
-/** POST /token  { username, password } => { token }
+/** POST /token  { email, password } => { token }
  *
  *  Returns JWT token which can be used to authenticate further requests.
  *
@@ -114,8 +114,8 @@ router.delete('/:userId', ensureCorrectUser, async function (req, res, next) {
         throw new BadRequestError(errs);
       }
   
-      const { username, password } = req.body;
-      const user = await User.authenticate(username, password);
+      const { email, password } = req.body;
+      const user = await User.authenticate(email, password);
       const token = createToken(user);
       return res.json({ token });
     } catch (err) {

@@ -2,7 +2,7 @@ import { useSnapshot } from 'valtio'
 import { H3, Card } from "@blueprintjs/core";
 import { Link } from 'react-router-dom';
 
-import { searchFormState } from '../App';
+import { searchFormState, userState } from '../App';
 
 import SearchForm from '../forms/SearchForm';
 // import Loading from '../tools/Loading';
@@ -14,6 +14,8 @@ const Home = () => {
     searchFormState.loadCheckboxData();
     
     const snap = useSnapshot(searchFormState);
+    const userSnap = useSnapshot(userState);
+    console.log(userSnap)
 
     return (
         <div>
@@ -42,14 +44,24 @@ const Home = () => {
                 <p>
                     Her vision is to create a tool which benefits the entire horn community.
                 </p>
-                    
             </Card>
-                 
-            { snap.isDataLoaded
+            { 
+                snap.isDataLoaded
                 ? <SearchForm />    
                 : '...Loading TODO' 
                 // : <Loading />
             }
+            {
+                userSnap.isLoggedIn
+                ? null
+                :
+                <Card className='Card'>
+                    <div>
+                        <span>create a <a href='/signup'>HornRep account</a></span>
+                    </div>
+                </Card>
+            }
+            
             <footer><small>web work by Aaron Brant</small></footer>
         </div>
     );

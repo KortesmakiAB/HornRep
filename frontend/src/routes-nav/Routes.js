@@ -4,7 +4,7 @@ import Home from '../addtl-pages/Home';
 import Signup from '../auth/Signup';
 import Works from '../works/Works';
 import WorkDetails from '../works/WorkDetails';
-import Sarah from '../addtl-pages/Sarah';
+// import Sarah from '../addtl-pages/Sarah';
 import Browse from '../Browse/Browse';
 
 
@@ -24,9 +24,9 @@ function Routes() {
                 <Works />
             </Route>
 
-            <Route exact path='/works/research'>
+            {/* <Route exact path='/works/research'>
                 <Sarah />
-            </Route>
+            </Route> */}
 
             <Route exact path='/works/browse'>
                 <Browse />

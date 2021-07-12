@@ -88,6 +88,12 @@ class HornRepApi {
     return res.user;
   }
 
+  static async register(formData) {
+    const method = 'POST';
+    let res = await this.request(`users`, formData, method);
+    return res.token;
+  }
+
   // TODO get rid of unused api call examples below
 //   static async updateUser(username, formData) {
 //     const method = 'PATCH';
@@ -95,11 +101,7 @@ class HornRepApi {
 //     return res.user;
 //   }
 
-//   static async signUp(formData) {
-//     const method = 'POST';
-//     let res = await this.request(`auth/register`, formData, method);
-//     return res.token;
-//   }
+
 
 //   static async signIn(unPw) {
 //     const method = 'POST';

@@ -26,17 +26,17 @@ export const userState = proxy({
   setIsNotLoggedIn() { this.isLoggedIn = false },
 });
 
-export const authState = proxy({
+export const loginState = proxy({
    // TODO reset to empty string
    unPw: {
-		username: 'aBrant1',
+		email: 'aaron@awesomeSite.com',
 		password: 'password',
 	},
   setUnPw (name, value) { this.unPw[name] = value },
 
   handleLoginFormChange(evt) {
     const { name, value } = evt.target;
-    authState.setUnPw(name, value);
+    loginState.setUnPw(name, value);
   },
 
   loginGetUser() {
@@ -46,8 +46,8 @@ export const authState = proxy({
       if (respToken){
         HornRepApi.token = respToken;
         userState.setToken(respToken);
-        const decodedToken = jwt.decode(respToken)
-        // HornRepApi.login() returns {id(userId), isAdmin}
+        // HornRepApi.login() returns token with { id(userId), isAdmin }
+        const decodedToken = jwt.decode(respToken);
         const user = await HornRepApi.getUser(decodedToken.id);
         delete user.password
         userState.setUser(user);
@@ -59,6 +59,22 @@ export const authState = proxy({
   loginIsOpen: false,
   setLoginIsOpen() { this.loginIsOpen = true },
   setLoginIsNotOpen() { this.loginIsOpen = false },
+});
+
+export const signupState = proxy({
+  formFields: {
+    fName: '',
+    lName: '',
+    username: '',
+    email: '',
+    password: ''
+  },
+  setSignupFormField(field, val) { this.formFields[field] = val },
+
+  handleSignupFormChange(evt) {
+		const { name, value } = evt.target;
+    signupState.setSignupFormField(name, value);
+  },
 });
 
 export const worksState = proxy({

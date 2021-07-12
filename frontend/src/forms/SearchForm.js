@@ -361,17 +361,18 @@ const SearchForm = () => {
                                 name="techniques" 
                                 placeholder='keyword' 
                                 value={formSnap.formFields.techniques} 
-                                onChange={searchFormState.handleFormChange} 
+                                onChange={searchFormState.handleFormChange}
+                                autoComplete='on'
                             />
                         </FormGroup>
                         <FormGroup label="Title" labelFor="title">
-                            <InputGroup id="title" name="title" placeholder="keyword" value={formSnap.formFields.title} onChange={searchFormState.handleFormChange} />
+                            <InputGroup id="title" name="title" placeholder="keyword" value={formSnap.formFields.title} onChange={searchFormState.handleFormChange} autoComplete='on' />
                         </FormGroup>
                         <FormGroup label="Last Name" labelFor="lName">
-                            <InputGroup id="lName" name="lName" placeholder="composer" value={formSnap.formFields.lName} onChange={searchFormState.handleFormChange} />
+                            <InputGroup id="lName" name="lName" placeholder="composer" value={formSnap.formFields.lName} onChange={searchFormState.handleFormChange} autoComplete='on' />
                         </FormGroup>
                         <FormGroup label="First Name" labelFor="fName">
-                            <InputGroup id="fName" name="fName" placeholder="composer" value={formSnap.formFields.fName} onChange={searchFormState.handleFormChange} />
+                            <InputGroup id="fName" name="fName" placeholder="composer" value={formSnap.formFields.fName} onChange={searchFormState.handleFormChange} autoComplete='on' />
                         </FormGroup>
                     </Collapse>
                     <FormGroup className='submit-btn'>

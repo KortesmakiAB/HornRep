@@ -2,7 +2,7 @@ import { Alignment, Button, Dialog, Navbar, Toaster } from '@blueprintjs/core';
 import { useSnapshot } from 'valtio';
 import { useHistory } from 'react-router-dom';
 
-import { userState, authState } from '../App';
+import { userState, loginState } from '../App';
 import Login from '../auth/Login';
 
 import './Nav.css';
@@ -10,11 +10,11 @@ import './Nav.css';
 const Nav = () => {
     const history = useHistory(); 
     const userSnap = useSnapshot(userState);
-    const authSnap = useSnapshot(authState);
+    const authSnap = useSnapshot(loginState);
 
     const handleHomeClick = () => history.push('/');
     const handleBrowseClick = () => history.push('/works/browse');
-    const handleLoginClick = () => authState.setLoginIsOpen();
+    const handleLoginClick = () => loginState.setLoginIsOpen();
     const handleLogoutClick = () => {
         const logoutToast = Toaster.create();
         logoutToast.show({
@@ -28,7 +28,7 @@ const Nav = () => {
         userState.setIsNotLoggedIn();
         
     };
-    const handleClose = () => authState.setLoginIsNotOpen();
+    const handleClose = () => loginState.setLoginIsNotOpen();
     
     return (
         <>

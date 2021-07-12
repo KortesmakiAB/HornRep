@@ -22,7 +22,7 @@ class User {
     // OR remove duplicate checks/BadRequestError
     // update tests
     static async registerUser(formFields) {
-        const { username, fName, lName, email, password, category } = formFields;
+        const { username, fName, lName, email, password, category = null } = formFields;
         
         const duplicateCheckUn = await db.query(`
             SELECT username
@@ -135,7 +135,7 @@ class User {
     *   Throws UnauthorizedError is user not found or wrong password.
     **/
 
-    static async authenticate(username, password) {
+    static async authenticate(email, password) {
         // try to find the user first
         const result = await db.query(
             `SELECT 
@@ -148,8 +148,8 @@ class User {
                 category,
                 is_admin AS "isAdmin"
             FROM users
-            WHERE username = $1`,
-            [username],
+            WHERE email = $1`,
+            [email],
         );
 
         const user = result.rows[0];
