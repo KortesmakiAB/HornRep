@@ -1,5 +1,5 @@
 import { useSnapshot } from 'valtio';
-import { Button, FormGroup, InputGroup, Toaster } from '@blueprintjs/core';
+import { Button, FormGroup, InputGroup, Position, Toaster } from '@blueprintjs/core';
 
 import { loginState } from '../App';
 // TODO implement LOCAL STORAGE
@@ -15,7 +15,7 @@ const Login = () => {
         evt.preventDefault();
         loginState.loginGetUser();
         loginState.setLoginIsNotOpen();
-        const loginToast = Toaster.create();
+        const loginToast = Toaster.create({position: Position.BOTTOM});
         loginToast.show({
             intent:'success',
             message: `welcome back`,
@@ -35,10 +35,10 @@ const Login = () => {
                 <FormGroup label='password' labelFor='password'>
                     <InputGroup id="password" name="password" value={authSnap.unPw.password} onChange={loginState.handleLoginFormChange} type='password' autoComplete='current-password' required={true}/>
                 </FormGroup>
-                <FormGroup className='Login-btns'>
+                <div className='Btn-pair'>
                     <Button type='button' intent='danger' onClick={handleCancel}>Cancel</Button>
-                    <Button type='submit' intent='primary' className='Login-submit-btn'>Submit</Button>
-                </FormGroup>
+                    <Button type='submit' intent='primary'>Submit</Button>
+                </div>
             </form>
             <div className='Login-signup'>
                 <span>create a <a href='/signup'>HornRep account</a></span>

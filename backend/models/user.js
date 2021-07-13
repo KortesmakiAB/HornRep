@@ -81,15 +81,15 @@ class User {
 
     /** updateUser()
     *   
-    *   Updates (required): username, fName, lName, email, category, password.
-    *   
-    *   Does not update: username, isAdmin.
+    *   Updates (required): username, fName, lName, email.
+    *   Optional: category.
+    *   Does not update: password, isAdmin.
     * 
     *   Return id.
     * 
     */
     static async updateUser(id, formFields) {
-        const { username, fName, lName, email, category, password } = formFields;
+        const { username, fName, lName, email, category = null } = formFields;
 		const query = `
 			UPDATE users
 			SET 
@@ -97,18 +97,23 @@ class User {
                 first_name = $2,
                 last_name = $3,
                 email = $4,
-                category = $5,
-                password = $6
-			WHERE id = $7 
-			RETURNING id;`;
+                category = $5
+			WHERE id = $6 
+			RETURNING id, 
+                username, 
+                first_name AS "fName",
+                last_name AS "lName",
+                email,
+                category
+                ;`;
 
-		const result = await db.query(query, [username, fName, lName, email, category, password, id]);
+		const result = await db.query(query, [username, fName, lName, email, category, id]);
 
-		const updatedUserId = result.rows[0];
+		const updatedUser = result.rows[0];
 
-		if (!updatedUserId) throw new NotFoundError(`User with id - ${id} not found.`);
-
-		return updatedUserId.id;
+		if (!updatedUser) throw new NotFoundError(`User with id - ${id} not found.`);
+        console.log('&&&&&&&&&&', updatedUser)
+		return updatedUser;
     }
 
     /** deleteUser()

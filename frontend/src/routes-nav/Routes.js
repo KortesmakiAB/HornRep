@@ -6,6 +6,8 @@ import Works from '../works/Works';
 import WorkDetails from '../works/WorkDetails';
 // import Sarah from '../addtl-pages/Sarah';
 import Browse from '../Browse/Browse';
+import LoggedInRoute from './LoggedInRoute';
+import Profile from '../addtl-pages/Profile';
 
 
 function Routes() {
@@ -36,13 +38,13 @@ function Routes() {
                 <WorkDetails />
             </Route>
 
-            {/* <ProtectedRoute exact path='/profile'>
+            <LoggedInRoute exact path='/profile'>
                 <Profile />              
-            </ProtectedRoute>
+            </LoggedInRoute>
 
-            <ProtectedRoute exact path='/profile/edit'>
+            {/* <LoggedInRoute exact path='/profile/edit'>
                 <EditProfile />              
-            </ProtectedRoute>  */}
+            </LoggedInRoute>  */}
 
             <Redirect to='/' />
         </Switch>
@@ -51,19 +53,19 @@ function Routes() {
 
 export default Routes;
 
-// <ProtectedRoute exact path='/works/add'>
+// <LoggedInRoute exact path='/works/add'>
 //     <AddWork />
-// </ProtectedRoute>
+// </LoggedInRoute>
 
-// <ProtectedRoute exact path='/works/:id/edit'>
+// <LoggedInRoute exact path='/works/:id/edit'>
 //     <EditWork />                
-// </ProtectedRoute>
+// </LoggedInRoute>
 
-// <ProtectedRoute exact path='/composers/add'>
+// <LoggedInRoute exact path='/composers/add'>
 //     <EditComposer />                
-// </ProtectedRoute>
+// </LoggedInRoute>
 
-// <ProtectedRoute exact path='/composers/:id/edit'>
+// <LoggedInRoute exact path='/composers/:id/edit'>
 //     <EditComposer />                
-// </ProtectedRoute>
+// </LoggedInRoute>
 

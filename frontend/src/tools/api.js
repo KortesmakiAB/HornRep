@@ -82,7 +82,6 @@ class HornRepApi {
     return res.token;
   }
 
-  // TODO username or userid?
   static async getUser(userId) {
     let res = await this.request(`users/${userId}`);
     return res.user;
@@ -94,15 +93,14 @@ class HornRepApi {
     return res.token;
   }
 
+  static async updateProfile(userId, formData) {
+    const method = 'PATCH';
+    let res = await this.request(`users/${userId}`, formData, method);
+    return res.updatedUser;
+  }
+
+
   // TODO get rid of unused api call examples below
-//   static async updateUser(username, formData) {
-//     const method = 'PATCH';
-//     let res = await this.request(`users/${username}`, formData, method);
-//     return res.user;
-//   }
-
-
-
 //   static async signIn(unPw) {
 //     const method = 'POST';
 //     let res = await this.request(`auth/token`, unPw, method);

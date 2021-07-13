@@ -62,9 +62,10 @@ router.post('/', async function (req, res, next) {
 
 /** PATCH /:userId
 * 
-*   Updates (required): username, fName, lName, email, category, password.
+*   Updates (required): username, fName, lName, email, 
+*   Optional: category
 *   
-*   Does not update: isAdmin.
+*   Does not update: password, isAdmin.
 *
 *   Returns { newUserId: int }
 */
@@ -78,8 +79,9 @@ router.patch('/:userId', ensureCorrectUser, async function (req, res, next) {
             throw new BadRequestError(errs);
         }
 
-        const newUserId = await User.updateUser(req.params.userId, req.body);
-        return res.status(201).json({ newUserId });
+        const updatedUser = await User.updateUser(req.params.userId, req.body);
+        
+        return res.status(201).json({ updatedUser });
     } catch (error) {
         return next(error);
     }

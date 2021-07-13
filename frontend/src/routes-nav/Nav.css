@@ -1,3 +1,19 @@
 .Nav {
     font-family: 'Almarai', sans-serif;
 }
+
+.Nav-drawer-content {
+    text-align: left;
+}
+
+.Nav-drawer-content > button:nth-child(1) {
+    margin: .75rem 0;
+}
+
+.Nav-drawer-content > .Nav-drawer-btn {
+    display: block;
+}
+
+.Nav-ul {
+    list-style-type: none;
+}

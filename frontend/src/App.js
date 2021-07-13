@@ -26,6 +26,12 @@ export const userState = proxy({
   setIsNotLoggedIn() { this.isLoggedIn = false },
 });
 
+export const navState = proxy({
+  isMenuOpen: false,
+  setIsMenuOpened(){ this.isMenuOpen = true },
+  setIsMenuClosed(){ this.isMenuOpen = false },
+})
+
 export const loginState = proxy({
    // TODO reset to empty string
    unPw: {
@@ -70,11 +76,18 @@ export const signupState = proxy({
     password: ''
   },
   setSignupFormField(field, val) { this.formFields[field] = val },
+  setSignupFields(obj) { this.formFields = obj },
 
-  handleSignupFormChange(evt) {
+  handleSignupChange(evt) {
 		const { name, value } = evt.target;
     signupState.setSignupFormField(name, value);
   },
+});
+
+export const profileFormState = proxy({
+  userFieldsDisabled: false,
+  setUserFieldsDisabledTrue() { this.userFieldsDisabled = true },
+  setUserFieldsDisabledFalse() { this.userFieldsDisabled = false },
 });
 
 export const worksState = proxy({

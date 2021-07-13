@@ -1,10 +1,11 @@
-import { Button, FormGroup, InputGroup, Toaster } from '@blueprintjs/core';
+import { Button, Card, Elevation, FormGroup, H3, InputGroup, Toaster } from '@blueprintjs/core';
 import { Redirect, useHistory } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 import jwt from 'jsonwebtoken';
 
 import { signupState, userState } from '../App';
 import HornRepApi from '../tools/api';
+import UserFields from '../forms/UserFields';
 
 import './Signup.css';
 
@@ -43,29 +44,35 @@ const Signup = () => {
         <>
         { 
             userSnap.isLoggedIn
-            ? <Redirect to='./' />
+            ? <Redirect to='/' />
             : (
-                <form onSubmit={handleSignupSubmit}>
-                    <FormGroup label='first name' labelFor='fName'>
-                        <InputGroup id='fName' name='fName' value={signupSnap.formFields.fName} onChange={signupState.handleSignupFormChange} autoComplete='name' required/>
-                    </FormGroup>
-                    <FormGroup label='last name' labelFor='lName'>
-                        <InputGroup id='lName' name='lName' value={signupSnap.formFields.lName} onChange={signupState.handleSignupFormChange} autoComplete='name' required/>
-                    </FormGroup>
-                    <FormGroup label='username' labelFor='username'>
-                        <InputGroup id='username' name='username' value={signupSnap.formFields.username} onChange={signupState.handleSignupFormChange} autoComplete='username' required/>
-                    </FormGroup>
-                    <FormGroup label='email' labelFor='email'>
-                        <InputGroup id='email' type='email' name='email' value={signupSnap.formFields.email} onChange={signupState.handleSignupFormChange} autoComplete='email' required/>
-                    </FormGroup>
-                    <FormGroup label='password' labelFor='password'>
-                        <InputGroup id='password' type='password' name='password' value={signupSnap.formFields.password} onChange={signupState.handleSignupFormChange} autoComplete='new-password' required/>
-                    </FormGroup>
-
-                    <div className='Signup-btn'>
-                        <Button type='submit' intent='primary' text='create account' />
-                    </div>
-                </form>
+                <>
+                <Card elevation={Elevation.TWO} className='Card'>
+                    <p>
+                        Get involved, creat an account and make your contribution to HornRep.
+                    </p>
+                </Card>
+                <Card elevation={Elevation.TWO} className='Card'>
+                    <H3>register</H3>
+                    <form onSubmit={handleSignupSubmit}>
+                        <UserFields />
+                        <FormGroup label='password' labelFor='password'>
+                            <InputGroup 
+                                id='password' type='password' 
+                                name='password' 
+                                value={signupSnap.formFields.password} 
+                                onChange={signupState.handleSignupFormChange} 
+                                autoComplete='new-password' 
+                                placeholder='' 
+                                required 
+                                disabled={signupSnap.userFieldsDisabled}/>
+                        </FormGroup>
+                        <div className='Signup-btn'>
+                            <Button type='submit' intent='primary' text='create account' />
+                        </div>
+                    </form>
+                </Card>
+                </>
             )
         }
         </>

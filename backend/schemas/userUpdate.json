@@ -18,9 +18,7 @@
         "username",
         "fName",
         "lName",
-        "email",
-        "category",
-        "password"
+        "email"
     ],
     "properties": {
         "username": {
@@ -50,13 +48,6 @@
             "format": "email",
             "examples": [
                 "test@test.com"
-            ]
-        },
-        "password": {
-            "$id": "#/properties/password",
-            "type": "string",
-            "examples": [
-                "testMeOnce"
             ]
         },
         "category": {

@@ -265,8 +265,10 @@ const WorkDetails = () => {
                         <FormGroup label='Share your experience with this work' labelFor='comment'>
                             <InputGroup id='comment' value={workDeetsSnap.newCommentState} onChange={handleCommentChange} />
                         </FormGroup>
-                        <Button type='button' small={true} intent='danger' className='comment-form-btn' onClick={() => workDetailsState.toggleHideCommentForm() } text='cancel' />
-                        <Button type='submit' small={true} intent='primary' className='comment-form-btn'>Add comment</Button>
+                        <div className='Btn-pair'>
+                            <Button type='button' small={true} intent='danger' className='comment-form-btn' onClick={() => workDetailsState.toggleHideCommentForm() } text='cancel' />
+                            <Button type='submit' small={true} intent='primary' className='comment-form-btn' text='add comment' />
+                        </div>
                     </form>
                 </Card>
                 : null
