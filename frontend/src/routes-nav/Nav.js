@@ -44,6 +44,10 @@ const Nav = () => {
                     ? <Button className="bp3-minimal" icon="log-out" text="Logout" onClick={handleLogoutClick}/>
                     : <Button className="bp3-minimal" icon="log-in" text="Login" onClick={handleLoginClick}/>
                 }
+                { userSnap.isLoggedIn
+                    ? <Button className="bp3-minimal" icon="user" text="profile" onClick={handleHomeClick}/>
+                    : null
+                }
             </Navbar.Group>
         </Navbar>
         <Dialog 

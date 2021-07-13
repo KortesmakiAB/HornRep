@@ -15,7 +15,6 @@ const Home = () => {
     
     const snap = useSnapshot(searchFormState);
     const userSnap = useSnapshot(userState);
-    console.log(userSnap)
 
     return (
         <div>

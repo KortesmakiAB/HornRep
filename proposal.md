@@ -249,27 +249,25 @@ UX Notes: group like inputs together: text, multi-select, checkboxes
 1. ~~`<WorkList>`~~
 1. ~~`<WorkDetails>`~~
 1. ~~`<Home>`~~
-1. `<Nav>`
-1. `<EditWork>`
-1. `<EditComment>`
-1. `<AddWork>`
-1. `<AddComposer>`
-1. `<EditComposer>`
-1. Browse (2 pages): Title, Composer
-1. `<Sarah>`
-1. `<Profile>`
-1. `<EditProfile>`
-1. `<Sara>`
-1. `<Login>`
-1. `<Signup>`
-1. Loading Pages: TBD
-    1. Suspend components (Valtio)
+1. `<Nav>` (responsive - wait til later?)
+1. ~~`<EditComment>`~~
+1. ~~Browse (2 pages): Title, Composer~~
+1. ~~`<Login>`~~
+1. ~~`<Signup>`~~
+
+1. Add/Edit/Delete `<Profile>`
+1. `<Loading>` 
+1. Add/Edit/Delete `<Work>`
+1. Add/Edit/Delete `<Composer>`
+
+
 1. ??
 1. ReadMe.md
 
 ### Do Later
 - Favicon
 - LocalStorage
+`<Sara>` (wait til responsive nav)
 
 ### React Design
 React routing

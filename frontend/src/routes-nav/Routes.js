@@ -36,6 +36,13 @@ function Routes() {
                 <WorkDetails />
             </Route>
 
+            {/* <ProtectedRoute exact path='/profile'>
+                <Profile />              
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path='/profile/edit'>
+                <EditProfile />              
+            </ProtectedRoute>  */}
 
             <Redirect to='/' />
         </Switch>
@@ -60,10 +67,3 @@ export default Routes;
 //     <EditComposer />                
 // </ProtectedRoute>
 
-// <ProtectedRoute exact path='/profile'>
-//      <Profile />              
-// </ProtectedRoute>
-
-// <ProtectedRoute exact path='/profile/edit'>
-//      <EditProfile />              
-// </ProtectedRoute> 
