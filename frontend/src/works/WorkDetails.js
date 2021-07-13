@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { useSnapshot } from 'valtio';
-import { H3, Callout, HTMLTable, Card, Elevation, Button, FormGroup, InputGroup } from '@blueprintjs/core';
+import { H3, Callout, HTMLTable, Card, Elevation, Button, FormGroup, TextArea } from '@blueprintjs/core';
 import { useParams } from 'react-router-dom';
 
 import { workDetailsState, userState } from '../App';
@@ -263,7 +263,7 @@ const WorkDetails = () => {
                 <Card className='Card'>
                     <form onSubmit={handleCommentSubmit}>
                         <FormGroup label='Share your experience with this work' labelFor='comment'>
-                            <InputGroup id='comment' value={workDeetsSnap.newCommentState} onChange={handleCommentChange} />
+                            <TextArea id='comment' value={workDeetsSnap.newCommentState} onChange={handleCommentChange} />
                         </FormGroup>
                         <div className='Btn-pair'>
                             <Button type='button' small={true} intent='danger' className='comment-form-btn' onClick={() => workDetailsState.toggleHideCommentForm() } text='cancel' />
@@ -277,10 +277,12 @@ const WorkDetails = () => {
                 <Card className='Card'>
                     <form onSubmit={handleEditSubmit}>
                         <FormGroup label='Edit your comment' labelFor='editComment'>
-                            <InputGroup id='editComment' value={workDeetsSnap.commentEditState} onChange={handleEditChange} />
+                            <TextArea id='editComment' value={workDeetsSnap.commentEditState} onChange={handleEditChange} />
                         </FormGroup>
-                        <Button type='button' small={true} intent='danger' className='comment-form-btn' onClick={() => workDetailsState.toggleHideEditForm() } text='cancel' />
-                        <Button type='submit' small={true} intent='primary' className='comment-form-btn' text='update comment' />
+                        <div className='Btn-pair'>
+                            <Button type='button' small={true} intent='danger' className='comment-form-btn' onClick={() => workDetailsState.toggleHideEditForm() } text='cancel' />
+                            <Button type='submit' small={true} intent='primary' className='comment-form-btn' text='update comment' />
+                        </div>
                     </form>
                 </Card>
                 : null

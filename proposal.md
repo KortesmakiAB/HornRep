@@ -254,8 +254,8 @@ UX Notes: group like inputs together: text, multi-select, checkboxes
 1. ~~Browse (2 pages): Title, Composer~~
 1. ~~`<Login>`~~
 1. ~~`<Signup>`~~
+1. ~~Add/Edit/Delete `<Profile>`~~
 
-1. Add/Edit/Delete `<Profile>`
 1. `<Loading>` 
 1. Add/Edit/Delete `<Work>`
 1. Add/Edit/Delete `<Composer>`
@@ -267,7 +267,8 @@ UX Notes: group like inputs together: text, multi-select, checkboxes
 ### Do Later
 - Favicon
 - LocalStorage
-`<Sara>` (wait til responsive nav)
+- `<Sara>` (wait til responsive nav)
+- Delete profile/user account?
 
 ### React Design
 React routing

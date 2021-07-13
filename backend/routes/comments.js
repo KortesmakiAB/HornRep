@@ -4,7 +4,7 @@ const express = require('express');
 const jsonschema = require('jsonschema');
 
 const Comment = require('../models/comment');
-const { ensureCorrectUser, ensureCorrectUserOrAdmin } = require('../middleware/auth');
+const { ensureLoggedIn, ensureCorrectUser, ensureCorrectUserOrAdmin } = require('../middleware/auth');
 const { BadRequestError } = require('../expressError');
 
 const commentNewSchema = require('../schemas/commentNew');
@@ -22,7 +22,7 @@ const router = new express.Router();
 *   
 *   Returns { id, comment, userId, workId, commentDate }
 */
-router.post('/', ensureCorrectUser, async function (req, res, next) {
+router.post('/', ensureLoggedIn, async function (req, res, next) {
     try {
         const validator = jsonschema.validate(req.body, commentNewSchema);
         if (!validator.valid) {
