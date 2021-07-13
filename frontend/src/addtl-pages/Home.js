@@ -1,11 +1,10 @@
 import { useSnapshot } from 'valtio'
-import { H3, Card } from "@blueprintjs/core";
+import { H3, Card, Classes } from "@blueprintjs/core";
 import { Link } from 'react-router-dom';
 
 import { searchFormState, userState } from '../App';
 
 import SearchForm from '../forms/SearchForm';
-// import Loading from '../tools/Loading';
 
 import './Home.css';
 
@@ -47,8 +46,20 @@ const Home = () => {
             { 
                 snap.isDataLoaded
                 ? <SearchForm />    
-                : '...Loading TODO' 
-                // : <Loading />
+                : (<Card className='Card'>
+                    <H3 className={Classes.SKELETON}>What is HornRep?</H3>
+                    <p className={Classes.SKELETON}>
+                        HornRep is a powerful resource for helping horn players of all skill levels find appropriate solo repertoire. 
+                    </p>
+                    <p className={Classes.SKELETON}>
+                        Think of it as a launching pad for finding the exact work you've been dreaming about...or just casually browse.
+                    </p>
+                    
+                    <p className={Classes.SKELETON}>
+                        Use the search form below to be as specific or general as you wish. 
+                    </p>
+                    
+                </Card>)
             }
             {
                 userSnap.isLoggedIn

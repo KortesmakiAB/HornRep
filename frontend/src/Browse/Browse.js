@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Tab, Tabs } from "@blueprintjs/core";
+import { Card, Spinner, Tab, Tabs } from "@blueprintjs/core";
 
 import { worksState } from '../App';
 
@@ -11,12 +11,20 @@ const Browse = () => {
     worksState.worksSearch();
     
     const handleTabChange = (tab) => {
-        // byTitles default is true
+        // byTitles default is true, so it is not included as an argument.
         tab === 'title' ? worksState.worksSearch() : worksState.worksSearch({byTitles: false}) ;
     };
 
+    const Spinner = () => {
+        return (
+            <Card className='Card'>
+                <Spinner intent='primary'/>
+            </Card>
+        );
+    };
+
     return (
-        <Suspense fallback={<span>TODO Loading component.....................</span>}>
+        <Suspense fallback={Spinner}>
             <Tabs id="BrowseTabs" onChange={handleTabChange} defaultSelectedTabId="title">
                 <Tab id="title" title="By Title" panel={<WorksByTitle  />} />
                 <Tab id="composer" title="By Composer" panel={<WorksByComposer  />} panelClassName="" />
