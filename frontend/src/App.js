@@ -10,6 +10,8 @@ import Nav from './routes-nav/Nav';
 
 import { eraStyleState } from './forms/EraStyle';
 import './App.css';
+import { countryMultiSelectState } from './forms/CountryMultiSelect';
+import { countrySelectState } from './forms/CountrySelect';
 // import hornBg from '../src/media/HornBg2.jpg';
 
 
@@ -184,17 +186,12 @@ const initialSearchFormState = {
   title: '',
   lName: '',
   fName:'',
-  minDuration: '00:00:00', 
-  maxDuration: '00:20:00',
+  minDuration: '', 
+  maxDuration: '',
   techniques: '',
-  // highestNote: '',  // property will be set as used. integer
-  // lowestNote: '', // property will be set as used. integer
-  difficulty: [],
-  eraStyle: [],
-  countries: [],
-  accompType: [],
-  accompDifficulty: [],
-  gender: ''
+  gender: '',
+  highestNote: '',      // type: int
+  lowestNote: '',       // type: int
 };
 
 export const searchFormState = proxy({
@@ -213,26 +210,14 @@ export const searchFormState = proxy({
   isDataLoaded: false,
   setIsDataLoadedTrue() { this.isDataLoaded = true; },
 
-  // TODO remove
-  // formChoicesData: {},
-  // setFormChoicesData (dataObj) { this.formChoicesData = dataObj },
-
-  // TODO remove
-  // eraStyleState: {},
-  // setEraStyleState(key) { this.eraStyleState[key] = !this.eraStyleState[key] },
-
-  countriesState: {},
-  setCountriesState(key) { this.countriesState[key] = !this.countriesState[key] },
-
-  countriesQuery: '',
-  setCountriesQuery(qString) { searchFormState.countriesQuery = qString },
 
   loadFormChoicesData () {
     (async () => {
       const resp = await HornRepApi.getFormChoicesData();
-      // this.setFormChoicesData(resp.formChoicesData);
       if (resp.formChoicesData.eraStyle.length) resp.formChoicesData.eraStyle.forEach(eS => eraStyleState.erasStyles[eS] = false);
-      if (resp.formChoicesData.countries.length) resp.formChoicesData.countries.forEach(c => this.countriesState[c] = false);
+      if (resp.formChoicesData.countries.length) resp.formChoicesData.countries.forEach(c => countryMultiSelectState.countriesState[c] = false);
+      // if (resp.formChoicesData.countries.length) resp.formChoicesData.countries.forEach(c => countrySelectState.countriesState[c] = false);
+      if (resp.formChoicesData.countries.length) countrySelectState.countries = resp.formChoicesData.countries;
       this.setIsDataLoadedTrue();
 		})();
 	},

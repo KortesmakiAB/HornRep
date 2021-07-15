@@ -1,12 +1,18 @@
-import { useSnapshot } from 'valtio';
+import { proxy, useSnapshot } from 'valtio';
 import { FormGroup, MenuItem } from '@blueprintjs/core';
 import { MultiSelect } from '@blueprintjs/select';
 
-import { searchFormState } from '../App';
 
+export const countryMultiSelectState = proxy({
+  countriesState: {},
+  setCountriesState(key) { this.countriesState[key] = !this.countriesState[key] },
+
+  countriesQuery: '',
+  setCountriesQuery(qString) { this.countriesQuery = qString },
+});
 
 const CountryMultiSelect = () => {
-    const formSnap = useSnapshot(searchFormState);
+    const multiSelectSnap = useSnapshot(countryMultiSelectState);
 
     const renderCountry = (country, {handleClick, modifiers }) => {
         if (!modifiers.matchesPredicate) {
@@ -18,14 +24,14 @@ const CountryMultiSelect = () => {
                 key={country}
                 onClick={handleClick}
                 text={country}
-                icon={ formSnap.countriesState[country] ? "tick" : "blank" }
+                icon={ multiSelectSnap.countriesState[country] ? "tick" : "blank" }
             />
         );
     };
     const filterCountry = (query, country) => country.toLowerCase().startsWith(query.toLowerCase());
-    const handleCountrySelect = (country) => searchFormState.setCountriesState(country);
+    const handleCountrySelect = (country) => countryMultiSelectState.setCountriesState(country);
     const renderTag = (tag) => tag;
-    const handleTagRemove = (_tag) => { searchFormState.setCountriesState(_tag) };
+    const handleTagRemove = (_tag) => { countryMultiSelectState.setCountriesState(_tag) };
 
     return (
         <FormGroup 
@@ -35,18 +41,18 @@ const CountryMultiSelect = () => {
             helperText='may make multiple selections'
         >
             <MultiSelect
-                items={ Object.keys(formSnap.countriesState) }
+                items={ Object.keys(multiSelectSnap.countriesState) }
                 itemRenderer={renderCountry}
                 onItemSelect={handleCountrySelect}
                 tagRenderer={renderTag}
 
                 fill={true}
-                query={ formSnap.countriesQuery }
-                onQueryChange={ searchFormState.setCountriesQuery }
+                query={ multiSelectSnap.countriesQuery }
+                onQueryChange={ countryMultiSelectState.setCountriesQuery }
                 itemPredicate={filterCountry}
                 noResults={<MenuItem disabled={true} text="No results." />}
                 resetOnSelect='true'
-                selectedItems={ Object.keys(formSnap.countriesState).filter(c => formSnap.countriesState[c]) }
+                selectedItems={ Object.keys(multiSelectSnap.countriesState).filter(c => countryMultiSelectState.countriesState[c]) }
                 tagInputProps={{
                     onRemove: handleTagRemove,
                 }}

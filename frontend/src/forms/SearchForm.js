@@ -8,7 +8,7 @@ import Difficulty, { difficultyState } from './Difficulty';
 import AccompAccompDiff, { accompState } from './AccompAccompDiff';
 import Duration from './Duration';
 import EraStyle, { eraStyleState } from './EraStyle';
-import CountryMultiSelect from './CountryMultiSelect';
+import CountryMultiSelect, { countryMultiSelectState } from './CountryMultiSelect';
 import GenderSelect from './GenderSelect';
 
 import './SearchForm.css';
@@ -22,6 +22,7 @@ const SearchForm = () => {
     const difficultySnap = useSnapshot(difficultyState);
     const accompSnap = useSnapshot(accompState);    
     const eraStyleSnap = useSnapshot(eraStyleState);
+    const multiSelectSnap = useSnapshot(countryMultiSelectState);
 
     const handleFormSubmit = (evt) => {
         evt.preventDefault();
@@ -35,8 +36,8 @@ const SearchForm = () => {
             if (eraStyleSnap.erasStyles[key]) eraStyleResults.push(key);
         }
         const countriesResults = [];
-        for (let key in formSnap.countriesState) {
-            if (formSnap.countriesState[key]) countriesResults.push(key);
+        for (let key in multiSelectSnap.countriesState) {
+            if (multiSelectSnap.countriesState[key]) countriesResults.push(key);
         }
         const accompResults = [];
         for (let key in accompSnap.checkboxesAccomp) {
@@ -47,16 +48,19 @@ const SearchForm = () => {
             if (accompSnap.checkboxesAccompDifficulty[key]) accompDiffResults.push(key);
         }
         
-        if (difficultyArr.length) searchFormState.setFormField('difficulty', difficultyArr);
-        if (eraStyleResults.length) searchFormState.setFormField('eraStyle', eraStyleResults);
-        if (countriesResults.length) searchFormState.setFormField('countries', countriesResults);
-        if (accompResults.length) searchFormState.setFormField('accompType', accompResults);
-        if (accompDiffResults.length) searchFormState.setFormField('accompDifficulty', accompDiffResults);
-        if (highestLowestSnap.highestNote.value) searchFormState.setFormField('highestNote', highestLowestSnap.highestNote.value);
-        if (highestLowestSnap.lowestNote.value) searchFormState.setFormField('lowestNote', highestLowestSnap.lowestNote.value);
+        const finalSearchObj = {}
+        if (difficultyArr.length) finalSearchObj['difficulty'] = difficultyArr;
+        if (eraStyleResults.length) finalSearchObj['eraStyle'] = eraStyleResults;
+        if (countriesResults.length) finalSearchObj['countries'] = countriesResults;
+        if (accompResults.length) finalSearchObj['accompType'] = accompResults;
+        if (accompDiffResults.length) finalSearchObj['accompDifficulty'] = accompDiffResults;
+        if (highestLowestSnap.highestNote.value) finalSearchObj['highestNote'] = highestLowestSnap.highestNote.value;
+        if (highestLowestSnap.lowestNote.value) finalSearchObj['lowestNote'] = highestLowestSnap.lowestNote.value;
         
-        worksState.worksSearch(searchFormState.formFields);
-        
+        for (let key in searchFormState.formFields){
+            if (searchFormState.formFields[key]) finalSearchObj[key] = searchFormState.formFields[key];
+        }
+        worksState.worksSearch(finalSearchObj);
         searchFormState.resetFormFields();
         history.push('/works');
     };
@@ -105,8 +109,15 @@ const SearchForm = () => {
                         <GenderSelect formParent='SearchForm' />
                         <HighestLowestNotes />
                         <AccompAccompDiff />
-                        
-                        
+                        <FormGroup label="title" labelFor="title">
+                            <InputGroup id="title" name="title" placeholder="keyword" value={formSnap.formFields.title} onChange={searchFormState.handleFormChange} autoComplete='on' />
+                        </FormGroup>
+                        <FormGroup label="last name" labelFor="lName">
+                            <InputGroup id="lName" name="lName" placeholder="composer" value={formSnap.formFields.lName} onChange={searchFormState.handleFormChange} autoComplete='on' />
+                        </FormGroup>
+                        <FormGroup label="first name" labelFor="fName">
+                            <InputGroup id="fName" name="fName" placeholder="composer" value={formSnap.formFields.fName} onChange={searchFormState.handleFormChange} autoComplete='on' />
+                        </FormGroup>
                         <FormGroup label="technique" labelFor="techniques" helperText=' eg. lip trill, stopped' >
                             <InputGroup 
                                 id="techniques" 
@@ -116,15 +127,6 @@ const SearchForm = () => {
                                 onChange={searchFormState.handleFormChange}
                                 autoComplete='on'
                             />
-                        </FormGroup>
-                        <FormGroup label="title" labelFor="title">
-                            <InputGroup id="title" name="title" placeholder="keyword" value={formSnap.formFields.title} onChange={searchFormState.handleFormChange} autoComplete='on' />
-                        </FormGroup>
-                        <FormGroup label="last name" labelFor="lName">
-                            <InputGroup id="lName" name="lName" placeholder="composer" value={formSnap.formFields.lName} onChange={searchFormState.handleFormChange} autoComplete='on' />
-                        </FormGroup>
-                        <FormGroup label="first name" labelFor="fName">
-                            <InputGroup id="fName" name="fName" placeholder="composer" value={formSnap.formFields.fName} onChange={searchFormState.handleFormChange} autoComplete='on' />
                         </FormGroup>
                     </Collapse>
                     <FormGroup className='submit-btn'>

@@ -10,7 +10,6 @@ export const eraStyleState = proxy({
 
     eraStyleQuery: '',
     setEraStyleQuery(q) { this.eraStyleQuery = q },
-
 })
 
 const EraStyle = () => {

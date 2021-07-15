@@ -1,7 +1,7 @@
 import { proxy, useSnapshot } from 'valtio';
 import { Button, Card, FormGroup, Icon, InputGroup } from '@blueprintjs/core';
 
-import CountrySelect from './CountrySelect';
+import CountrySelect, {countrySelectState} from './CountrySelect';
 import GenderSelect from './GenderSelect';
 import HornRepApi from '../utilities/api';
 
@@ -10,16 +10,12 @@ import HornRepApi from '../utilities/api';
 const initialNewComposerState = {
     fName: '',
     lName: '',
-    country: '',
     gender: '',
 };
 export const newComposerState = proxy({
     formFields: {...initialNewComposerState},
     setFormField(field, val) { this.formFields[field] = val },
     resetFormFields(){ this.formFields = {...initialNewComposerState} },
-
-    countryQuery: '',
-    setCountryQuery(q){ this.countryQuery = q },
 
     handleFormChange(evt) {
 		const { name, value } = evt.target;
@@ -30,6 +26,7 @@ export const newComposerState = proxy({
         evt.preventDefault();
         // TODO try/catch
         (async () => {
+            newComposerState.setFormField('country', countrySelectState.country);
             const resp = await HornRepApi.newComposer(newComposerState.formFields);
             newComposerState.resetFormFields();
         })();
@@ -60,6 +57,7 @@ const NewComposer = () => {
                         value={newComposerSnap.formFields.fName} 
                         onChange={newComposerState.handleFormChange} 
                         autoComplete='on'
+                        required={true}
                     
                     />
                 </FormGroup>
@@ -71,6 +69,7 @@ const NewComposer = () => {
                         value={newComposerSnap.formFields.lName} 
                         onChange={newComposerState.handleFormChange} 
                         autoComplete='on'
+                        required={true}
                     />
                 </FormGroup>
                 {/* TODO <H4>Choose a country from this list. Or enter it manually (below).</H4> */}

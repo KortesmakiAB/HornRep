@@ -1,14 +1,20 @@
-import { useSnapshot } from 'valtio';
+import { proxy, useSnapshot } from 'valtio';
 import { Button, FormGroup, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 
-import { searchFormState } from '../App';
-import { newComposerState } from './NewComposer';
+export const countrySelectState = proxy({
+    countries: [],
+
+    country: '',
+    setCountryState(c) { this.country = c },
+  
+    countryQuery: '',
+    setCountryQuery(qString) { this.countryQuery = qString },
+});
 
 const CountrySelect = () => {
 
-    const formSnap = useSnapshot(searchFormState);
-    const newComposerSnap = useSnapshot(newComposerState);
+    const countrySelectSnap = useSnapshot(countrySelectState);
 
     const renderCountry = (country, {handleClick, modifiers }) => {
         if (!modifiers.matchesPredicate) {
@@ -20,13 +26,13 @@ const CountrySelect = () => {
                 key={country}
                 onClick={handleClick}
                 text={country}
-                icon={ newComposerSnap.formFields.country === country ? "tick" : "blank" }
+                icon={ countrySelectSnap.country === country ? "tick" : "blank" }
             />
         );
     };
     const handleCountrySelect = (country) => {
-        if (country === newComposerSnap.formFields.country) newComposerState.setFormField('country', '');
-        else newComposerState.setFormField('country', country);
+        if (country === countrySelectSnap.country) countrySelectState.setCountryState('');
+        else countrySelectState.setCountryState(country);
     };
     const filterCountry = (query, country) => country.toLowerCase().startsWith(query.toLowerCase());
 
@@ -34,20 +40,20 @@ const CountrySelect = () => {
     return (
         <FormGroup 
             label="country/region"
-            labelFor="countries"
+            labelFor="country"
             labelInfo='(of composer)'
         >
             <Select
-                items={ Object.keys(formSnap.countriesState) }
+                items={ countrySelectSnap.countries }
                 itemRenderer={renderCountry}
                 onItemSelect={handleCountrySelect}
                 
-                query={ newComposerSnap.countryQuery }
-                onQueryChange={ searchFormState.setCountriesQuery }
+                query={ countrySelectSnap.countryQuery }
+                onQueryChange={ countrySelectState.setCountryQuery }
                 itemPredicate={filterCountry}
                 noResults={<MenuItem disabled={true} text="No results." />}
             >
-                <Button text={newComposerSnap.formFields.country || 'Search for country...'} rightIcon="double-caret-vertical"  />
+                <Button text={countrySelectSnap.country || 'Search for country...'} rightIcon="double-caret-vertical"  />
             </Select>
         </FormGroup>
     );

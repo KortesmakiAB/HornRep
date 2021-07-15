@@ -6,11 +6,13 @@
     "properties": {
         "fName": {
             "$id": "#/properties/fName",
-            "type": "string"
+            "type": "string",
+            "minLength": 1
         },
         "lName": {
             "$id": "#/properties/lName",
-            "type": "string"
+            "type": "string",
+            "minLength": 1
         },
         "country": {
             "$id": "#/properties/country",

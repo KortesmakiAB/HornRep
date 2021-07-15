@@ -115,7 +115,7 @@ class Work {
 				difficulty
 			FROM works
 			JOIN composers c ON composer_id = c.id
-			JOIN users u ON u.id = submitted_by
+			JOIN users u ON u.id = submitted_by 
 		`;
 		
 		const whereExpressions = [];
@@ -129,44 +129,43 @@ class Work {
 
 		// ILIKE - case insensitive, partial matches
 		// db column may have multiple entries listed within 1 string, eg "Glissando, lip trills, mute, stopped horn". 
-		// If search-filter-data is an array, then iterate/search. eg. ["Glissando", "lip trills", "mute", "stopped horn"]
-		// Otherwise, just search db by term
-		const ilikes = { title, difficulty, first_name, last_name, techniques, country, era_style, accompaniment_type, accompaniment_difficulty };
-		for (let filter in ilikes ) {
-			if (Array.isArray(ilikes[filter])) ilikes[filter].forEach(f => {
-				if(f !== '' && f !== undefined) {
-					queryValues.push(`%${f}%`);
-					whereExpressions.push(`${[filter]} ILIKE $${queryValues.length}`);
-				}
-			});
-			
-			else {
-				if (ilikes[filter] !== '' && ilikes[filter] !== undefined) {
-					queryValues.push(`%${ilikes[filter]}%`);
+		const ilikeStrings = { title, first_name, last_name, techniques };
+		const ilikeStrArr = Object.keys(ilikeStrings).filter(key => (ilikeStrings[key] !== '' && ilikeStrings[key] !== undefined));
+		for (let filter of ilikeStrArr) {
+			queryValues.push(`%${ilikeStrings[filter]}%`);
+			filter === 'first_name' || filter === 'last_name'
+				? whereExpressions.push(` c.${filter} ILIKE $${queryValues.length}`)
+				: whereExpressions.push(` ${filter} ILIKE $${queryValues.length}`);
+		}
 
-					filter === 'first_name' || filter === 'last_name'
-						? whereExpressions.push(`c.${[filter]} ILIKE $${queryValues.length}`)
-						: whereExpressions.push(`${[filter]} ILIKE $${queryValues.length}`);
-				}
+		const ilikeArrays = { difficulty, accompaniment_type, accompaniment_difficulty };
+		for (let key in ilikeArrays) {
+			const arr = ilikeArrays[key];
+			if (arr && arr.length) arr.forEach(filter => {
+				queryValues.push(`%${filter}%`);
+				whereExpressions.push(` ${key} ILIKE $${queryValues.length}`);
+			});
+		}
+	
+		// EXACT MATCHES
+		// each property is an array
+		const exactMatches = { country, era_style, };
+		// '&&' in case a [] slips through the cracks
+		for (let key in exactMatches) {
+			const matchArr = exactMatches[key];
+			if (matchArr && matchArr.length) {
+				matchArr.forEach(m => {
+					queryValues.push(m);
+					whereExpressions.push(`${key} = $${queryValues.length}`);
+				});
 			}
 		}
-		
-		// TODO - refactor? - do I need to check for an array?
-		// Cannot move gender to ILIKE: male and female, both contain "male"
-		const exactMatches = { gender };
-		for (let match in exactMatches) {
-			if (Array.isArray(exactMatches[match])) exactMatches[match].forEach(m => {
-				if(m !== undefined) {
-					queryValues.push(m);
-					whereExpressions.push(`${[match]} = $${queryValues.length}`);
-				}
-			});
-			else {
-				if (exactMatches[match] !== '' && exactMatches[match] !== undefined) {
-					queryValues.push(exactMatches[match]);
-					whereExpressions.push(`${[match]} = $${queryValues.length}`);
-				}
-			}
+
+		// give gender its own 'exact match' treatment, it's not an array.
+		// gender cannot be included in ILIKE because male and female both contain 'male'
+		if (gender) {
+			queryValues.push(gender);
+			whereExpressions.push(`gender = $${queryValues.length}`);
 		}
 
 		if (highest_note && Number.isInteger(highest_note)) {
@@ -177,7 +176,6 @@ class Work {
 			queryValues.push(lowest_note);
 			whereExpressions.push(`lowest_note >= $${queryValues.length}`);
 		}
-
 		if (minDuration !== undefined) {
 			queryValues.push(minDuration);
 			whereExpressions.push(`duration >= $${queryValues.length}`);
@@ -187,13 +185,33 @@ class Work {
 			whereExpressions.push(`duration <= $${queryValues.length}`);
 		}
 
+		// WHERE expressions
+		// determine use of	OR vs AND
+		// eg, user might want to search 2 countries, Germany OR United States
+		// Otherwise, use AND
 		if (whereExpressions.length) {
-			query += " WHERE " + whereExpressions.join(" AND ");
+			const orColumns = ['difficulty', 'country', 'era_style', 'accompaniment_type', 'accompaniment_difficulty'];
+			query += " WHERE ";
+			for (let i = 0; i < whereExpressions.length; i++) {
+				const exp = whereExpressions[i];
+				if (i === 0) query += exp;
+				else {
+					let orCol = false;
+					for (let col of orColumns) {
+						if (!orCol && exp.includes(col))  {
+							query += ' OR ' + exp;
+							orCol = true;
+							break;
+						}
+					};
+					if (!orCol) query +=' AND ' + exp;
+				}
+			}
 		}
 
 		if (byTitles === true) query += ' ORDER BY title, c.last_name, c.first_name;'
 		else if (byTitles === false) query += ' ORDER BY c.last_name, c.first_name, title;'
-		console.log('############', query, queryValues)
+		
 		const worksResp = await db.query(query, queryValues);
 
 		return worksResp.rows;
