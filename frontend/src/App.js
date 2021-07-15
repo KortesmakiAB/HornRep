@@ -4,10 +4,11 @@ import { H1, Card } from '@blueprintjs/core';
 import { BrowserRouter } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 
-import HornRepApi from './tools/api';
+import HornRepApi from './utilities/api';
 import Routes from './routes-nav/Routes';
 import Nav from './routes-nav/Nav';
 
+import { eraStyleState } from './forms/EraStyle';
 import './App.css';
 // import hornBg from '../src/media/HornBg2.jpg';
 
@@ -33,10 +34,9 @@ export const navState = proxy({
 })
 
 export const loginState = proxy({
-   // TODO reset to empty string
    unPw: {
-		email: 'aaron@awesomeSite.com',
-		password: 'password',
+		email: '',
+		password: '',
 	},
   setUnPw (name, value) { this.unPw[name] = value },
 
@@ -46,6 +46,7 @@ export const loginState = proxy({
   },
 
   loginGetUser() {
+    // try/catch and handle invalid combos
     (async () => {
       const respToken = await HornRepApi.login(this.unPw);
 
@@ -125,13 +126,11 @@ export const workDetailsState = proxy({
   addNewComment() {
     (async () => {
       // TODO user must be logged in. 
-      // TODO try/catch
+      // add try/catch?
       // if error, send an error toast?
-
       const addedComment = await HornRepApi.newComment({
         comment: this.newCommentState,
-        // TODO remove hard coded id and add userId from proxy state
-        userId: 2,
+        userId: userState.user.id,
         workId: this.workDetails.id
       });
 		})();
@@ -140,12 +139,11 @@ export const workDetailsState = proxy({
   editComment(commentId) {
     (async () => {
       // TODO user must be logged in. 
-      // TODO try/catch
+      // add try/catch?
       // if error, send an error toast?
       const editedComment = await HornRepApi.editComment({
         comment: this.commentEditState,
-        // TODO remove hard coded id and add userId from proxy state
-        userId: 2,
+        userId: userState.user.id,
         commentId
       });
 		})();
@@ -154,13 +152,12 @@ export const workDetailsState = proxy({
   deleteComment(commentId) {
     (async () => {
       // TODO user must be logged in or admin
-      // TODO try/catch
+      // add try/catch?
       // if error, send an error toast?
 
       const addedComment = await HornRepApi.deleteComment({
         commentId,
-        // TODO remove hard coded id and add userId from proxy state
-        userId: 2,
+        userId: userState.user.id,
       });
 		})();
 	},
@@ -183,24 +180,27 @@ export const workDetailsState = proxy({
 
 // initial maxDuration is pre-set to 20 for convenience.
 // most people want works less than 20 minutes.
+const initialSearchFormState = {
+  title: '',
+  lName: '',
+  fName:'',
+  minDuration: '00:00:00', 
+  maxDuration: '00:20:00',
+  techniques: '',
+  // highestNote: '',  // property will be set as used. integer
+  // lowestNote: '', // property will be set as used. integer
+  difficulty: [],
+  eraStyle: [],
+  countries: [],
+  accompType: [],
+  accompDifficulty: [],
+  gender: ''
+};
+
 export const searchFormState = proxy({
-  formFields: {
-    title: '',
-    lName: '',
-    fName:'',
-    minDuration: '00:00:00', 
-    maxDuration: '00:20:00',
-    techniques: '',
-    // highestNote: '',  // property will be set as used. integer
-    // lowestNote: '', // property will be set as used. integer
-    difficulty: [],
-    eraStyle: [],
-    countries: [],
-    accompType: [],
-    accompDifficulty: [],
-    gender: ''
-  },
+  formFields: {...initialSearchFormState},
   setFormField(field, val) { this.formFields[field] = val },
+  resetFormFields(){ this.formFields = {...initialSearchFormState} },
 
   isAdvancedSearch: false,
   setAdvancedSearch() { this.isAdvancedSearch = !this.isAdvancedSearch },
@@ -213,11 +213,13 @@ export const searchFormState = proxy({
   isDataLoaded: false,
   setIsDataLoadedTrue() { this.isDataLoaded = true; },
 
-  checkboxData: {},
-  setCheckboxData (dataObj) { this.checkboxData = dataObj },
+  // TODO remove
+  // formChoicesData: {},
+  // setFormChoicesData (dataObj) { this.formChoicesData = dataObj },
 
-  eraStyleCheckboxState: {},
-  setEraStyleCheckboxState(key) { this.eraStyleCheckboxState[key] = !this.eraStyleCheckboxState[key] },
+  // TODO remove
+  // eraStyleState: {},
+  // setEraStyleState(key) { this.eraStyleState[key] = !this.eraStyleState[key] },
 
   countriesState: {},
   setCountriesState(key) { this.countriesState[key] = !this.countriesState[key] },
@@ -225,12 +227,12 @@ export const searchFormState = proxy({
   countriesQuery: '',
   setCountriesQuery(qString) { searchFormState.countriesQuery = qString },
 
-  loadCheckboxData () {
+  loadFormChoicesData () {
     (async () => {
-      const resp = await HornRepApi.getCheckBoxData();
-      this.setCheckboxData(resp.checkboxData);
-      if (this.checkboxData.eraStyle) this.checkboxData.eraStyle.forEach(eS => this.eraStyleCheckboxState[eS] = false);
-      if (this.checkboxData.countries) this.checkboxData.countries.forEach(c => this.countriesState[c] = false);
+      const resp = await HornRepApi.getFormChoicesData();
+      // this.setFormChoicesData(resp.formChoicesData);
+      if (resp.formChoicesData.eraStyle.length) resp.formChoicesData.eraStyle.forEach(eS => eraStyleState.erasStyles[eS] = false);
+      if (resp.formChoicesData.countries.length) resp.formChoicesData.countries.forEach(c => this.countriesState[c] = false);
       this.setIsDataLoadedTrue();
 		})();
 	},

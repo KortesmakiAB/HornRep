@@ -10,7 +10,7 @@ import './Home.css';
 
 const Home = () => {
     
-    searchFormState.loadCheckboxData();
+    searchFormState.loadFormChoicesData();
     
     const snap = useSnapshot(searchFormState);
     const userSnap = useSnapshot(userState);

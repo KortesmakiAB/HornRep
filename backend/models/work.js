@@ -169,14 +169,6 @@ class Work {
 			}
 		}
 
-		// original lowest/highest approach
-		// const lowHigh = { highest_note, lowest_note };
-		// for (let val in lowHigh) {
-		// 	if (Number.isInteger(lowHigh[val])) {
-		// 		queryValues.push(lowHigh[val]);
-		// 		whereExpressions.push(`${[val]} <= $${queryValues.length}`);
-		// 	}
-		// }
 		if (highest_note && Number.isInteger(highest_note)) {
 			queryValues.push(highest_note);
 			whereExpressions.push(`highest_note <= $${queryValues.length}`);
@@ -199,11 +191,9 @@ class Work {
 			query += " WHERE " + whereExpressions.join(" AND ");
 		}
 
-		// TODO remove ternary?
-		// query += ` ORDER BY ${  ? 'title, c.last_name, c.first_name' : 'c.last_name, c.first_name, title' };`;
 		if (byTitles === true) query += ' ORDER BY title, c.last_name, c.first_name;'
 		else if (byTitles === false) query += ' ORDER BY c.last_name, c.first_name, title;'
-		console.log('@@@@@@@@@', query)
+		console.log('############', query, queryValues)
 		const worksResp = await db.query(query, queryValues);
 
 		return worksResp.rows;

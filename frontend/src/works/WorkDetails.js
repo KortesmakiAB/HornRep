@@ -1,11 +1,12 @@
 import { Suspense } from 'react';
 import { useSnapshot } from 'valtio';
-import { H3, Callout, HTMLTable, Card, Elevation, Button, FormGroup, Spinner, TextArea } from '@blueprintjs/core';
+import { H3, Callout, HTMLTable, Card, Elevation, Button, FormGroup, TextArea } from '@blueprintjs/core';
 import { useParams } from 'react-router-dom';
 
 import { workDetailsState, userState } from '../App';
+import SpinnerCard from '../utilities/SpinnerCard';
 
-import { createRangeArr } from '../tools/range';
+import { createRangeArr } from '../utilities/range';
 import i from '../media/noteWebPs/webp';
 
 
@@ -17,14 +18,6 @@ const WorkDetails = () => {
     const rangeArr = createRangeArr();
 
     workDetailsState.loadWorkDeets(id);
-
-    const Spinner = () => {
-        return (
-            <Card className='Card'>
-                <Spinner intent='primary'/>
-            </Card>
-        );
-    };
 
     const WorkDeets = () => {
         const workDeetsSnap = useSnapshot(workDetailsState);
@@ -300,7 +293,7 @@ const WorkDetails = () => {
 
 
     return (
-        <Suspense fallback={Spinner}>
+        <Suspense fallback={SpinnerCard}>
             <WorkDeets />
         </Suspense>
     );

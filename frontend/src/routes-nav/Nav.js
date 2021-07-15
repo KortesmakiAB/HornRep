@@ -17,18 +17,18 @@ const Nav = () => {
     const handleDialogueClose = () => loginState.setLoginIsNotOpen();
     const handleBurgerClick = (evt) => navState.setIsMenuOpened();
     const handleHomeClick = () => history.push('/');
-    const handleBrowseClick = () => {
-        history.push('/works/browse');
+
+    const handleMostClicks = (evt) => {
+        const buttonText = evt.target.textContent;
+
+        if (buttonText === 'login') loginState.setLoginIsOpen();
+        else if (buttonText === 'browse') history.push('/works/browse');
+        else if (buttonText === 'profile') history.push('/profile');
+        else if (buttonText === 'collaborate') history.push('/collaborate');
+        
         navState.setIsMenuClosed();
     };
-    const handleProfileClick = () => {
-        history.push('/profile');
-        navState.setIsMenuClosed();
-    };
-    const handleLoginClick = () => { 
-        loginState.setLoginIsOpen();
-        navState.setIsMenuClosed();
-    };
+
     const handleLogoutClick = () => {
         const logoutToast = Toaster.create({position: Position.BOTTOM});
         logoutToast.show({
@@ -72,18 +72,22 @@ const Nav = () => {
             title='menu'
             size='40%'
             isCloseButtonShown={false}
-
         >
             <div className='Nav-drawer-content'>
-                <Button className="bp3-minimal Nav-drawer-btn" icon="box" text="Browse" onClick={handleBrowseClick}   />
-                { userSnap.isLoggedIn
-                    ? <Button className="bp3-minimal Nav-drawer-btn" icon="log-out" text="Logout" onClick={handleLogoutClick}  />
-                    : <Button className="bp3-minimal Nav-drawer-btn" icon="log-in" text="Login" onClick={handleLoginClick}  />
+                <Button className="bp3-minimal Nav-drawer-btn" icon="box" text="browse" onClick={handleMostClicks}   />
+                {
+                    userSnap.isLoggedIn
+                    ? <Button className="bp3-minimal Nav-drawer-btn" icon="add" text="collaborate" onClick={handleMostClicks}  />
+                    : null
                 }
                 { userSnap.isLoggedIn
-                    ? <Button className="bp3-minimal Nav-drawer-btn" icon="user" text="profile" onClick={handleProfileClick}  />
+                    ? <Button className="bp3-minimal Nav-drawer-btn" icon="user" text="profile" onClick={handleMostClicks}  />
                     : null
-                }  
+                }
+                { userSnap.isLoggedIn
+                    ? <Button className="bp3-minimal Nav-drawer-btn" icon="log-out" text="logout" onClick={handleLogoutClick}  />
+                    : <Button className="bp3-minimal Nav-drawer-btn" icon="log-in" text="login" onClick={handleMostClicks}  />
+                }
             </div>
         </Drawer>
             

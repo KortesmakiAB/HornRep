@@ -6,7 +6,7 @@
     text-align: left;
 }
 
-.Nav-drawer-content > button:nth-child(1) {
+.Nav-drawer-content > button {
     margin: .75rem 0;
 }
 

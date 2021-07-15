@@ -6,6 +6,7 @@ import Works from '../works/Works';
 import WorkDetails from '../works/WorkDetails';
 // import Sarah from '../addtl-pages/Sarah';
 import Browse from '../Browse/Browse';
+import Collaborate from '../addtl-pages/Collaborate';
 import LoggedInRoute from './LoggedInRoute';
 import Profile from '../addtl-pages/Profile';
 
@@ -42,9 +43,9 @@ function Routes() {
                 <Profile />              
             </LoggedInRoute>
 
-            {/* <LoggedInRoute exact path='/profile/edit'>
-                <EditProfile />              
-            </LoggedInRoute>  */}
+            <LoggedInRoute exact path='/collaborate'>
+                <Collaborate />              
+            </LoggedInRoute> 
 
             <Redirect to='/' />
         </Switch>

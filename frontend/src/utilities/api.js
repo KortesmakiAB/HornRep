@@ -41,20 +41,14 @@ class HornRepApi {
   }
   
   /* returns => { 
-    "checkboxData": {
-        "eraStyle": [
-            "romantic",
-            "modern"
-        ],
-        "countries": [
-            "Germany",
-            "United States"
-        ]
+    "formChoicesData": {
+        "eraStyle": [ eg, "romantic", "modern"],
+        "countries": [ eg, "Germany", United States" ]
       }
     } 
   */
-  static async getCheckBoxData() {
-    return await this.request(`works/checkboxes`);
+  static async getFormChoicesData() {
+    return await this.request(`works/formData`);
   }
   
   static async newComment(commentObj) {
@@ -99,24 +93,24 @@ class HornRepApi {
     return res.updatedUser;
   }
 
+  static async newComposer(formData) {
+    const method = 'POST';
+    let res = await this.request(`composers`, formData, method)
+    return res;
+  }
 
-  // TODO get rid of unused api call examples below
-//   static async signIn(unPw) {
-//     const method = 'POST';
-//     let res = await this.request(`auth/token`, unPw, method);
-//     return res.token;
-//   }
+  static async newWork(userId, formData) {
+    const method = 'POST';
+    let res = await this.request(`works/${userId}`, formData, method)
+    return res;
+  }
 
+
+  // TODO keep?
 //   // {username, password} => true/false
 //   static async validate(unPw) {
 //     return await this.request('auth/validate', unPw);
 //   }  
-
-//   // queryString with username and id = > {applied: jobId}
-//   static async applyJob(username, id) {
-//     const method = 'POST';
-//     return await this.request(`users/${username}/jobs/${id}`, null, method);
-//   }
 
 }
 

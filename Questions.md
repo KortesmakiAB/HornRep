@@ -1,8 +1,7 @@
 #### `<SearchForm>` 
 I wanted to have eraStyle be checkboxes which correspond to the era_style's in the db. The db contains a string which may be comma or slash separated. I thought about writing a method to query that data, but it would need to iterate over each character of each string, looking for commas and/or slashes. Maybe regex would be faster? or does it iterate too? Maybe I could change the schema to be an array of string values. But that seemed like too much work also, so I went with a keyword search. If I didn't want a keyword search, what kind of approach would you suggest?
 
-There is a lot of repetition, particularly handleFormSubmit().
-Would you refactor this?
+How to add a new Country or Era/Style with MultiSelect and/or Select
 
 #### App.js
 searchFormState.formFields - I am sending lots of empty strings in the qstring to the api. The backend is expecting this and can handle it. But ideally, should there be a different approach?
@@ -16,7 +15,7 @@ eg, `<WorkDetails>` When changing the form input value each keystroke is causing
 
 (not that important right now...)
 #### I can't remember...
-When writing Model methods, I'm not sure whether or not to write checks for db colums which are "UNIQUE". The db will throw errors anyways if there is a unique violation, so why should I write one?
+When writing Model methods, I'm not sure whether or not to write checks for db columns which are "UNIQUE". The db will throw errors anyways if there is a unique violation, so why should I write one?
 - Pros: proactive, clear. Any other pros?
 - Cons: it adds more (unnecessary?) queries. 
 

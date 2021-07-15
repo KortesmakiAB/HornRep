@@ -55,12 +55,13 @@ const UserFields = () => {
         </FormGroup>
         <FormGroup label='password' labelFor='password'>
             <InputGroup 
-                id='password' type='password' 
+                id='password' 
+                type='password' 
                 name='password' 
                 value={signupSnap.formFields.password} 
                 onChange={signupState.handleSignupFormChange} 
                 autoComplete='new-password' 
-                placeholder='' 
+                placeholder='TODO min characters' 
                 required 
                 disabled={signupSnap.userFieldsDisabled}/>
         </FormGroup>

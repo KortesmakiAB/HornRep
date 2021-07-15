@@ -3,7 +3,7 @@ import { Button, Card, Elevation, FormGroup, H3, InputGroup, } from '@blueprintj
 import { useSnapshot } from 'valtio';
 
 import { profileFormState, userState } from '../App';
-import HornRepApi from '../tools/api';
+import HornRepApi from '../utilities/api';
 
 const Profile = () => {
     const userSnap = useSnapshot(userState)

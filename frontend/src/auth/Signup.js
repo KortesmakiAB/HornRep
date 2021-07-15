@@ -1,10 +1,10 @@
-import { Button, Card, Elevation, FormGroup, H3, InputGroup, Toaster } from '@blueprintjs/core';
+import { Button, Card, Elevation, H3, Icon, Toaster } from '@blueprintjs/core';
 import { Redirect, useHistory } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 import jwt from 'jsonwebtoken';
 
 import { signupState, userState } from '../App';
-import HornRepApi from '../tools/api';
+import HornRepApi from '../utilities/api';
 import UserFields from '../forms/UserFields';
 
 import './Signup.css';
@@ -49,24 +49,25 @@ const Signup = () => {
                 <>
                 <Card elevation={Elevation.TWO} className='Card'>
                     <p>
-                        Get involved, creat an account and make your contribution to HornRep.
+                        <Icon 
+                            icon='clean'
+                            intent='primary'
+                            className='Icon-m Signup-get-involved'
+                        />
+                        Get involved, create an account and make your contribution to HornRep.
                     </p>
                 </Card>
                 <Card elevation={Elevation.TWO} className='Card'>
-                    <H3>register</H3>
+                    <H3>
+                        register
+                        <Icon
+                            icon='new-person'
+                            intent='primary'
+                            className='Icon-m'
+                        />
+                    </H3>
                     <form onSubmit={handleSignupSubmit}>
                         <UserFields />
-                        <FormGroup label='password' labelFor='password'>
-                            <InputGroup 
-                                id='password' type='password' 
-                                name='password' 
-                                value={signupSnap.formFields.password} 
-                                onChange={signupState.handleSignupFormChange} 
-                                autoComplete='new-password' 
-                                placeholder='' 
-                                required 
-                                disabled={signupSnap.userFieldsDisabled}/>
-                        </FormGroup>
                         <div className='Signup-btn'>
                             <Button type='submit' intent='primary' text='create account' />
                         </div>

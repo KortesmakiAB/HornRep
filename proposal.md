@@ -255,11 +255,12 @@ UX Notes: group like inputs together: text, multi-select, checkboxes
 1. ~~`<Login>`~~
 1. ~~`<Signup>`~~
 1. ~~Add/Edit/Delete `<Profile>`~~
+1. ~~`<Loading>`~~
 
-1. `<Loading>` 
+1. Handle TODO's
 1. Add/Edit/Delete `<Work>`
 1. Add/Edit/Delete `<Composer>`
-
+1. Heroku
 
 1. ??
 1. ReadMe.md

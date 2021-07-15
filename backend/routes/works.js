@@ -61,14 +61,14 @@ router.get('/', async function (req, res, next) {
     }
 });
 
-/** /checkboxData
+/** /formData
 * 	Returns 2 arrays containing all of the entries in db columns for eraStyle and countries.
 */
-router.get('/checkboxes', async function (req, res, next) {
+router.get('/formData', async function (req, res, next) {
 	try {
-		const checkboxData = await Work.getFormChoices();
+		const formChoicesData = await Work.getFormChoices();
 
-		return res.json({ checkboxData })
+		return res.json({ formChoicesData })
 	} catch (error) {
 		return next(error);
 	}

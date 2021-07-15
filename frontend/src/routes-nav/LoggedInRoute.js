@@ -6,7 +6,7 @@ import { loginState, userState } from '../App';
 const LoggedInRoute = ({ exact, path, children }) => {
     const userSnap = useSnapshot(userState);
     const history = useHistory();
-
+    
     if (!userSnap.isLoggedIn) {
         history.push('/');
         loginState.setLoginIsOpen();

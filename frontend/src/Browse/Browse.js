@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
-import { Card, Spinner, Tab, Tabs } from "@blueprintjs/core";
+import { Tab, Tabs } from "@blueprintjs/core";
 
 import { worksState } from '../App';
 
 import WorksByComposer from './WorksByComposer';
 import WorksByTitle from './WorksByTitle';
-
+import SpinnerCard from '../utilities/SpinnerCard';
 
 const Browse = () => {
     worksState.worksSearch();
@@ -15,19 +15,11 @@ const Browse = () => {
         tab === 'title' ? worksState.worksSearch() : worksState.worksSearch({byTitles: false}) ;
     };
 
-    const Spinner = () => {
-        return (
-            <Card className='Card'>
-                <Spinner intent='primary'/>
-            </Card>
-        );
-    };
-
     return (
-        <Suspense fallback={Spinner}>
+        <Suspense fallback={SpinnerCard}>
             <Tabs id="BrowseTabs" onChange={handleTabChange} defaultSelectedTabId="title">
-                <Tab id="title" title="By Title" panel={<WorksByTitle  />} />
-                <Tab id="composer" title="By Composer" panel={<WorksByComposer  />} panelClassName="" />
+                <Tab id="title" title="by Title" panel={<WorksByTitle  />} />
+                <Tab id="composer" title="by Composer" panel={<WorksByComposer  />} panelClassName="" />
             </Tabs>
         </Suspense>
     );

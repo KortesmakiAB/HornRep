@@ -1,7 +1,6 @@
 import { useSnapshot } from 'valtio';
-import { H3, H4 } from "@blueprintjs/core";
-import { Link } from 'react-router-dom';
-import { worksState } from '../App';
+import { Card, H3, H4, Icon } from "@blueprintjs/core";
+import { searchFormState, worksState } from '../App';
 
 import WorkCard from './WorkCard';
 
@@ -12,24 +11,39 @@ const Works = () => {
     const worksSnap = useSnapshot(worksState);
     
     const cards = worksSnap.worksList.map(w => <WorkCard key={w.id} props={w} />);
+    const handleQuestClick = () => searchFormState.resetFormFields();
 
     const noResults = (
         <>
         <H4>Sad! No horn solos found.</H4>
-        {/* TODO use history.push instead?? to reset search or at least a handle click to reset search fields */}
-        <Link to={'/'}><span>Continue your quest to find great HornRep</span></Link>
+        <a onClick={handleQuestClick} href={'/'}><span>Continue your quest to find great HornRep</span></a>
         </>
     );
 
     return (
+        <>
         <div className='Works'>
             <H3>Search Results</H3>
             <div>
                 { worksSnap.worksList.length
                     ? cards
-                    : noResults  }
+                    : noResults  
+                }
             </div>
         </div>
+        {
+            worksSnap.worksList.length
+            ? (
+                <Card className='Card search-again'>
+                    <p>
+                        <Icon icon='search' className='Icon-m' />
+                        <a href='/'>Search Again</a>
+                    </p>
+                </Card>
+            )
+            : null
+        }
+        </>
     );
 };
 
