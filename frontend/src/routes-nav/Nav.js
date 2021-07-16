@@ -2,7 +2,8 @@ import { Alignment, Button, Dialog, Drawer, Navbar, Position, Toaster } from '@b
 import { useSnapshot } from 'valtio';
 import { useHistory } from 'react-router-dom';
 
-import { userState, loginState, navState } from '../App';
+import { userState, navState } from '../App';
+import { loginState } from '../auth/Login';
 import Login from '../auth/Login';
 
 import './Nav.css';
@@ -15,7 +16,7 @@ const Nav = () => {
     const navSnap = useSnapshot(navState);
 
     const handleDialogueClose = () => loginState.setLoginIsNotOpen();
-    const handleBurgerClick = (evt) => navState.setIsMenuOpened();
+    const handleBurgerClick = () => navState.setIsMenuOpened();
     const handleHomeClick = () => history.push('/');
 
     const handleMostClicks = (evt) => {

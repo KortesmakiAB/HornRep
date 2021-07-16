@@ -52,6 +52,7 @@ const CountrySelect = () => {
                 onQueryChange={ countrySelectState.setCountryQuery }
                 itemPredicate={filterCountry}
                 noResults={<MenuItem disabled={true} text="No results." />}
+                resetOnSelect={true}
             >
                 <Button text={countrySelectSnap.country || 'Search for country...'} rightIcon="double-caret-vertical"  />
             </Select>

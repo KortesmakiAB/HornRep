@@ -1,12 +1,47 @@
-import { useSnapshot } from 'valtio';
+import { proxy, useSnapshot } from 'valtio';
 import { Button, FormGroup, InputGroup, Position, Toaster } from '@blueprintjs/core';
+import jwt from 'jsonwebtoken';
+import HornRepApi from '../utilities/api';
 
-import { loginState } from '../App';
 // TODO implement LOCAL STORAGE
 // import useLocalStorage from '../shared/useLocalStorage';
-
+import { userState } from '../App';
 import './Login.css';
 
+export const loginState = proxy({
+    unPw: {
+         email: '',
+         password: '',
+    },
+   setUnPw (name, value) { this.unPw[name] = value },
+ 
+   handleLoginFormChange(evt) {
+     const { name, value } = evt.target;
+     loginState.setUnPw(name, value);
+   },
+ 
+   loginGetUser() {
+     // try/catch and handle invalid combos
+     (async () => {
+       const respToken = await HornRepApi.login(this.unPw);
+ 
+       if (respToken){
+         HornRepApi.token = respToken;
+         userState.setToken(respToken);
+         // HornRepApi.login() returns token with { id(userId), isAdmin }
+         const decodedToken = jwt.decode(respToken);
+         const user = await HornRepApi.getUser(decodedToken.id);
+         delete user.password
+         userState.setUser(user);
+         userState.setIsLoggedIn();
+       }
+     })();
+   },
+ 
+   loginIsOpen: false,
+   setLoginIsOpen() { this.loginIsOpen = true },
+   setLoginIsNotOpen() { this.loginIsOpen = false },
+});
 
 const Login = () => {
     const authSnap = useSnapshot(loginState);

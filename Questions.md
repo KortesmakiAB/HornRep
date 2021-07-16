@@ -3,12 +3,10 @@ I wanted to have eraStyle be checkboxes which correspond to the era_style's in t
 
 How to add a new Country or Era/Style with MultiSelect and/or Select
 
-#### App.js
-searchFormState.formFields - I am sending lots of empty strings in the qstring to the api. The backend is expecting this and can handle it. But ideally, should there be a different approach?
+
 
 #### Valtio
 I'm not sure I understand the use case for `subscribe()` and `unsubscribe()`. 
-I am exporting and importing the proxy state and it seems to be working. Can you help me understand what `subscribe()` and `unsubscribe()` do and how to use them?
 eg, `<WorkDetails>` When changing the form input value each keystroke is causing another API call, 2 duplicate calls, actually.
 
 ---

@@ -1,76 +1,66 @@
 import { proxy, useSnapshot } from 'valtio';
 import { Button, Card, FormGroup, InputGroup } from '@blueprintjs/core';
 
-import HornRepApi from '../utilities/api';
 import HighestLowestNotes from './HighestLowestNotes';
 import Difficulty from './Difficulty';
-import Duration from './Duration';
+import DurationSlider from './DurationSlider';
 import AccompAccompDiff from './AccompAccompDiff';
+import EraStyleSelect from './EraStyleSelect';
+import ComposerSelect from './ComposerSelect';
+import useFormSubmitHelpers from './useFormSubmitHelpers';
 
-import { userState } from '../App';
-// import ComposerSelect from './ComposerSelect';
 
-const initialNewWorkFfState = {
+const initialNewWorkFormState = {
     // required
     title: '',
-    compId: '',
-    submittedBy: '',
     // optional
-    duration: '',
-    eraStyle: '',
-    highestNote: '',
-    lowestNote: '',
-    difficulty: '',
-    techniques: '',
+    techniques: '',     // TODO note re comma separated
     clef: '',
-    compYr: '',
-    accompType: '' ,
-    accompDifficulty: '',
+    compYr: '',         // TODO deal with clef
 }
 export const newWorkState = proxy({
-    formFields: {...initialNewWorkFfState},
+    formFields: {...initialNewWorkFormState},
     setFormField(field, val) { this.formFields[field] = val },
-    resetFormFields(){ this.formFields = {...initialNewWorkFfState} },
-
-    handleFormChange(evt) {
-		const { name, value } = evt.target;
-        newWorkState.setFormField(name, value);
-    },
-
-    handleNewWorkSubmit(evt) {
-        evt.preventDefault();
-        // TODO try/catch
-        (async () => {
-            const resp = await HornRepApi.newWork(userState.user.id, newWorkState.formFields);
-            newWorkState.resetFormFields();
-        })();
-    },
+    resetFormFields(){ this.formFields = {...initialNewWorkFormState} },
 });
 
 
 const NewWork = () => {
-
+    const { newWorkSubmit } = useFormSubmitHelpers();
     const newWorkSnap = useSnapshot(newWorkState);
+
+    function handleFormChange(evt) {
+		const { name, value } = evt.target;
+        newWorkState.setFormField(name, value);
+    }
+
+    const handleNewWorkSubmit = (evt) => {
+        evt.preventDefault();
+        newWorkSubmit();
+    };
 
     return (
         <Card className='Card'>
-            <form onSubmit={newWorkState.handleNewWorkSubmit}>
-                <FormGroup label='title' labelFor='title' >
+            <form onSubmit={handleNewWorkSubmit}>
+                <FormGroup label='title' labelFor='title' helperText=' *required' >
                     <InputGroup
                         id='title'
                         type='text'
                         name='title'
                         value={newWorkSnap.formFields.title}
-                        onChange={newWorkState.handleFormChange}
+                        onChange={handleFormChange}
+                        required={true}
                     />
                 </FormGroup>
-                
-                <HighestLowestNotes />
+                <ComposerSelect helperText=' *required' />
+                <EraStyleSelect />
                 <Difficulty />
-                <Duration />
+                <DurationSlider />
+                <HighestLowestNotes />
                 <AccompAccompDiff />
                 <div className='Btn-pair'>
                     <Button
+                        type='submit'
                         intent='primary'
                         text='add Work'
                     />

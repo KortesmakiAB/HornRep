@@ -1,7 +1,8 @@
 import { Route, useHistory } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 
-import { loginState, userState } from '../App';
+import { userState } from '../App';
+import { loginState } from '../auth/Login';
 
 const LoggedInRoute = ({ exact, path, children }) => {
     const userSnap = useSnapshot(userState);

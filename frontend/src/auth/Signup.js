@@ -68,6 +68,15 @@ const Signup = () => {
                     </H3>
                     <form onSubmit={handleSignupSubmit}>
                         <UserFields />
+                        <p className='NewComposer-p'>
+                            <Icon 
+                                icon='issue'
+                                intent='warning'
+                                className='Icon-m'
+                                iconSize={15}
+                            />
+                            all fields required
+                        </p>
                         <div className='Signup-btn'>
                             <Button type='submit' intent='primary' text='create account' />
                         </div>

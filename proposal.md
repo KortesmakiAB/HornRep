@@ -256,10 +256,15 @@ UX Notes: group like inputs together: text, multi-select, checkboxes
 1. ~~`<Signup>`~~
 1. ~~Add/Edit/Delete `<Profile>`~~
 1. ~~`<Loading>`~~
+1. ~~`<NewComposer>`~~
+1. ~~`<NewWork>` other fields, handle submit~~
 
+1. LocalStorage
+1. `<NewWork>` movements, submit
+    - if you add a new composer, does it show in the new work form? If not, then re-render
 1. Handle TODO's
-1. Add/Edit/Delete `<Work>`
-1. Add/Edit/Delete `<Composer>`
+1. Edit/Delete `<Work>`
+1. Edit/Delete `<Composer>`
 1. Heroku
 
 1. ??
@@ -267,7 +272,6 @@ UX Notes: group like inputs together: text, multi-select, checkboxes
 
 ### Do Later
 - Favicon
-- LocalStorage
 - `<Sara>` (wait til responsive nav)
 - Delete profile/user account?
 

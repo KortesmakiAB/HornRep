@@ -8,11 +8,12 @@ import HornRepApi from './utilities/api';
 import Routes from './routes-nav/Routes';
 import Nav from './routes-nav/Nav';
 
-import { eraStyleState } from './forms/EraStyle';
+import { eraStyleMultiState } from './forms/EraStyleMultiSelect';
 import './App.css';
 import { countryMultiSelectState } from './forms/CountryMultiSelect';
 import { countrySelectState } from './forms/CountrySelect';
-// import hornBg from '../src/media/HornBg2.jpg';
+import { composerSelectState } from './forms/ComposerSelect';
+import { eraStyleSelectState } from './forms/EraStyleSelect';
 
 
 // SHARED/GLOBAL STATE
@@ -33,43 +34,10 @@ export const navState = proxy({
   isMenuOpen: false,
   setIsMenuOpened(){ this.isMenuOpen = true },
   setIsMenuClosed(){ this.isMenuOpen = false },
-})
-
-export const loginState = proxy({
-   unPw: {
-		email: '',
-		password: '',
-	},
-  setUnPw (name, value) { this.unPw[name] = value },
-
-  handleLoginFormChange(evt) {
-    const { name, value } = evt.target;
-    loginState.setUnPw(name, value);
-  },
-
-  loginGetUser() {
-    // try/catch and handle invalid combos
-    (async () => {
-      const respToken = await HornRepApi.login(this.unPw);
-
-      if (respToken){
-        HornRepApi.token = respToken;
-        userState.setToken(respToken);
-        // HornRepApi.login() returns token with { id(userId), isAdmin }
-        const decodedToken = jwt.decode(respToken);
-        const user = await HornRepApi.getUser(decodedToken.id);
-        delete user.password
-        userState.setUser(user);
-        userState.setIsLoggedIn();
-      }
-    })();
-  },
-
-  loginIsOpen: false,
-  setLoginIsOpen() { this.loginIsOpen = true },
-  setLoginIsNotOpen() { this.loginIsOpen = false },
 });
 
+
+// TODO, move to Signup component
 export const signupState = proxy({
   formFields: {
     fName: '',
@@ -87,12 +55,14 @@ export const signupState = proxy({
   },
 });
 
+// TODO, move to Profile component
 export const profileFormState = proxy({
   userFieldsDisabled: false,
   setUserFieldsDisabledTrue() { this.userFieldsDisabled = true },
   setUserFieldsDisabledFalse() { this.userFieldsDisabled = false },
 });
 
+// TODO, move to Works component
 export const worksState = proxy({
   worksList: [],
   setWorksList(worksArr){ this.worksList = worksArr},
@@ -105,6 +75,7 @@ export const worksState = proxy({
 	},
 });
 
+// TODO, move to Works component?
 export const workDetailsState = proxy({
   workDetails: {},
   setWorkDetails(worksObj) { this.workDetails = worksObj },
@@ -174,7 +145,6 @@ export const workDetailsState = proxy({
   loadWorkDeets(id) {
     (async () => {
       const resp = await HornRepApi.getWorkDetails(id);
-      console.log(resp.work)
       this.setWorkDetails(resp.work);
 		})();
 	},
@@ -186,12 +156,7 @@ const initialSearchFormState = {
   title: '',
   lName: '',
   fName:'',
-  minDuration: '', 
-  maxDuration: '',
   techniques: '',
-  gender: '',
-  highestNote: '',      // type: int
-  lowestNote: '',       // type: int
 };
 
 export const searchFormState = proxy({
@@ -210,14 +175,14 @@ export const searchFormState = proxy({
   isDataLoaded: false,
   setIsDataLoadedTrue() { this.isDataLoaded = true; },
 
-
   loadFormChoicesData () {
     (async () => {
       const resp = await HornRepApi.getFormChoicesData();
-      if (resp.formChoicesData.eraStyle.length) resp.formChoicesData.eraStyle.forEach(eS => eraStyleState.erasStyles[eS] = false);
-      if (resp.formChoicesData.countries.length) resp.formChoicesData.countries.forEach(c => countryMultiSelectState.countriesState[c] = false);
-      // if (resp.formChoicesData.countries.length) resp.formChoicesData.countries.forEach(c => countrySelectState.countriesState[c] = false);
-      if (resp.formChoicesData.countries.length) countrySelectState.countries = resp.formChoicesData.countries;
+      if (resp.eraStyle.length) eraStyleSelectState.erasStyles = resp.eraStyle;
+      if (resp.eraStyle.length) resp.eraStyle.forEach(eS => eraStyleMultiState.erasStyles[eS] = false);
+      if (resp.countries.length) resp.countries.forEach(c => countryMultiSelectState.countriesState[c] = false);
+      if (resp.countries.length) countrySelectState.countries = resp.countries;
+      if (resp.composers.length) composerSelectState.composers = resp.composers;
       this.setIsDataLoadedTrue();
 		})();
 	},

@@ -1,10 +1,11 @@
 import { Suspense } from 'react';
 import { useSnapshot } from 'valtio';
 import { H3, Callout, HTMLTable, Card, Elevation, Button, FormGroup, TextArea } from '@blueprintjs/core';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { workDetailsState, userState } from '../App';
 import SpinnerCard from '../utilities/SpinnerCard';
+import { loginState } from '../auth/Login';
 
 import { createRangeArr } from '../utilities/range';
 import i from '../media/noteWebPs/webp';
@@ -224,6 +225,15 @@ const WorkDetails = () => {
             
             <Card className='Card'>
                 <H3>Community</H3>
+                { 
+                    !userSnap.isLoggedIn
+                    ? (
+                        <p>
+                            <a onClick={() => loginState.setLoginIsOpen()}>Login</a> or <a href='/signup'>register</a> to leave a comment.
+                        </p>
+                    )
+                    : null
+                }
                 { comments && comments.length > 0 
                     ? (
                         <div>

@@ -43,12 +43,14 @@ class HornRepApi {
   /* returns => { 
     "formChoicesData": {
         "eraStyle": [ eg, "romantic", "modern"],
-        "countries": [ eg, "Germany", United States" ]
+        "countries": [ eg, "Germany", United States" ],
+        "composers": [ etc. ] TODO
       }
     } 
   */
   static async getFormChoicesData() {
-    return await this.request(`works/formData`);
+    const res = await this.request(`works/formData`);
+    return res.formChoicesData;
   }
   
   static async newComment(commentObj) {

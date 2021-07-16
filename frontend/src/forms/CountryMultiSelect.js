@@ -51,7 +51,7 @@ const CountryMultiSelect = () => {
                 onQueryChange={ countryMultiSelectState.setCountriesQuery }
                 itemPredicate={filterCountry}
                 noResults={<MenuItem disabled={true} text="No results." />}
-                resetOnSelect='true'
+                resetOnSelect={true}
                 selectedItems={ Object.keys(multiSelectSnap.countriesState).filter(c => countryMultiSelectState.countriesState[c]) }
                 tagInputProps={{
                     onRemove: handleTagRemove,

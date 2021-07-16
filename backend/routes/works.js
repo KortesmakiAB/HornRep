@@ -62,7 +62,7 @@ router.get('/', async function (req, res, next) {
 });
 
 /** /formData
-* 	Returns 2 arrays containing all of the entries in db columns for eraStyle and countries.
+* 	Returns 3 arrays containing all of the entries in db columns for eraStyle, countries, composers [{ id, compNameLastFirst }, {etc.}]
 */
 router.get('/formData', async function (req, res, next) {
 	try {

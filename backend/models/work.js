@@ -344,10 +344,13 @@ class Work {
 		const eraStyleResp = await db.query(`SELECT ARRAY( SELECT DISTINCT era_style FROM works WHERE era_style IS NOT NULL);`);
 		
 		const countriesResp = await db.query(`SELECT ARRAY( SELECT DISTINCT country FROM composers WHERE country IS NOT NULL);`);
+
+		const composersResp = await db.query(`SELECT id, CONCAT (last_name, ', ', first_name) AS "compNameLastFirst" FROM composers;`)
 		
 		return {
 			eraStyle: eraStyleResp.rows[0].array,
 			countries: countriesResp.rows[0].array,
+			composers: composersResp.rows,
 		};
 	}
 }

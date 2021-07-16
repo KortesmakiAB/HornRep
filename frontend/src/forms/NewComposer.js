@@ -2,7 +2,7 @@ import { proxy, useSnapshot } from 'valtio';
 import { Button, Card, FormGroup, Icon, InputGroup } from '@blueprintjs/core';
 
 import CountrySelect, {countrySelectState} from './CountrySelect';
-import GenderSelect from './GenderSelect';
+import GenderSelect, {genderState} from './GenderSelect';
 import HornRepApi from '../utilities/api';
 
 // import './NewComposer.css';
@@ -10,7 +10,6 @@ import HornRepApi from '../utilities/api';
 const initialNewComposerState = {
     fName: '',
     lName: '',
-    gender: '',
 };
 export const newComposerState = proxy({
     formFields: {...initialNewComposerState},
@@ -22,24 +21,30 @@ export const newComposerState = proxy({
         newComposerState.setFormField(name, value);
     },
 
-    handleNewComposerSubmit(evt) {
-        evt.preventDefault();
-        // TODO try/catch
-        (async () => {
-            newComposerState.setFormField('country', countrySelectState.country);
-            const resp = await HornRepApi.newComposer(newComposerState.formFields);
-            newComposerState.resetFormFields();
-        })();
-    },
+    
 });
 
 const NewComposer = () => {
 
     const newComposerSnap = useSnapshot(newComposerState);
+    const countrySelectSnap = useSnapshot(countrySelectState);
+    const genderSnap = useSnapshot(genderState);
+
+    function handleNewComposerSubmit(evt) {
+        evt.preventDefault();
+        // TODO try/catch
+        (async () => {
+            newComposerState.setFormField('country', countrySelectSnap.country);
+            newComposerState.setFormField('gender', genderSnap.gender);
+            const resp = await HornRepApi.newComposer(newComposerState.formFields);
+            console.log(resp)
+            newComposerState.resetFormFields();
+        })();
+    }
     
     return (
         <Card className='Card'>
-            <form onSubmit={newComposerState.handleNewComposerSubmit}>
+            <form onSubmit={handleNewComposerSubmit}>
                 <p className='NewComposer-p'>
                     <Icon 
                         icon='issue'

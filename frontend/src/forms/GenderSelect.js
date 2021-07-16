@@ -1,24 +1,19 @@
-import { useSnapshot } from 'valtio';
+import { proxy, useSnapshot } from 'valtio';
 import { Button, FormGroup, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 
-import { searchFormState } from '../App';
-import { newComposerState } from './NewComposer';
+export const genderState = proxy({
+    gender: '',
+    setGender(g) { this.gender = g.value }
+});
 
 
-const GenderSelect = ({formParent}) => {
-    let form;
-    const searchFormSnap = useSnapshot(searchFormState);
-    const newComposerSnap = useSnapshot(newComposerState);
-    if (formParent === 'SearchForm') form = searchFormSnap
-    else if (formParent === 'NewComposer') form = newComposerSnap;
-
+const GenderSelect = () => {
+    const genderSnap = useSnapshot(genderState);
+ 
     const genderArr = [{display: 'male', value: 'male'}, {display: 'female', value: 'female'}, {display: 'select', value: null}];
-    const handleGenderSelect = (g) => { 
-        formParent === 'SearchForm' 
-        ? searchFormState.setFormField('gender', g.value) 
-        : newComposerState.setFormField('gender', g.value) 
-    };
+    const handleGenderSelect = (g) => { genderState.setGender(g) }
+ 
     const renderGender = (gender, { handleClick, modifiers }) => {
         if (!modifiers.matchesPredicate) {
             return null;
@@ -29,7 +24,7 @@ const GenderSelect = ({formParent}) => {
                 key={gender.display}
                 onClick={handleClick}
                 text={gender.display}
-                icon={ form.formFields.gender === gender.value ? "tick" : "blank" }
+                icon={ genderSnap.gender === gender.value ? "tick" : "blank" }
             />
         );
     };
@@ -43,7 +38,7 @@ const GenderSelect = ({formParent}) => {
                 
                 filterable={false}
             >
-                <Button text={ form.formFields.gender || genderArr[2].display } rightIcon="double-caret-vertical" />
+                <Button text={ genderSnap.gender || genderArr[2].display } rightIcon="double-caret-vertical" />
             </Select>
         </FormGroup>
     );
