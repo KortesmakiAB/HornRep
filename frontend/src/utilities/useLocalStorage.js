@@ -1,27 +1,27 @@
-import { useState, useEffect } from "react";
+import { proxy } from "valtio";
+
+export const localStorageState = proxy({
+    item: '', 
+    setItem(item) {localStorageState.item = item},
+});
+
 
 /** Custom hook for keeping state data synced with localStorage.
 *   const [myThing, setMyThing] = useLocalStorage("myThing")
-*   eg - setToken at login; this triggers useEffect and sets the item in LS
-*   eg - setToken at logout; this triggers useEffect and removes the item from LS
+*   eg - setToken() in LS at login, this causes token to be set in proxy.
+*   eg - removeToken() token at logout, this causes token to be set to null.
 */
-
 function useLocalStorage(key, firstValue = null) {
-  const initialValue = localStorage.getItem(key) || firstValue;
+    const initialValue = localStorage.getItem(key) || firstValue;
 
-  const [item, setItem] = useState(initialValue);
-
-  useEffect(function setKeyInLocalStorage() {
-    console.debug("hooks useLocalStorage useEffect", "item=", item);
-
-    if (item === null) {
-      localStorage.removeItem(key);
+    localStorageState.setItem(initialValue);
+    console.log(localStorageState.item)
+ 
+    if (localStorageState.item === null) {
+        localStorage.removeItem(key);
     } else {
-      localStorage.setItem(key, item);
+        localStorage.setItem(key, localStorageState.item);
     }
-  }, [key, item]);
-
-  return [item, setItem];
 }
 
 export default useLocalStorage;

@@ -2,9 +2,10 @@ import { Alignment, Button, Dialog, Drawer, Navbar, Position, Toaster } from '@b
 import { useSnapshot } from 'valtio';
 import { useHistory } from 'react-router-dom';
 
-import { userState, navState } from '../App';
+import { userState, navState, TOKEN_STORAGE_KEY } from '../App';
 import { loginState } from '../auth/Login';
 import Login from '../auth/Login';
+import { localStorageState } from '../utilities/useLocalStorage';
 
 import './Nav.css';
 
@@ -14,6 +15,9 @@ const Nav = () => {
     const userSnap = useSnapshot(userState);
     const authSnap = useSnapshot(loginState);
     const navSnap = useSnapshot(navState);
+    const lsSnap = useSnapshot(localStorageState);
+    // if there is a token in LS, user should not need to re-login and is considered logged in.
+    const isLoggedIn = lsSnap.item;
 
     const handleDialogueClose = () => loginState.setLoginIsNotOpen();
     const handleBurgerClick = () => navState.setIsMenuOpened();
@@ -38,9 +42,8 @@ const Nav = () => {
             timeout: 3500,
             icon:'hand',
         });
-        userState.setToken('');
+        localStorage.removeItem(TOKEN_STORAGE_KEY); // this also removes the token from proxy
         userState.setUser({});
-        userState.setIsNotLoggedIn();
         navState.setIsMenuClosed();
         history.push('/');
     };
@@ -77,15 +80,17 @@ const Nav = () => {
             <div className='Nav-drawer-content'>
                 <Button className="bp3-minimal Nav-drawer-btn" icon="box" text="browse" onClick={handleMostClicks}   />
                 {
-                    userSnap.isLoggedIn
+                    isLoggedIn
                     ? <Button className="bp3-minimal Nav-drawer-btn" icon="add" text="collaborate" onClick={handleMostClicks}  />
                     : null
                 }
-                { userSnap.isLoggedIn
+                { 
+                    isLoggedIn
                     ? <Button className="bp3-minimal Nav-drawer-btn" icon="user" text="profile" onClick={handleMostClicks}  />
                     : null
                 }
-                { userSnap.isLoggedIn
+                { 
+                    isLoggedIn
                     ? <Button className="bp3-minimal Nav-drawer-btn" icon="log-out" text="logout" onClick={handleLogoutClick}  />
                     : <Button className="bp3-minimal Nav-drawer-btn" icon="log-in" text="login" onClick={handleMostClicks}  />
                 }

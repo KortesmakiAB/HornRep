@@ -1,33 +1,27 @@
-// import jwt from 'jsonwebtoken';
 import { proxy } from 'valtio';
 import { H1, Card } from '@blueprintjs/core';
 import { BrowserRouter } from 'react-router-dom';
-import jwt from 'jsonwebtoken';
 
 import HornRepApi from './utilities/api';
 import Routes from './routes-nav/Routes';
 import Nav from './routes-nav/Nav';
 
 import { eraStyleMultiState } from './forms/EraStyleMultiSelect';
-import './App.css';
 import { countryMultiSelectState } from './forms/CountryMultiSelect';
 import { countrySelectState } from './forms/CountrySelect';
 import { composerSelectState } from './forms/ComposerSelect';
 import { eraStyleSelectState } from './forms/EraStyleSelect';
 
+import './App.css';
+import useLocalStorage from './utilities/useLocalStorage';
+
 
 // SHARED/GLOBAL STATE
+export const TOKEN_STORAGE_KEY = 'HornRep-LS-key'
 
 export const userState = proxy({ 
-  token: '', 
-  setToken(token) {this.token = token},
-
   user: {},
   setUser (obj) { this.user = obj },
-
-  isLoggedIn: false,
-  setIsLoggedIn() { this.isLoggedIn = true },
-  setIsNotLoggedIn() { this.isLoggedIn = false },
 });
 
 export const navState = proxy({
@@ -190,6 +184,7 @@ export const searchFormState = proxy({
 
 
 function App() {
+  useLocalStorage(TOKEN_STORAGE_KEY)
   return (
     <BrowserRouter>
       <Card className="App">

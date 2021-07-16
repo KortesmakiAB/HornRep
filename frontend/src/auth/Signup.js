@@ -3,7 +3,7 @@ import { Redirect, useHistory } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 import jwt from 'jsonwebtoken';
 
-import { signupState, userState } from '../App';
+import { signupState, TOKEN_STORAGE_KEY, userState } from '../App';
 import HornRepApi from '../utilities/api';
 import UserFields from '../forms/UserFields';
 
@@ -21,13 +21,12 @@ const Signup = () => {
       
             if (respToken){
                 HornRepApi.token = respToken;
-                userState.setToken(respToken);
+                localStorage.setItem(TOKEN_STORAGE_KEY, respToken);
                 // HornRepApi.register() returns token with { id(userId), isAdmin }
                 const decodedToken = jwt.decode(respToken)
                 const user = await HornRepApi.getUser(decodedToken.id);
                 delete user.password
                 userState.setUser(user);
-                userState.setIsLoggedIn();
                 const loginToast = Toaster.create();
                 loginToast.show({
                     intent:'success',

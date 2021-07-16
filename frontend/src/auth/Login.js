@@ -4,8 +4,8 @@ import jwt from 'jsonwebtoken';
 import HornRepApi from '../utilities/api';
 
 // TODO implement LOCAL STORAGE
-// import useLocalStorage from '../shared/useLocalStorage';
-import { userState } from '../App';
+import { TOKEN_STORAGE_KEY, userState } from '../App';
+import useLocalStorage, { localStorageState } from '../utilities/useLocalStorage';
 import './Login.css';
 
 export const loginState = proxy({
@@ -13,30 +13,30 @@ export const loginState = proxy({
          email: '',
          password: '',
     },
-   setUnPw (name, value) { this.unPw[name] = value },
+    setUnPw (name, value) { this.unPw[name] = value },
+  
+    handleLoginFormChange(evt) {
+      const { name, value } = evt.target;
+      loginState.setUnPw(name, value);
+    },
  
-   handleLoginFormChange(evt) {
-     const { name, value } = evt.target;
-     loginState.setUnPw(name, value);
-   },
- 
-   loginGetUser() {
-     // try/catch and handle invalid combos
-     (async () => {
-       const respToken = await HornRepApi.login(this.unPw);
- 
-       if (respToken){
-         HornRepApi.token = respToken;
-         userState.setToken(respToken);
-         // HornRepApi.login() returns token with { id(userId), isAdmin }
-         const decodedToken = jwt.decode(respToken);
-         const user = await HornRepApi.getUser(decodedToken.id);
-         delete user.password
-         userState.setUser(user);
-         userState.setIsLoggedIn();
-       }
-     })();
-   },
+    loginGetUser() {
+        // TODO try/catch and handle invalid combos
+        (async () => {
+        const respToken = await HornRepApi.login(this.unPw);
+    
+            if (respToken){
+                HornRepApi.token = respToken;
+                localStorageState.setItem(respToken);
+                localStorage.setItem(TOKEN_STORAGE_KEY, respToken);
+                // HornRepApi.login() returns token with { id(userId), isAdmin }
+                const decodedToken = jwt.decode(respToken);
+                const user = await HornRepApi.getUser(decodedToken.id);
+                delete user.password
+                userState.setUser(user);
+            }
+        })();
+    },
  
    loginIsOpen: false,
    setLoginIsOpen() { this.loginIsOpen = true },

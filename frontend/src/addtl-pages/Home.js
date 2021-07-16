@@ -3,13 +3,16 @@ import { H3, Card, Classes } from "@blueprintjs/core";
 import { Link } from 'react-router-dom';
 
 import { searchFormState, userState } from '../App';
+import { localStorageState } from '../utilities/useLocalStorage';
 
 import SearchForm from '../forms/SearchForm';
 
 import './Home.css';
 
 const Home = () => {
-    
+    const lsSnap = useSnapshot(localStorageState);
+    // if there is a token in LS, user should not need to re-login and is considered logged in.
+    const isLoggedIn = lsSnap.item;
     searchFormState.loadFormChoicesData();
     
     const snap = useSnapshot(searchFormState);
@@ -62,7 +65,7 @@ const Home = () => {
                 </Card>)
             }
             {
-                userSnap.isLoggedIn
+                isLoggedIn
                 ? null
                 :
                 <Card className='Card'>
