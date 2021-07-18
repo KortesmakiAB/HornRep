@@ -6,10 +6,10 @@ export const eraStyleSelectState = proxy({
     erasStyles: [],
 
     eraStyle: '',
-    setEraStyleState(c) { this.eraStyle = c },
+    setEraStyleState(c) { eraStyleSelectState.eraStyle = c },
   
     eraStyleQuery: '',
-    setEraStyleQuery(qString) { this.eraStyleQuery = qString },
+    setEraStyleQuery(qString) { eraStyleSelectState.eraStyleQuery = qString },
 });
 
 const EraStyleSelect = () => {

@@ -5,11 +5,11 @@ import { MultiSelect } from '@blueprintjs/select';
 
 export const eraStyleMultiState = proxy({
     erasStyles: {},
-    setErasStyles(key) { this.erasStyles[key] = !this.erasStyles[key] },
+    setErasStyles(key) { eraStyleMultiState.erasStyles[key] = !this.erasStyles[key] },
 
     eraStyleQuery: '',
-    setEraStyleQuery(q) { this.eraStyleQuery = q },
-})
+    setEraStyleQuery(q) { eraStyleMultiState.eraStyleQuery = q },
+});
 
 const EraStyleMultiSelect = () => {
     // const handleEraStyleCheckboxChange = (evt) => eraStyleMultiState.setEraStyleCheckboxState(evt.target.getAttribute('data-es'));

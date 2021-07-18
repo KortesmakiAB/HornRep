@@ -2,7 +2,7 @@ import { useSnapshot } from 'valtio'
 import { H3, Card, Classes } from "@blueprintjs/core";
 import { Link } from 'react-router-dom';
 
-import { searchFormState, userState } from '../App';
+import { searchFormState } from '../App';
 import { localStorageState } from '../utilities/useLocalStorage';
 
 import SearchForm from '../forms/SearchForm';
@@ -16,7 +16,6 @@ const Home = () => {
     searchFormState.loadFormChoicesData();
     
     const snap = useSnapshot(searchFormState);
-    const userSnap = useSnapshot(userState);
 
     return (
         <div>

@@ -258,14 +258,15 @@ UX Notes: group like inputs together: text, multi-select, checkboxes
 1. ~~`<Loading>`~~
 1. ~~`<NewComposer>`~~
 1. ~~`<NewWork>` other fields, handle submit~~
+1. ~~LocalStorage~~
+1. ~~`<NewWork>` submit~~
 
-1. LocalStorage
-1. `<NewWork>` movements, submit
-    - if you add a new composer, does it show in the new work form? If not, then re-render
+1. `<NewWork>` movements
 1. Handle TODO's
 1. Edit/Delete `<Work>`
 1. Edit/Delete `<Composer>`
 1. Heroku
+1. Breakup `<WorkDetails>` into smaller chunks, esp Comments.
 
 1. ??
 1. ReadMe.md

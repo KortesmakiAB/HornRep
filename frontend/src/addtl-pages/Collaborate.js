@@ -1,23 +1,22 @@
-import { Suspense } from 'react';
+import { proxy, useSnapshot } from 'valtio';
 import { Tab, Tabs } from '@blueprintjs/core';
 import NewComposer from '../forms/NewComposer';
 import NewWork from '../forms/NewWork';
-import SpinnerCard from '../utilities/SpinnerCard';
+
+export const collaborateState = proxy({
+    tabId: 'work',
+    setTabId(id){ this.tabId = id },
+});
 
 const Collaborate = () => {
-
-    const handleTabChange = (tab) => {
-        // byTitles default is true, so it is not included as an argument.
-        // tab === 'work' ? worksState.worksSearch() : worksState.worksSearch({byTitles: false}) ;
-    };
+    const collabState = useSnapshot(collaborateState)
+    const handleTabChange = (tab) => collaborateState.setTabId(tab);
 
     return (
-        <Suspense fallback={SpinnerCard}>
-            <Tabs id="CollaborateTabs" onChange={handleTabChange} defaultSelectedTabId="work">
-                <Tab id="work" title="new Work" panel={<NewWork />} />
-                <Tab id="composer" title="new Composer" panel={<NewComposer />}  />
-            </Tabs>
-        </Suspense>
+        <Tabs id="CollaborateTabs" selectedTabId={collabState.tabId} onChange={handleTabChange} >
+            <Tab id="work" title="new Work" panel={<NewWork />} />
+            <Tab id="composer" title="new Composer" panel={<NewComposer />}  />
+        </Tabs>
     );
 };
 

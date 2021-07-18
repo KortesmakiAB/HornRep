@@ -1,10 +1,13 @@
+import { Suspense } from 'react';
 import { proxy } from 'valtio';
 import { H1, Card } from '@blueprintjs/core';
 import { BrowserRouter } from 'react-router-dom';
+import jwt from 'jsonwebtoken';
 
 import HornRepApi from './utilities/api';
 import Routes from './routes-nav/Routes';
 import Nav from './routes-nav/Nav';
+import SpinnerCard from './utilities/SpinnerCard';
 
 import { eraStyleMultiState } from './forms/EraStyleMultiSelect';
 import { countryMultiSelectState } from './forms/CountryMultiSelect';
@@ -14,6 +17,7 @@ import { eraStyleSelectState } from './forms/EraStyleSelect';
 
 import './App.css';
 import useLocalStorage from './utilities/useLocalStorage';
+
 
 
 // SHARED/GLOBAL STATE
@@ -184,16 +188,32 @@ export const searchFormState = proxy({
 
 
 function App() {
-  useLocalStorage(TOKEN_STORAGE_KEY)
+  const token = useLocalStorage(TOKEN_STORAGE_KEY);
+
+  (async function handleAuth(){
+    if(token === null) HornRepApi.token = null;
+    else {
+      HornRepApi.token = token;
+      if (!userState.user.id || !userState.user.username) {
+        const decodedToken = jwt.decode(token);
+        const user = await HornRepApi.getUser(decodedToken.id);
+        delete user.password
+        userState.setUser(user);
+      }
+    }
+  })();
+
   return (
     <BrowserRouter>
-      <Card className="App">
-        <header className="App-header">
-          <Nav />
-          <H1 className='App-title'>HornRep</H1>
-        </header>
-        <Routes></Routes>
-      </Card>
+      <Suspense fallback={SpinnerCard}>
+        <Card className="App">
+            <header className="App-header">
+              <Nav />
+              <H1 className='App-title'>HornRep</H1>
+            </header>
+            <Routes></Routes>
+          </Card>
+      </Suspense>
     </BrowserRouter>
   );
 }

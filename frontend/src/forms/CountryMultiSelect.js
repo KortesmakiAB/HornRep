@@ -8,7 +8,7 @@ export const countryMultiSelectState = proxy({
   setCountriesState(key) { this.countriesState[key] = !this.countriesState[key] },
 
   countriesQuery: '',
-  setCountriesQuery(qString) { this.countriesQuery = qString },
+  setCountriesQuery(qString) { countryMultiSelectState.countriesQuery = qString },
 });
 
 const CountryMultiSelect = () => {

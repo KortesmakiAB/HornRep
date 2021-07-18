@@ -1,0 +1,12 @@
+.Header-TitleIcon-div {
+    display: flex;
+    justify-content: space-between;
+}
+
+.Header-Inner-div > form:nth-child(2) {
+    margin-left: .5rem;
+}
+
+.Header-TitleIcon-form {
+    display: inline;
+}

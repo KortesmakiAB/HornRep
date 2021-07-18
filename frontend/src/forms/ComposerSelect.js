@@ -31,7 +31,7 @@ const ComposerSelect = ({ helperText }) => {
         );
     };
     const handleComposerSelect = (composer) => {
-        if (composer.id === composerSelectSnap.composerObj.idObj) composerSelectState.setComposerState({});
+        if (composer.id === composerSelectSnap.composerObj.id) composerSelectState.setComposerState({});
         else composerSelectState.setComposerState(composer);
     };
     const filterComposer = (query, composer) => composer.compNameLastFirst.toLowerCase().startsWith(query.toLowerCase());

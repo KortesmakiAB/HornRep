@@ -5,7 +5,7 @@ import HornRepApi from '../utilities/api';
 
 // TODO implement LOCAL STORAGE
 import { TOKEN_STORAGE_KEY, userState } from '../App';
-import useLocalStorage, { localStorageState } from '../utilities/useLocalStorage';
+import { localStorageState } from '../utilities/useLocalStorage';
 import './Login.css';
 
 export const loginState = proxy({

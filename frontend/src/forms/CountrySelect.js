@@ -9,7 +9,7 @@ export const countrySelectState = proxy({
     setCountryState(c) { this.country = c },
   
     countryQuery: '',
-    setCountryQuery(qString) { this.countryQuery = qString },
+    setCountryQuery(qString) { countrySelectState.countryQuery = qString },
 });
 
 const CountrySelect = () => {
@@ -53,6 +53,7 @@ const CountrySelect = () => {
                 itemPredicate={filterCountry}
                 noResults={<MenuItem disabled={true} text="No results." />}
                 resetOnSelect={true}
+                required={true}
             >
                 <Button text={countrySelectSnap.country || 'Search for country...'} rightIcon="double-caret-vertical"  />
             </Select>

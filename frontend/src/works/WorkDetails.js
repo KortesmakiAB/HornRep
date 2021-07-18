@@ -1,8 +1,9 @@
 import { Suspense } from 'react';
 import { useSnapshot } from 'valtio';
 import { H3, Callout, HTMLTable, Card, Elevation, Button, FormGroup, TextArea } from '@blueprintjs/core';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
+import HeaderTitleEditDelete from './HeaderTitleEditDelete';    
 import { workDetailsState, userState } from '../App';
 import SpinnerCard from '../utilities/SpinnerCard';
 import { loginState } from '../auth/Login';
@@ -13,8 +14,8 @@ import i from '../media/noteWebPs/webp';
 
 import './WorkDetails.css';
 
+
 const WorkDetails = () => {
-    
     const { id } = useParams();
     const rangeArr = createRangeArr();
 
@@ -23,6 +24,7 @@ const WorkDetails = () => {
     const WorkDeets = () => {
         const workDeetsSnap = useSnapshot(workDetailsState);
         const userSnap = useSnapshot(userState);
+
         const lsSnap = useSnapshot(localStorageState);
         // if there is a token in LS, user should not need to re-login and is considered logged in.
         const isLoggedIn = lsSnap.item;
@@ -77,10 +79,27 @@ const WorkDetails = () => {
             lowestNote, techniques, fName, lName, country, gender, accompType, accompDifficulty, movements
         } = workDeetsSnap.workDetails;
 
+        const handleWorkEdit = (evt) => {
+            evt.preventDefault();
+            console.log('handle work edit')
+        };
+        const handleWorkDelete = (evt) => {
+            evt.preventDefault();
+            console.log('handle work delete')
+        };
+        const handleComposerEdit = (evt) => {
+            evt.preventDefault();
+            console.log('handle composer edit')
+        };
+        const handleComposerDelete = (evt) => {
+            evt.preventDefault();
+            console.log('handle composer delete')
+        };
+
         return (
             <>
             <Card elevation={Elevation.TWO} className='Card'>
-                <H3>{title}</H3>
+                <HeaderTitleEditDelete heading={title}  handleEdit={handleWorkEdit} handleDelete={handleWorkDelete} />
                 <HTMLTable>
                     <tbody>
                     { duration ? 
@@ -157,7 +176,7 @@ const WorkDetails = () => {
                 </HTMLTable>
             </Card>
             <Card className='Card'>
-                <H3>Composer</H3>
+                <HeaderTitleEditDelete heading='Composer' handleEdit={handleComposerEdit} handleDelete={handleComposerDelete} />
                 <HTMLTable>
                     <tbody>
                     { fName || lName ? 
@@ -231,7 +250,7 @@ const WorkDetails = () => {
                     !isLoggedIn
                     ? (
                         <p>
-                            <a onClick={() => loginState.setLoginIsOpen()}>Login</a> or <a href='/signup'>register</a> to leave a comment.
+                            <Link onClick={() => loginState.setLoginIsOpen()}>Login</Link> or <a href='/signup'>register</a> to leave a comment.
                         </p>
                     )
                     : null
@@ -255,7 +274,7 @@ const WorkDetails = () => {
                                         isLoggedIn && (userSnap.user.id === c.userId || userSnap.user.isAdmin)
                                         ? 
                                         <form data-comment-id={c.id} className='comment-form-delete' onSubmit={handleCommentDelete}>
-                                                <Button icon='trash' type='submit' minimal={true} className='comment-icon' />
+                                            <Button icon='trash' type='submit' minimal={true} className='comment-icon' />
                                         </form>
                                         : null
                                     }
