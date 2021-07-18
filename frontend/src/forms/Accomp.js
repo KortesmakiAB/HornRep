@@ -11,10 +11,9 @@ export const accompState = proxy({
     },
     setCheckboxesAccompType(accomp) { this.checkboxesAccompType[accomp] = !this.checkboxesAccompType[accomp] },
     setCheckboxesUnaccomp() { 
-        this.checkboxesAccompType = ({
-        'orchestra': false,
-        'piano': false,
-    })},
+        this.checkboxesAccompType['orchestra'] = false;
+        this.checkboxesAccompType['piano'] = false;
+    },
 
     checkboxesAccompDifficulty: {
         'novice': false,

@@ -48,8 +48,8 @@ const useFormSubmitHelpers = () => {
         if (multiSelectSnap.countriesState[key]) countriesResults.push(key);
     }
     const accompTypeResults = [];
-    for (let key in accompSnap.checkboxesAccomp) {
-        if (accompSnap.checkboxesAccomp[key]) accompTypeResults.push(key);
+    for (let key in accompSnap.checkboxesAccompType) {
+        if (accompSnap.checkboxesAccompType[key]) accompTypeResults.push(key);
     }
     const accompDiffResults = [];
     for (let key in accompSnap.checkboxesAccompDifficulty) {
@@ -62,7 +62,7 @@ const useFormSubmitHelpers = () => {
         if (eraStyleMultiResults.length) finalSearchObj['eraStyle'] = eraStyleMultiResults;
         if (countriesResults.length) finalSearchObj['countries'] = countriesResults;
         if (accompTypeResults.length) finalSearchObj['accompType'] = accompTypeResults;
-        if (accompDiffResults.length && !accompTypeResults.includes('unaccompanied')) finalSearchObj['accompDifficulty'] = accompDiffResults;
+        if (accompDiffResults.length) finalSearchObj['accompDifficulty'] = accompDiffResults;
         if (highestLowestSnap.highestNote.value) finalSearchObj['highestNote'] = highestLowestSnap.highestNote.value;
         if (highestLowestSnap.lowestNote.value) finalSearchObj['lowestNote'] = highestLowestSnap.lowestNote.value;
         if (genderSnap.gender) finalSearchObj['gender'] = genderSnap.gender;
@@ -93,7 +93,8 @@ const useFormSubmitHelpers = () => {
             if (highestLowestSnap.highestNote.value) newWorkObj['highestNote'] = highestLowestSnap.highestNote.value;
             if (highestLowestSnap.lowestNote.value) newWorkObj['lowestNote'] = highestLowestSnap.lowestNote.value;
             if (accompTypeResults.length) newWorkObj['accompType'] = accompTypeResults.join();
-            if (accompDiffResults.length) newWorkObj['accompDifficulty'] = accompDiffResults.join();
+            console.log(accompTypeResults, accompTypeResults.includes('unaccompanied'))
+            if (accompDiffResults.length  && !accompTypeResults.includes('unaccompanied')) newWorkObj['accompDifficulty'] = accompDiffResults.join();
 
             // TODO add movements component results
 

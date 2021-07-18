@@ -10,7 +10,7 @@ const AccompType = ({ newWork }) => {
         const accompType = evt.target.getAttribute('data-accomp');
         accompState.setCheckboxesAccompType(accompType);
         // don't allow any other type of accompaniment if user checks 'unaccompanied'.
-        if (accompType === 'unaccompanied' && accompSnap.checkboxesAccompType.unaccompanied) accompState.setCheckboxesUnaccomp();
+        if (accompType === 'unaccompanied' && accompState.checkboxesAccompType.unaccompanied) accompState.setCheckboxesUnaccomp();
     };
 
     return (
