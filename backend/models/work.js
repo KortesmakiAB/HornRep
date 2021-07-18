@@ -343,7 +343,7 @@ class Work {
 	static async getFormChoices() {
 		const eraStyleResp = await db.query(`SELECT ARRAY( SELECT DISTINCT era_style FROM works WHERE era_style IS NOT NULL);`);
 		
-		const countriesResp = await db.query(`SELECT ARRAY( SELECT DISTINCT country FROM composers WHERE country IS NOT NULL);`);
+		const countriesResp = await db.query(`SELECT ARRAY( SELECT DISTINCT country FROM composers WHERE country IS NOT NULL AND LENGTH(country) > 0);`);
 
 		const composersResp = await db.query(`SELECT id, CONCAT (last_name, ', ', first_name) AS "compNameLastFirst" FROM composers;`)
 		

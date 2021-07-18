@@ -1,6 +1,7 @@
 import { proxy, useSnapshot } from 'valtio';
 import { Button, FormGroup, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
+import { searchFormState } from '../App';
 
 export const countrySelectState = proxy({
     countries: [],
@@ -15,6 +16,7 @@ export const countrySelectState = proxy({
 const CountrySelect = () => {
 
     const countrySelectSnap = useSnapshot(countrySelectState);
+    if (!countrySelectSnap.countries.length) searchFormState.loadFormChoicesData();
 
     const renderCountry = (country, {handleClick, modifiers }) => {
         if (!modifiers.matchesPredicate) {

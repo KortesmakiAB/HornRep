@@ -1,7 +1,7 @@
 import { useSnapshot } from 'valtio';
 import { useHistory } from 'react-router-dom';
 
-import { accompState } from './AccompAccompDiff';
+import { accompState } from './Accomp';
 import { composerSelectState } from './ComposerSelect';
 import { countryMultiSelectState } from './CountryMultiSelect';
 import { countrySelectState } from './CountrySelect';
@@ -47,9 +47,9 @@ const useFormSubmitHelpers = () => {
     for (let key in multiSelectSnap.countriesState) {
         if (multiSelectSnap.countriesState[key]) countriesResults.push(key);
     }
-    const accompResults = [];
+    const accompTypeResults = [];
     for (let key in accompSnap.checkboxesAccomp) {
-        if (accompSnap.checkboxesAccomp[key]) accompResults.push(key);
+        if (accompSnap.checkboxesAccomp[key]) accompTypeResults.push(key);
     }
     const accompDiffResults = [];
     for (let key in accompSnap.checkboxesAccompDifficulty) {
@@ -61,8 +61,8 @@ const useFormSubmitHelpers = () => {
         if (difficultyArr.length) finalSearchObj['difficulty'] = difficultyArr;
         if (eraStyleMultiResults.length) finalSearchObj['eraStyle'] = eraStyleMultiResults;
         if (countriesResults.length) finalSearchObj['countries'] = countriesResults;
-        if (accompResults.length) finalSearchObj['accompType'] = accompResults;
-        if (accompDiffResults.length) finalSearchObj['accompDifficulty'] = accompDiffResults;
+        if (accompTypeResults.length) finalSearchObj['accompType'] = accompTypeResults;
+        if (accompDiffResults.length && !accompTypeResults.includes('unaccompanied')) finalSearchObj['accompDifficulty'] = accompDiffResults;
         if (highestLowestSnap.highestNote.value) finalSearchObj['highestNote'] = highestLowestSnap.highestNote.value;
         if (highestLowestSnap.lowestNote.value) finalSearchObj['lowestNote'] = highestLowestSnap.lowestNote.value;
         if (genderSnap.gender) finalSearchObj['gender'] = genderSnap.gender;
@@ -92,7 +92,7 @@ const useFormSubmitHelpers = () => {
             if (durationSnap.maxDuration) newWorkObj['maxDuration'] = durationSnap.maxDuration;
             if (highestLowestSnap.highestNote.value) newWorkObj['highestNote'] = highestLowestSnap.highestNote.value;
             if (highestLowestSnap.lowestNote.value) newWorkObj['lowestNote'] = highestLowestSnap.lowestNote.value;
-            if (accompResults.length) newWorkObj['accompType'] = accompResults.join();
+            if (accompTypeResults.length) newWorkObj['accompType'] = accompTypeResults.join();
             if (accompDiffResults.length) newWorkObj['accompDifficulty'] = accompDiffResults.join();
 
             // TODO add movements component results

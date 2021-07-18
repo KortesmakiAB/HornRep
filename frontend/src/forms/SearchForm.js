@@ -1,7 +1,7 @@
 import { useSnapshot } from 'valtio';
 import { Button, FormGroup, InputGroup, Collapse, H3, Card, Icon } from "@blueprintjs/core";
 
-import AccompAccompDiff from './AccompAccompDiff';
+import Accomp from './Accomp';
 import CountryMultiSelect from './CountryMultiSelect';
 import Difficulty from './Difficulty';
 import Duration from './Duration';
@@ -50,7 +50,7 @@ const SearchForm = () => {
                         <CountryMultiSelect />   
                         <GenderSelect />
                         <HighestLowestNotes />
-                        <AccompAccompDiff />
+                        <Accomp />
                         <FormGroup label="title" labelFor="title">
                             <InputGroup id="title" name="title" placeholder="keyword" value={formSnap.formFields.title} onChange={searchFormState.handleFormChange} autoComplete='on' />
                         </FormGroup>

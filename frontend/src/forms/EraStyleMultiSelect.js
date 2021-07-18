@@ -2,6 +2,8 @@ import { proxy, useSnapshot } from 'valtio';
 import { FormGroup, MenuItem } from '@blueprintjs/core';
 import { MultiSelect } from '@blueprintjs/select';
 
+import { searchFormState } from '../App';
+
 
 export const eraStyleMultiState = proxy({
     erasStyles: {},
@@ -12,8 +14,9 @@ export const eraStyleMultiState = proxy({
 });
 
 const EraStyleMultiSelect = () => {
-    // const handleEraStyleCheckboxChange = (evt) => eraStyleMultiState.setEraStyleCheckboxState(evt.target.getAttribute('data-es'));
     const eraStyleMultiSnap = useSnapshot(eraStyleMultiState);
+    const eraStyleArr = Object.keys(eraStyleMultiSnap.erasStyles);
+    if (!eraStyleArr.length) searchFormState.loadFormChoicesData();
 
     const renderCountry = (eraStyle, {handleClick, modifiers }) => {
         if (!modifiers.matchesPredicate) {
@@ -41,7 +44,7 @@ const EraStyleMultiSelect = () => {
             helperText='may make multiple selections'
         >
             <MultiSelect
-                items={ Object.keys(eraStyleMultiSnap.erasStyles) }
+                items={ eraStyleArr }
                 itemRenderer={renderCountry}
                 onItemSelect={handleCountrySelect}
                 tagRenderer={renderTag}
@@ -52,7 +55,7 @@ const EraStyleMultiSelect = () => {
                 itemPredicate={filterEraStyle}
                 noResults={<MenuItem disabled={true} text="No results." />}
                 resetOnSelect='true'
-                selectedItems={ Object.keys(eraStyleMultiSnap.erasStyles).filter(c => eraStyleMultiSnap.erasStyles[c]) }
+                selectedItems={ eraStyleArr.filter(c => eraStyleMultiSnap.erasStyles[c]) }
                 tagInputProps={{
                     onRemove: handleTagRemove,
                 }}

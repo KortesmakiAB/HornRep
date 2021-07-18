@@ -4,10 +4,11 @@ import { Button, Card, FormGroup, InputGroup } from '@blueprintjs/core';
 import HighestLowestNotes from './HighestLowestNotes';
 import Difficulty from './Difficulty';
 import DurationSlider from './DurationSlider';
-import AccompAccompDiff from './AccompAccompDiff';
+import Accomp from './Accomp';
 import EraStyleSelect from './EraStyleSelect';
 import ComposerSelect from './ComposerSelect';
 import useFormSubmitHelpers from './useFormSubmitHelpers';
+import MovementsForm from './MovementsForm';
 
 
 const initialNewWorkFormState = {
@@ -57,7 +58,9 @@ const NewWork = () => {
                 <Difficulty />
                 <DurationSlider />
                 <HighestLowestNotes />
-                <AccompAccompDiff />
+                <Accomp newWork={true} />
+                
+                <MovementsForm />
                 <div className='Btn-pair'>
                     <Button
                         type='submit'

@@ -31,7 +31,9 @@ const NewComposer = () => {
 
     function handleNewComposerSubmit(evt) {
         evt.preventDefault();
-        // TODO try/catch, esp required Country & Gender
+        // if (!countrySelectSnap.country) TODO
+        // if (!genderSnap.gender) TODO
+        // TODO try/catch, 
         (async () => {
             newComposerState.setFormField('country', countrySelectSnap.country);
             newComposerState.setFormField('gender', genderSnap.gender);

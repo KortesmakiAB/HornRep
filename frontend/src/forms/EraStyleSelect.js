@@ -1,6 +1,7 @@
 import { proxy, useSnapshot } from 'valtio';
 import { Button, FormGroup, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
+import { searchFormState } from '../App';
 
 export const eraStyleSelectState = proxy({
     erasStyles: [],
@@ -15,6 +16,7 @@ export const eraStyleSelectState = proxy({
 const EraStyleSelect = () => {
 
     const eraStyleSelectSnap = useSnapshot(eraStyleSelectState);
+    if (!eraStyleSelectSnap.erasStyles.length) searchFormState.loadFormChoicesData();
 
     const renderEraStyle = (eraStyle, {handleClick, modifiers }) => {
         if (!modifiers.matchesPredicate) {
@@ -39,9 +41,8 @@ const EraStyleSelect = () => {
 
     return (
         <FormGroup 
-            label="eraStyle/region"
+            label="era/style"
             labelFor="eraStyle"
-            labelInfo='(of composer)'
         >
             <Select
                 items={ eraStyleSelectSnap.erasStyles }

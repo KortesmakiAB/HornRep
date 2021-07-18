@@ -1,6 +1,7 @@
 import { proxy, useSnapshot } from 'valtio';
 import { FormGroup, MenuItem } from '@blueprintjs/core';
 import { MultiSelect } from '@blueprintjs/select';
+import { searchFormState } from '../App';
 
 
 export const countryMultiSelectState = proxy({
@@ -13,6 +14,8 @@ export const countryMultiSelectState = proxy({
 
 const CountryMultiSelect = () => {
     const multiSelectSnap = useSnapshot(countryMultiSelectState);
+    const countriesArr = Object.keys(multiSelectSnap.countriesState);
+    if (!countriesArr.length) searchFormState.loadFormChoicesData();
 
     const renderCountry = (country, {handleClick, modifiers }) => {
         if (!modifiers.matchesPredicate) {
@@ -41,7 +44,7 @@ const CountryMultiSelect = () => {
             helperText='may make multiple selections'
         >
             <MultiSelect
-                items={ Object.keys(multiSelectSnap.countriesState) }
+                items={ countriesArr }
                 itemRenderer={renderCountry}
                 onItemSelect={handleCountrySelect}
                 tagRenderer={renderTag}
@@ -52,7 +55,7 @@ const CountryMultiSelect = () => {
                 itemPredicate={filterCountry}
                 noResults={<MenuItem disabled={true} text="No results." />}
                 resetOnSelect={true}
-                selectedItems={ Object.keys(multiSelectSnap.countriesState).filter(c => countryMultiSelectState.countriesState[c]) }
+                selectedItems={ countriesArr.filter(c => countryMultiSelectState.countriesState[c]) }
                 tagInputProps={{
                     onRemove: handleTagRemove,
                 }}

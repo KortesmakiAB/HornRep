@@ -1,6 +1,7 @@
 import { proxy, useSnapshot } from 'valtio';
 import { Button, FormGroup, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
+import { searchFormState } from '../App';
 
 export const composerSelectState = proxy({
     composers: [],
@@ -15,6 +16,7 @@ export const composerSelectState = proxy({
 const ComposerSelect = ({ helperText }) => {
 
     const composerSelectSnap = useSnapshot(composerSelectState);
+    if (!composerSelectSnap.composers.length) searchFormState.loadFormChoicesData();
 
     const renderComposer = (composer, {handleClick, modifiers }) => {
         if (!modifiers.matchesPredicate) {
