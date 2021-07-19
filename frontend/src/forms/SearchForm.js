@@ -67,7 +67,6 @@ const SearchForm = () => {
                                 placeholder='keyword' 
                                 value={formSnap.formFields.techniques} 
                                 onChange={searchFormState.handleFormChange}
-                                autoComplete='on'
                             />
                         </FormGroup>
                     </Collapse>

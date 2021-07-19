@@ -8,6 +8,7 @@ import { localStorageState } from '../utilities/useLocalStorage';
 import SearchForm from '../forms/SearchForm';
 
 import './Home.css';
+import { getYear } from '../utilities/getYear';
 
 const Home = () => {
     const lsSnap = useSnapshot(localStorageState);
@@ -74,7 +75,7 @@ const Home = () => {
                 </Card>
             }
             
-            <footer><small>web work by Aaron Brant</small></footer>
+            <footer><small>web work by Aaron Brant - { getYear() }</small></footer>
         </div>
     );
 };

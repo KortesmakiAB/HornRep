@@ -1,8 +1,71 @@
+import { proxy, useSnapshot } from 'valtio';
+import { FormGroup, H4, Icon, InputGroup, NumericInput, Tab, Tabs } from '@blueprintjs/core';
+import Difficulty from './Difficulty';
+import DurationSlider from './DurationSlider';
+import HighestLowest from './HighestLowestNotes';
+
+const movementsFormState = proxy({
+    numMvmts: '',
+    setNumMvmts(num) { this.numMvmts = num },
+
+
+});
 
 const MovementsForm = () => {
+    const mvmtsFormSnap = useSnapshot(movementsFormState);
+    console.log(mvmtsFormSnap.numMvmts)
+
+    // docs advise against using the 1st param, which has the type 'number' and instead choose the 2nd parameter, which has the type 'string'.
+    // I am ignoring this advice due to the simplicity of my use. No decimals, fractions, or math needed.
+    const handleNumMvmtsChange = (num, string) => { 
+        // user input '-' causes 'NaN
+        if (Number.isNaN(num)) movementsFormState.setNumMvmts('');
+        else movementsFormState.setNumMvmts(num);
+    };
+
+    const Movement = ({ mvmtNum }) => {
+        return (
+            <>
+            <FormGroup label='title' labelFor={`title${mvmtNum}`}>
+                <InputGroup
+                    id={`title${mvmtNum}`}
+                    name={`title${mvmtNum}`}
+                    type='text'
+                    // value={}
+                    // onChange={}
+                />
+            </FormGroup>
+            <DurationSlider />
+            <Difficulty />
+            <HighestLowest />
+            </>
+        );
+    };
+    
+    const displayTabs = (numRows) => {
+        const rowsArr = [];
+        for (let i = 1; i <= numRows; i++) {
+            rowsArr.push(<Tab key={i} id={i} title={`m${i}`} panel={<Movement mvmtNum={i} />} />)
+        }
+        return rowsArr;
+    }
+
     return(
         <div>
-            Mvmts Form
+            <H4>add movements</H4>
+            
+            <FormGroup label='# of movements (m)' labelFor='numMvmts' >
+                <NumericInput
+                    id='numMvmts'
+                    name='numMvmts'
+                    fill={true}
+                    value={mvmtsFormSnap.numMvmts}
+                    onValueChange={handleNumMvmtsChange}
+                />
+            </FormGroup>
+            <Tabs onChange={(tabId) => console.log(tabId)} >
+                { displayTabs(mvmtsFormSnap.numMvmts) }
+            </Tabs>
         </div>
     );
 };

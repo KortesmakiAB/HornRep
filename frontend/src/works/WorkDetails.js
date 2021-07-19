@@ -167,7 +167,7 @@ const WorkDetails = () => {
                     }
                     { lowestNote ? 
                         <tr>
-                            <td>lowest note</td>
+                            <td>lowest note <small>(new notation)</small></td>
                             <td><img src={ i[rangeArr[lowestNote].fullName] } alt={ rangeArr[lowestNote].fullName }></img></td>
                         </tr> 
                         : null 

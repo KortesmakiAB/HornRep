@@ -69,7 +69,7 @@ const useFormSubmitHelpers = () => {
         if (durationSnap.minDuration) finalSearchObj['minDuration'] = durationSnap.minDuration;
         if (durationSnap.maxDuration) finalSearchObj['maxDuration'] = durationSnap.maxDuration;
 
-        for (let key in searchFormState.formFields){
+        for (let key in searchFormState.formFields) {
             if (searchFormState.formFields[key]) finalSearchObj[key] = searchFormState.formFields[key];
         }
         worksState.worksSearch(finalSearchObj);
@@ -78,6 +78,7 @@ const useFormSubmitHelpers = () => {
     };
 
     const newWorkSubmit = () => {
+        // if (!newWorkSnap.formFields.title || !newWorkSnap.formFields.title.trim().length) TODO
         // TODO try/catch
         (async () => {
             const newWorkObj = {
@@ -93,12 +94,16 @@ const useFormSubmitHelpers = () => {
             if (highestLowestSnap.highestNote.value) newWorkObj['highestNote'] = highestLowestSnap.highestNote.value;
             if (highestLowestSnap.lowestNote.value) newWorkObj['lowestNote'] = highestLowestSnap.lowestNote.value;
             if (accompTypeResults.length) newWorkObj['accompType'] = accompTypeResults.join();
-            console.log(accompTypeResults, accompTypeResults.includes('unaccompanied'))
             if (accompDiffResults.length  && !accompTypeResults.includes('unaccompanied')) newWorkObj['accompDifficulty'] = accompDiffResults.join();
 
+            
             // TODO add movements component results
 
-            // TODO iterate over formFields, taking only the good values
+            for (let key in newWorkSnap.formFields) {
+                if (newWorkSnap.formFields[key]) newWorkObj[key] = newWorkSnap.formFields[key];
+            }
+            // TODO handle year of composition (needs to be a date format?), frontend or backend?
+            // if (newWorkObj.compYr) newWorkObj.compYr = parseInt(newWorkObj.compYr);
 
             const resp = await HornRepApi.newWork(userState.user.id, newWorkObj);
             newWorkState.resetFormFields();

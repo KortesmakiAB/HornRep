@@ -1,5 +1,6 @@
 import { proxy, useSnapshot } from 'valtio';
 import { Button, FormGroup, InputGroup, Position, Toaster } from '@blueprintjs/core';
+import { useHistory, useLocation } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 import HornRepApi from '../utilities/api';
 
@@ -45,6 +46,8 @@ export const loginState = proxy({
 
 const Login = () => {
     const authSnap = useSnapshot(loginState);
+    const location = useLocation();
+    const history = useHistory();
     
     const handleFormSubmit = (evt) => {
         evt.preventDefault();
@@ -57,6 +60,8 @@ const Login = () => {
             timeout: 3500,
             icon:'emoji',
         });
+        
+        if (location.pathname === '/signup') history.push('/');
     };
 
     const handleCancel = () => loginState.setLoginIsNotOpen();

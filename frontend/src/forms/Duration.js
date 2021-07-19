@@ -37,7 +37,7 @@ const Duration = () => {
     };
 
     return (
-        <FormGroup label="duration" labelFor="duration" labelInfo="(complete work)" helperText="*Does not search individual movement duration.">
+        <FormGroup label="duration" labelFor="duration" labelInfo="(in minutes)" helperText=" *Complete work. Does not search individual movement duration.">
             <RangeSlider 
                 id="duration" 
                 name="duration" 

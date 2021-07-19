@@ -13,7 +13,7 @@ export const highestLowestState = proxy({
     setLowestNote(nObj){ this.lowestNote = nObj },
 })
 
-const HighestNote = () => {
+const HighestLowest = () => {
     const highestLowestSnap = useSnapshot(highestLowestState);
 
     const rangeArr = createRangeArr();
@@ -88,7 +88,11 @@ const HighestNote = () => {
 
     return (
         <>
-        <FormGroup label='highest note' labelFor='highestNote' labelInfo='(horn in F)' helperText='above the treble clef staff'>
+        <FormGroup 
+            label='highest note' 
+            labelFor='highestNote' 
+            labelInfo='(horn in F)' 
+            helperText='above the treble clef staff'>
             <Select
                 items={highRangeArr}
                 itemRenderer={renderRange}
@@ -96,10 +100,17 @@ const HighestNote = () => {
                 
                 filterable={false}
             >
-                <Button text={ highestLowestSnap.highestNote.label || highRangeArr[highRangeArr.length - 1].label } rightIcon="double-caret-vertical" />
+                <Button 
+                    text={ highestLowestSnap.highestNote.label || highRangeArr[highRangeArr.length - 1].label } 
+                    rightIcon="double-caret-vertical" 
+                />
             </Select>
         </FormGroup>
-        <FormGroup label='lowest note' labelFor='lowestNote' labelInfo='(horn in F)' helperText='descending, beginning G below middle C'>
+        <FormGroup 
+            label='lowest note' 
+            labelFor='lowestNote' 
+            labelInfo='(horn in F)' 
+            helperText='descending, beginning G below middle C'>
             <Select
                 items={lowRangeArr}
                 itemRenderer={renderRange}
@@ -107,11 +118,14 @@ const HighestNote = () => {
                 
                 filterable={false}
             >
-                <Button text={ highestLowestSnap.lowestNote.label || lowRangeArr[0].label } rightIcon="double-caret-vertical" />
+                <Button 
+                    text={ highestLowestSnap.lowestNote.label || lowRangeArr[0].label } 
+                    rightIcon="double-caret-vertical" 
+                />
             </Select>
         </FormGroup>
         </>
     );
 };
 
-export default HighestNote;
+export default HighestLowest;

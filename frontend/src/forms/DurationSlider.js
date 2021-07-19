@@ -6,12 +6,6 @@ import { getDurationObj, sliderMax } from './Duration';
 // initial maxDuration is pre-set to 15 for convenience.
 // most people want works shorter than 15 minutes.
 export const durationSliderState = proxy({
-    // sliderArr: [0, 20],
-    // setSliderArr(valArr) { this.sliderArr = valArr },
-
-    // minDuration: '',
-    // setMinDuration(d){ this.minDuration = d },
-    
     duration: 15,
     setDuration(d){ this.duration = d },
 
