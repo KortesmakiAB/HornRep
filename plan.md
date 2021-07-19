@@ -275,6 +275,7 @@ UX Notes: group like inputs together: text, multi-select, checkboxes
 - Favicon
 - `<Sara>` (wait til responsive nav)
 - Delete profile/user account?
+- Under-represented populations!
 
 ### React Design
 React routing

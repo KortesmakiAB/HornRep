@@ -57,6 +57,10 @@
         "accompDifficulty": {
             "$id": "#/properties/accompDifficulty",
             "type": "string"
+        },
+        "description": {
+            "$id": "#/properties/description",
+            "type": "string"
         }
     },
     "additionalProperties": false

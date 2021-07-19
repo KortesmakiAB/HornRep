@@ -231,7 +231,7 @@ class Work {
 	*/
 	static async addWork(formFields) {
 		const { title, compId, submittedBy, duration, eraStyle, highestNote, lowestNote,
-				difficulty, techniques, clef, compYr, accompType, accompDifficulty } = formFields;
+				difficulty, techniques, clef, compYr, accompType, accompDifficulty, movements } = formFields;
 		
 		// schema: composer_id and submitted_by are not "NOT NULL", however they are required.
 		const compIdResp = await db.query(`SELECT id FROM composers WHERE id = $1;`, [compId]);
@@ -259,23 +259,27 @@ class Work {
 			VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
 			RETURNING
 				id`,
-				// TODO remove info below if unnecessary
-				// title, 
-				// composer_id AS compId,
-				// submitted_by AS submittedBy,
-				// duration, 
-				// era_style AS eraStyle,
-				// highest_note AS highestNote,
-				// lowest_note AS lowestNote,
-				// difficulty, 
-				// techniques, 
-				// clef, 
-				// composition_yr AS compYr,
-				// accompaniment_type AS accompType,
-				// accompaniment_difficulty AS accompDifficulty`,
 			[title, compId, submittedBy, duration, eraStyle, highestNote, lowestNote,
-				difficulty, techniques, clef, compYr, accompType, accompDifficulty]
+			difficulty, techniques, clef, compYr, accompType, accompDifficulty]
 		);
+
+		// array of objects
+		for (let mvmt of movements) {
+			const { work_id, title, duration, difficulty, highest_note, lowest_note } = mvmt;
+
+			await db.query(`
+				INSERT INTO movements (
+					work_id,
+					title,
+					duration,
+					difficulty,
+					highest_note,
+					lowest_note
+				)
+				VALUES ($1,$2,$3,$4,$5,$6)`,
+				[work_id, title, duration, difficulty, highest_note, lowest_note]
+			);
+		}
 
 		return newWorkResp.rows[0].id;
 	}

@@ -1,8 +1,10 @@
 #### `<SearchForm>` 
 I wanted to have eraStyle be checkboxes which correspond to the era_style's in the db. The db contains a string which may be comma or slash separated. I thought about writing a method to query that data, but it would need to iterate over each character of each string, looking for commas and/or slashes. Maybe regex would be faster? or does it iterate too? Maybe I could change the schema to be an array of string values. But that seemed like too much work also, so I went with a keyword search. If I didn't want a keyword search, what kind of approach would you suggest?
 
-How to add a new Country or Era/Style with MultiSelect and/or Select, 
+Can you help me with adding a new Country or Era/Style with MultiSelect and/or Select?
 eg. `<EraStyleMultiSelect>` or `<CountrySelect>`
+https://blueprintjs.com/docs/#select/multi-select
+I haven't looked in to this yet, but need to.
 
 #### `<useLocalStorage>`
 frontent/src/utilities/useLocalStorage
